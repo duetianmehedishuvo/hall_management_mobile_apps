@@ -1,10 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.shuvo.duetstahall">
     <uses-permission android:name="android.permission.INTERNET"/>
 
    <application
         android:label="DUET STA-HALL"
         android:name="${applicationName}"
+       tools:replace="android:label"
+       android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

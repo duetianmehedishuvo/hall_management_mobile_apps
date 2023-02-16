@@ -46,4 +46,12 @@ class DateConverter {
   static String convertTimeToTime(String time) {
     return DateFormat('hh:mm a').format(DateFormat('hh:mm:ss').parse(time));
   }
+
+  static String isoStringToDatePushServer(String dateTime) {
+    return DateFormat('dd-MM-yyyy').format(isoStringToLocalDate(dateTime));
+  }
+  static DateTime isoStringToDateGetServer(String dateTime) {
+    return DateFormat('dd-MM-yyyy').parse(dateTime, true).toLocal();
+  }
+
 }

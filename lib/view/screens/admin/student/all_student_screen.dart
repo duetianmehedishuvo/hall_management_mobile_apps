@@ -32,7 +32,7 @@ class AddStudentScreen extends StatelessWidget {
                 final DatabaseHelper databaseService = DatabaseHelper();
                 databaseService.allStudents().then((value) {
                   for (var v in value) {
-                    print(v.toMap());
+                    // print(v.toMap());
                   }
                 });
               }),

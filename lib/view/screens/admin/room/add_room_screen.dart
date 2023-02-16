@@ -110,30 +110,30 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
                                   if (roomIDController.text.isEmpty || yearController.text.isEmpty || floorIDController.text.isEmpty) {
                                     showMessage('please fill up all fields');
                                   } else {
-                                    int totalStudents = 0;
-                                    if (authProvider.selectStudent1.isNotEmpty) totalStudents += 1;
-                                    if (authProvider.selectStudent2.isNotEmpty) totalStudents += 1;
-                                    if (authProvider.selectStudent3.isNotEmpty) totalStudents += 1;
-                                    if (authProvider.selectStudent4.isNotEmpty) totalStudents += 1;
-                                    if (authProvider.selectStudent5.isNotEmpty) totalStudents += 1;
-                                    if (authProvider.selectStudent6.isNotEmpty) totalStudents += 1;
-                                    if (authProvider.selectStudentExtra.isNotEmpty) totalStudents += 1;
-
-                                    RoomModel roomModel = RoomModel(
-                                        floor: int.parse(floorIDController.text),
-                                        roomID: int.parse(roomIDController.text),
-                                        year: int.parse(yearController.text),
-                                        student1: authProvider.selectStudent1,
-                                        student2: authProvider.selectStudent2,
-                                        student3: authProvider.selectStudent3,
-                                        student4: authProvider.selectStudent4,
-                                        student5: authProvider.selectStudent5,
-                                        student6: authProvider.selectStudent6,
-                                        studentExtra: authProvider.selectStudentExtra,
-                                        totalStudents: totalStudents);
-
-                                    authProvider.addRooms(roomModel);
-                                    authProvider.resetStudents();
+                                    // int totalStudents = 0;
+                                    // if (authProvider.selectStudent1.isNotEmpty) totalStudents += 1;
+                                    // if (authProvider.selectStudent2.isNotEmpty) totalStudents += 1;
+                                    // if (authProvider.selectStudent3.isNotEmpty) totalStudents += 1;
+                                    // if (authProvider.selectStudent4.isNotEmpty) totalStudents += 1;
+                                    // if (authProvider.selectStudent5.isNotEmpty) totalStudents += 1;
+                                    // if (authProvider.selectStudent6.isNotEmpty) totalStudents += 1;
+                                    // if (authProvider.selectStudentExtra.isNotEmpty) totalStudents += 1;
+                                    //
+                                    // RoomModel roomModel = RoomModel(
+                                    //     floor: int.parse(floorIDController.text),
+                                    //     roomID: int.parse(roomIDController.text),
+                                    //     year: int.parse(yearController.text),
+                                    //     student1: authProvider.selectStudent1,
+                                    //     student2: authProvider.selectStudent2,
+                                    //     student3: authProvider.selectStudent3,
+                                    //     student4: authProvider.selectStudent4,
+                                    //     student5: authProvider.selectStudent5,
+                                    //     student6: authProvider.selectStudent6,
+                                    //     studentExtra: authProvider.selectStudentExtra,
+                                    //     totalStudents: totalStudents);
+                                    //
+                                    // authProvider.addRooms(roomModel);
+                                    // authProvider.resetStudents();
                                   }
                                 },
                                 btnTxt: "Submit",
@@ -153,8 +153,9 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
         if (value.text.isEmpty) {
           return List.empty();
         }
-        List<String> data = await authProvider.getSuggestionsData(value.text);
-        return data.where((element) => element.toLowerCase().contains(value.text.toLowerCase())).toList();
+        // List<String> data = await authProvider.getSuggestionsData(value.text);
+        // return data.where((element) => element.toLowerCase().contains(value.text.toLowerCase())).toList();
+        return List.empty();
       },
       fieldViewBuilder: (BuildContext context, TextEditingController controller, FocusNode node, Function onSubmit) => CustomTextField(
         controller: controller,
@@ -180,7 +181,7 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
         );
       },
       onSelected: (value) {
-        authProvider.changeValue(value, position);
+        // authProvider.changeValue(value, position);
       },
       displayStringForOption: (String d) => d,
     );

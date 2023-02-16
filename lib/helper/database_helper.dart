@@ -51,17 +51,17 @@ class DatabaseHelper {
     await db.execute(createTableRequestPhoneNo);
   }
 
-  // Define a function that inserts Student into the database
-  Future<int> insertStudent(StudentModel studentModel) async {
-    // Get a reference to the database.
-    final db = await _databaseService.database;
-
-    // Insert the Breed into the correct table. You might also specify the
-    // `conflictAlgorithm` to use in case the same breed is inserted twice.
-    //
-    // In this case, replace any previous data.
-    return await db.insert(tableStudent, studentModel.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
-  }
+  // // Define a function that inserts Student into the database
+  // Future<int> insertStudent(StudentModel studentModel) async {
+  //   // Get a reference to the database.
+  //   final db = await _databaseService.database;
+  //
+  //   // Insert the Breed into the correct table. You might also specify the
+  //   // `conflictAlgorithm` to use in case the same breed is inserted twice.
+  //   //
+  //   // In this case, replace any previous data.
+  //   return await db.insert(tableStudent, studentModel.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+  // }
 
   Future<int> insertRoom(RoomModel roomModel) async {
     final db = await _databaseService.database;

@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "559204505268",
-    "project_id": "duet-sta-hall",
-    "storage_bucket": "duet-sta-hall.appspot.com"
+    "project_number": "170958571155",
+    "project_id": "duet-sta-hall-610b8",
+    "storage_bucket": "duet-sta-hall-610b8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:559204505268:android:d242f1330276752ba7a9e1",
+        "mobilesdk_app_id": "1:170958571155:android:0f1d86d139c758457a2f66",
         "android_client_info": {
           "package_name": "com.shuvo.duetstahall"
         }
       },
       "oauth_client": [
         {
-          "client_id": "559204505268-eq78a4kuluk4qf8s6tr8eddl1deut32n.apps.googleusercontent.com",
+          "client_id": "170958571155-v2b12bmt2mpnp5jfp6teconh62fgnikv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyApYaBMk_4CCIo_MfZ1wXdfJXOg6tvbUYU"
+          "current_key": "AIzaSyB3h7zgPwVOpK4uZGQyqZSRwfU-UWRcGCU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "559204505268-eq78a4kuluk4qf8s6tr8eddl1deut32n.apps.googleusercontent.com",
+              "client_id": "170958571155-v2b12bmt2mpnp5jfp6teconh62fgnikv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

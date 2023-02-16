@@ -49,7 +49,7 @@ class _CreateStudentScreenState extends State<CreateStudentScreen> {
       idController.text = widget.studentModel!.studentID!.toString();
       nameController.text = widget.studentModel!.name!;
       departmentController.text = widget.studentModel!.department!;
-      phoneController.text = widget.studentModel!.phoneNo!;
+      // phoneController.text = widget.studentModel!.phoneNo!;
       passwordController.text = widget.studentModel!.password!;
     }
   }
@@ -156,12 +156,13 @@ class _CreateStudentScreenState extends State<CreateStudentScreen> {
                                   padding: const EdgeInsets.all(1.0),
                                   child: CustomButton(
                                       onTap: () {
-                                        authProvider.selectDate();
+                                        // authProvider.selectDate();
                                       },
                                       radius: 15,
                                       backgroundColor: AppColors.imageBGColorLight,
                                       textWhiteColor: false,
-                                      btnTxt: DateConverter.localDateToIsoString(authProvider.selectedDate)),
+                                      // btnTxt: DateConverter.localDateToIsoString(authProvider.selectedDate)
+                                  ),
                                 ),
                               ),
                             ],
@@ -199,14 +200,15 @@ class _CreateStudentScreenState extends State<CreateStudentScreen> {
                                         department: departmentController.text,
                                         bloodGroup: authProvider.selectedBlood,
                                         password: passwordController.text,
-                                        phoneNo: phoneController.text,
-                                        studentID: int.parse(idController.text),
-                                        image: '',
-                                        address: '',
-                                        aboutMe: '',
-                                        admissionDate: DateConverter.localDateToIsoString(authProvider.selectedDate),
-                                        jobPosition: '',
-                                        userRoll: 0);
+                                        // phoneNo: phoneController.text,
+                                        studentID: idController.text,
+                                        // image: '',
+                                        // address: '',
+                                        // aboutMe: '',
+                                        // admissionDate: DateConverter.localDateToIsoString(authProvider.selectedDate),
+                                        // jobPosition: '',
+                                        // userRoll: 0
+                                    );
 
                                     authProvider.addStudent(student);
                                   }

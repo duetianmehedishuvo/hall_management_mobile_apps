@@ -54,6 +54,18 @@ dependencies:
   animate_do: ^3.0.2
   cloud_firestore: ^4.3.1
   firebase_core: ^2.4.1
+  firebase_auth: ^4.2.6
+  image_picker: ^0.8.6+1
+  intl: ^0.17.0
+  image: ^4.0.15
+  path_provider: ^2.0.12
+  uuid: ^3.0.7
+  flutter_spinkit: ^5.1.0
+  textfield_tags: ^2.0.2
+  table_calendar: ^3.0.8
+  flutter_sslcommerz: ^2.2.2-nullsafety.0
+  auto_size_text: ^3.0.0
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

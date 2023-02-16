@@ -1,66 +1,52 @@
-import 'package:duetstahall/helper/database/table_column.dart';
-
 class StudentModel {
-  int? id;
-  int? userRoll;
-  int? studentID;
-  String? password;
+  String? studentID;
   String? name;
-  String? image;
   String? department;
-  String? phoneNo;
-  String? address;
-  String? jobPosition;
-  String? admissionDate;
-  String? aboutMe;
+  String? phoneNumber;
   String? bloodGroup;
+  String? fingerID;
+  String? rfID;
+  String? password;
+  int? allowableMeal;
+  int? roomNO;
 
   StudentModel(
-      {this.id,
-      this.userRoll,
-      this.studentID,
-      this.password,
-      this.name,
-      this.image,
-      this.department,
-      this.phoneNo,
-      this.address,
-      this.jobPosition,
-      this.admissionDate,
-      this.bloodGroup,
-      this.aboutMe});
+      {this.studentID,
+        this.name,
+        this.department,
+        this.phoneNumber,
+        this.bloodGroup,
+        this.fingerID,
+        this.rfID,
+        this.password,
+        this.roomNO,
+        this.allowableMeal});
 
-  Map<String, dynamic> toMap() {
-    final map = <String, dynamic>{};
-    map[columnUserRoll] = userRoll;
-    map[columnStudentID] = studentID;
-    map[columnPassword] = password;
-    map[columnName] = name;
-    map[columnImage] = image;
-    map[columnDepartment] = department;
-    map[columnAdmissionDate] = admissionDate;
-    map[columnPhoneNo] = phoneNo;
-    map[columnAddress] = address;
-    map[columnBloodGroup] = bloodGroup;
-    map[columnJobPosition] = jobPosition;
-    map[columnAboutMe] = aboutMe;
-    return map;
+  StudentModel.fromMap(final map) {
+    studentID = map['studentID'];
+    name = map['name'];
+    department = map['department'];
+    phoneNumber = map['phone'];
+    bloodGroup = map['bloodGroup'];
+    fingerID = map['finger_ID'];
+    rfID = map['rf_ID'];
+    password = map['password'];
+    roomNO = map['roomNO'];
+    allowableMeal = map['allowableMeal'];
   }
 
-  //to be used when converting the row into object
-  factory StudentModel.fromMap(Map<String, dynamic> data) => StudentModel(
-        id: data[columnID],
-        userRoll: data[columnUserRoll],
-        studentID: data[columnStudentID],
-        password: data[columnPassword],
-        name: data[columnName],
-        image: data[columnImage],
-        department: data[columnDepartment],
-        admissionDate: data[columnAdmissionDate],
-        phoneNo: data[columnPhoneNo],
-        address: data[columnAddress],
-        bloodGroup: data[columnBloodGroup],
-        jobPosition: data[columnJobPosition],
-        aboutMe: data[columnAboutMe],
-      );
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['studentID'] = studentID;
+    map['name'] = name;
+    map['department'] = department;
+    map['phone'] = phoneNumber;
+    map['bloodGroup'] = bloodGroup;
+    map['finger_ID'] = fingerID;
+    map['rf_ID'] = rfID;
+    map['password'] = password;
+    map['roomNO'] = roomNO;
+    map['allowableMeal'] = allowableMeal;
+    return map;
+  }
 }

@@ -1,7 +1,17 @@
 //constant key
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:duetstahall/data/model/response/language_model.dart';
+final CollectionReference adminCollection = FirebaseFirestore.instance.collection('admin');
+final CollectionReference userCollection = FirebaseFirestore.instance.collection('Student');
+final CollectionReference mealStudentCollection = FirebaseFirestore.instance.collection('Meal-Student');
+final CollectionReference mealAdminCollection = FirebaseFirestore.instance.collection('Meal-Admin');
+final CollectionReference fingerCollectionToday = FirebaseFirestore.instance.collection('Finger_Data_Todays');
+final CollectionReference rfCollectionToday = FirebaseFirestore.instance.collection('RF_Data_Todays');
+final CollectionReference fingerCollectionTomorrow = FirebaseFirestore.instance.collection('Finger_Data_Tomorrow');
+final CollectionReference rfCollectionTomorrow = FirebaseFirestore.instance.collection('RF_Data_Tomorrow');
+final CollectionReference mealRateCollection = FirebaseFirestore.instance.collection('mealRate');
 
 class AppConstant {
   // API BASE URL
@@ -69,25 +79,25 @@ class AppConstant {
   static const String latestVersionUri = '/latest-version/';
   static const String helpDiskURI = '/settings/help-desk/';
 
+  static const String currencyURI = 'currency';
+
   // Shared Key
+  // Shared Key
+  static const String studentID = 'StudentID';
+  static const String userEmail = 'user_email';
+  static const String userPassword = 'user_password';
+
   static const String theme = 'theme';
-  static const String light = 'light';
-  static const String dark = 'dark';
   static const String token = 'token';
-  static const String offlineChatList = 'offlineChatList';
   static const String countryCode = 'country_code';
   static const String languageCode = 'language_code';
-  static const String selectLanguageIndex = 'select_language_index';
-  static const String userID = 'userID';
-  static const String userProfileImage = 'userprofile_image';
-  static const String userName = 'username';
-  static const String usercode = 'usercode';
-  static const String userEmail = 'useremail';
-  static const String postTypePage = 'page';
-  static const String postTypeGroup = 'group';
-  static const String postTypeTimeline = 'timeline';
-  static const String chats = 'chats';
-  static const Duration durationAnimation = Duration(seconds: 1);
+  static const String user = 'user';
+  static const String userEmail2 = 'user_email2';
+  static const String customerID = 'customerID';
+  static const String userName = 'userName';
+  static const String phoneNumber = 'phoneNumber';
+  static const String cartList = 'cart_list';
+  static const String currencyName = 'currencyName';
 
   static List<LanguageModel> languagesList = [
     LanguageModel(imageUrl: '', languageName: 'English', countryCode: 'US', languageCode: 'en'),
