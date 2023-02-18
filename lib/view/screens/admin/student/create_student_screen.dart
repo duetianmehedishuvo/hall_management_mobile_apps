@@ -210,7 +210,7 @@ class _CreateStudentScreenState extends State<CreateStudentScreen> {
                                         // userRoll: 0
                                     );
 
-                                    authProvider.addStudent(student);
+                                    // authProvider.addStudent(student);
                                   }
                                 },
                                 btnTxt: widget.isDetails ? "Update" : "Submit",

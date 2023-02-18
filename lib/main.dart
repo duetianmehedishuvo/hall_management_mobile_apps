@@ -1,9 +1,10 @@
+import 'package:duetstahall/view/screens/splash_screen.dart';
 import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/splash_provider.dart';
+import 'package:duetstahall/provider/student_provider.dart';
 import 'package:duetstahall/translations/codegen_loader.g.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/sizeConfig.dart';
-import 'package:duetstahall/view/screens/splash/splash_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
@@ -13,14 +14,15 @@ import 'di_container.dart' as di;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await di.init();
+
   await Firebase.initializeApp(
       options: const FirebaseOptions(
-          apiKey: 'AIzaSyApYaBMk_4CCIo_MfZ1wXdfJXOg6tvbUYU',
-          appId: '1:559204505268:android:d242f1330276752ba7a9e1',
-          messagingSenderId: '559204505268',
-          projectId: 'duet-sta-hall'));
+          apiKey: 'AIzaSyB3h7zgPwVOpK4uZGQyqZSRwfU-UWRcGCU',
+          appId: '1:170958571155:android:0f1d86d139c758457a2f66',
+          messagingSenderId: '170958571155',
+          projectId: 'duet-sta-hall-610b8'));
   await EasyLocalization.ensureInitialized();
+  await di.init();
   runApp(EasyLocalization(
       path: 'assets/lang',
       supportedLocales: const [Locale('en'), Locale('bn')],
@@ -31,6 +33,7 @@ void main() async {
         providers: [
           ChangeNotifierProvider(create: (context) => di.sl<SplashProvider>()),
           ChangeNotifierProvider(create: (context) => di.sl<AuthProvider>()),
+          ChangeNotifierProvider(create: (context) => di.sl<StudentProvider>()),
         ],
         child: const MyApp(),
       )));

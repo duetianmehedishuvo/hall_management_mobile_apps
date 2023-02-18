@@ -6,10 +6,13 @@ import 'package:duetstahall/dining/widgets/custom_loader.dart';
 import 'package:duetstahall/dining/widgets/custome_text_fields.dart';
 import 'package:duetstahall/dining/widgets/rounded_button.dart';
 import 'package:duetstahall/provider/auth_provider.dart';
+import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/sizeConfig.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/screens/auth/signup_screen.dart';
+import 'package:duetstahall/view/screens/student/student_dashboard_screen.dart';
 import 'package:duetstahall/view/widgets/snackbar_message.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
   late TextEditingController idController;
 
   late TextEditingController passwordController;
+  FocusNode idFocus = FocusNode();
+  FocusNode passwordFocus = FocusNode();
 
   @override
   void initState() {
@@ -34,8 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     idController = TextEditingController();
     passwordController = TextEditingController();
-    idController.text = Provider.of<AuthProvider>(context, listen: false).getUserEmail();
-    passwordController.text = Provider.of<AuthProvider>(context, listen: false).getUserPassword();
+    // idController.text = Provider.of<AuthProvider>(context, listen: false).getUserEmail();
+    // passwordController.text = Provider.of<AuthProvider>(context, listen: false).getUserPassword();
   }
 
   @override
@@ -85,10 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       autoPlayInterval: const Duration(seconds: 10),
                                       initialPage: 1),
                                   itemBuilder: (context, index, realIndex) {
-                                    return Image.asset(
-                                      banners[index],
-                                      fit: BoxFit.fill,
-                                    );
+                                    return Image.asset(banners[index], fit: BoxFit.fill);
                                   }),
                             ),
                             //login bottom sheet
@@ -98,10 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 margin: const EdgeInsets.only(left: 6, right: 6),
                                 decoration: const BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                         isShowBorder: true,
                                         verticalSize: 14,
                                         labelText: 'Student ID',
-                                        autoFillHints: AutofillHints.email),
+                                        focusNode: idFocus,
+                                        nextFocus: passwordFocus,
+                                        inputType: TextInputType.number,
+                                        autoFillHints: AutofillHints.telephoneNumber),
 
                                     //username
                                     SizedBox(height: SizeConfig.blockSizeVertical * 2),
@@ -125,6 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       isShowBorder: true,
                                       isShowSuffixIcon: true,
                                       labelText: 'Password',
+                                      focusNode: passwordFocus,
                                       inputAction: TextInputAction.done,
                                       autoFillHints: AutofillHints.password,
                                       isSaveAutoFillData: true,
@@ -172,38 +175,39 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 children: [
                                                   Expanded(
                                                     child: RoundedButton(
-                                                      // onPress: () => {
-                                                      //   if (emailController.text.isEmpty)
-                                                      //     {showCustomSnackBar('Student Email Filed is Required', context)}
-                                                      //   else if (passwordController.text.isEmpty)
-                                                      //     {showCustomSnackBar('Password field is Required', context)}
-                                                      //   else
-                                                      //     {
-                                                      //       authProvider.addAdmin(
-                                                      //           emailController.text, passwordController.text)
-                                                      //     }
-                                                      // },
                                                       onPress: () {
-                                                        authProvider
-                                                            .checkAdmin(
-                                                                idController.text, passwordController.text, authProvider.isActiveRememberMe)
-                                                            .then((value) {
-                                                          if (value) {
-                                                            Navigator.of(context).pushReplacement(
-                                                                MaterialPageRoute(builder: (_) => const AdminDashboardScreen()));
-                                                          } else {
-                                                            authProvider
-                                                                .checkStudent(idController.text, passwordController.text)
-                                                                .then((studentLoginStatus) {
-                                                              if (studentLoginStatus) {
-                                                                Navigator.of(context).pushReplacement(
-                                                                    MaterialPageRoute(builder: (_) => const UserDashboardScreen()));
-                                                              } else {
-                                                                showMessage('Could not login! please check student id and password');
-                                                              }
-                                                            });
-                                                          }
+                                                        authProvider.signIn(idController.text, passwordController.text).then((value) {
+                                                          if (value == true) {
+                                                            if (authProvider.studentModel1.role == 1) {
+                                                              Navigator.of(context).pushReplacement(
+                                                                  MaterialPageRoute(builder: (_) => const AdminDashboardScreen()));
+                                                            } else {
+                                                              Navigator.of(context).pushReplacement(
+                                                                  MaterialPageRoute(builder: (_) => const StudentDashboardScreen()));
+                                                            }
+                                                          } else {}
                                                         });
+
+                                                        // authProvider
+                                                        //     .checkAdmin(
+                                                        //         idController.text, passwordController.text, authProvider.isActiveRememberMe)
+                                                        //     .then((value) {
+                                                        //   if (value) {
+                                                        //     Navigator.of(context).pushReplacement(
+                                                        //         MaterialPageRoute(builder: (_) => const AdminDashboardScreen()));
+                                                        //   } else {
+                                                        //     authProvider
+                                                        //         .checkStudent(idController.text, passwordController.text)
+                                                        //         .then((studentLoginStatus) {
+                                                        //       if (studentLoginStatus) {
+                                                        //         Navigator.of(context).pushReplacement(
+                                                        //             MaterialPageRoute(builder: (_) => const UserDashboardScreen()));
+                                                        //       } else {
+                                                        //         showMessage('Could not login! please check student id and password');
+                                                        //       }
+                                                        //     });
+                                                        //   }
+                                                        // });
                                                       },
                                                       boarderRadius: 8,
                                                       backgroundColor: MaterialStateProperty.all(Colors.black),
@@ -216,6 +220,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 ],
                                               ),
                                               SizedBox(height: SizeConfig.blockSizeVertical * 2),
+
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Helper.toScreen(SignupScreen());
+                                                  },
+                                                  child: Text('Create a new Account'))
+
                                               //sign in with google
                                             ],
                                           )

@@ -22,7 +22,7 @@ class UserDashboardScreen extends StatefulWidget {
 class _UserDashboardScreenState extends State<UserDashboardScreen> {
   @override
   Widget build(BuildContext context) {
-    Provider.of<StudentProvider>(context, listen: false).initializeStudent(Provider.of<AuthProvider>(context, listen: false).getStudentID());
+    // Provider.of<StudentProvider>(context, listen: false).initializeStudent(Provider.of<AuthProvider>(context, listen: false).getStudentID());
     return WillPopScope(
       onWillPop: () {
         showAnimatedDialog(context, const GuestDialog(isLogin: true), isFlip: false);

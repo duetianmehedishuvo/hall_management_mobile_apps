@@ -1,5 +1,5 @@
 import 'package:duetstahall/dining/check_today_screen.dart';
-import 'package:duetstahall/dining/create_user_screen.dart';
+import 'package:duetstahall/view/screens/auth/signup_screen.dart';
 import 'package:duetstahall/dining/meal_rate_screen.dart';
 import 'package:duetstahall/dining/student_screen.dart';
 import 'package:duetstahall/dining/total_money.dart';
@@ -29,7 +29,7 @@ class AdminDashboardScreen extends StatelessWidget {
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            adminDashboardWidget(context, 'Add Student', const CreateUserScreen(), Icons.add),
+            adminDashboardWidget(context, 'Add Student', const SignupScreen(), Icons.add),
             adminDashboardWidget(context, 'Modify Student', const StudentScreen(), Icons.edit),
             adminDashboardWidget(context, 'Delete Student', const StudentScreen(isDelete: true), Icons.delete),
             adminDashboardWidget(context, 'Add Student Meal Quantity', const StudentScreen(isUpdateMealCount: true), Icons.edit_attributes),

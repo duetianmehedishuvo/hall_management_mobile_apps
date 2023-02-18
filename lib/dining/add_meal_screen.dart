@@ -155,15 +155,15 @@ class _AddMealScreenState extends State<AddMealScreen> {
               );
             });
 
-        Provider.of<AuthProvider>(context, listen: false).addStudent(studentModel).then((value) {
-          if (value) {
-            mealCountController.text = '';
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          } else {
-            showMessage('Meal Added Failed');
-          }
-        });
+        // Provider.of<AuthProvider>(context, listen: false).addStudent(studentModel).then((value) {
+        //   if (value) {
+        //     mealCountController.text = '';
+        //     Navigator.of(context).pop();
+        //     Navigator.of(context).pop();
+        //   } else {
+        //     showMessage('Meal Added Failed');
+        //   }
+        // });
       }
     } else {
       showMessage('Meal Count Field is required');

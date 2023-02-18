@@ -15,22 +15,16 @@ final CollectionReference mealRateCollection = FirebaseFirestore.instance.collec
 
 class AppConstant {
   // API BASE URL
-  static const agoraApiKey = "52aa6d82f3f14aa3bd36b7a0fb6648f4";
-  static const String baseUrl = 'https://testing.feedback-social.com';
-  static const String baseUrlTesting = 'https://testing.feedback-social.com';
-  static const String baseUrlLive = 'https://feedback-social.com';
+  static const String baseUrl = 'https://evue.in/shuvo/api/';
+  static const String imageBaseUrl = 'https://evue.in/shuvo/images/';
+  static const String loginURI = 'login';
+  static const String signUPURI = 'register';
+  static const String logoutURI = 'logout';
+  static const String setNewPasswordURI = 'resetPassword';
 
-  static const String socketBaseUrl = 'wss://testing.feedback-social.com/';
-  static const String socketBaseUrlTesting = 'wss://testing.feedback-social.com/';
-  static const String socketBaseUrlLive = 'wss://feedback-social.com/';
 
-  static const String oldBaseUrl = 'https://als-social.com';
-
-  static const String loginURI = '/accounts/signin/';
-  static const String signupURI = '/accounts/signup/';
   static const String otpSendURI = '/accounts/otp/send/';
   static const String resetOtpSendURI = '/accounts/password/reset/';
-  static const String setNewPasswordURI = '/accounts/password/reset/confirm/';
   static const String otpVerifyURI = '/accounts/otp/verify/';
   static const String sendFriendRequestURI = '/accounts/friends/send-friend-request/';
   static const String cancelFriendRequestURI = '/accounts/friends/cancel-friend-request/';
@@ -79,15 +73,13 @@ class AppConstant {
   static const String latestVersionUri = '/latest-version/';
   static const String helpDiskURI = '/settings/help-desk/';
 
-  static const String currencyURI = 'currency';
 
-  // Shared Key
   // Shared Key
   static const String studentID = 'StudentID';
-  static const String userEmail = 'user_email';
   static const String userPassword = 'user_password';
-
   static const String theme = 'theme';
+  static const String userStatus = 'userStatus';
+  static const String ammount = 'ammount';
   static const String token = 'token';
   static const String countryCode = 'country_code';
   static const String languageCode = 'language_code';

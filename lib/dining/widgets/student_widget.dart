@@ -1,7 +1,7 @@
 
 import 'package:duetstahall/data/model/response/student_model.dart';
 import 'package:duetstahall/dining/add_meal_screen.dart';
-import 'package:duetstahall/dining/create_user_screen.dart';
+import 'package:duetstahall/view/screens/auth/signup_screen.dart';
 import 'package:duetstahall/dining/widgets/animated_custom_dialog.dart';
 import 'package:duetstahall/dining/widgets/guest_dialog.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
@@ -16,7 +16,7 @@ Widget studentWidget(BuildContext context, StudentModel studentModel, bool isUpd
       } else if (isDelete) {
         showAnimatedDialog(context, GuestDialog(isRemove: true, studentID: studentModel.studentID!), isFlip: false);
       } else {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => CreateUserScreen(isDetails: true, studentModel: studentModel)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => SignupScreen(isDetails: true, studentModel: studentModel)));
       }
     },
     child: Container(

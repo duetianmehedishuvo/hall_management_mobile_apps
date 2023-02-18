@@ -8,7 +8,7 @@ import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../signin.dart';
+import '../../view/screens/auth/signin_screen.dart';
 
 class GuestDialog extends StatelessWidget {
   final bool isLogin;

@@ -1,42 +1,159 @@
+import 'package:dio/dio.dart';
+import 'package:duetstahall/data/datasource/remote/dio/dio_client.dart';
+import 'package:duetstahall/data/datasource/remote/exception/api_error_handler.dart';
+import 'package:duetstahall/data/model/response/base/api_response.dart';
 import 'package:duetstahall/util/app_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+double progressPercent = 0;
+
 class AuthRepo {
+  final DioClient dioClient;
   final SharedPreferences sharedPreferences;
 
-  AuthRepo({required this.sharedPreferences});
+  AuthRepo({required this.dioClient, required this.sharedPreferences});
 
-  Future<void> saveStudentID(String studentID) async {
+  Response response = Response(requestOptions: RequestOptions(path: '22222'));
+
+  Future<ApiResponse> login(String studentId, String password) async {
     try {
-      await sharedPreferences.setString(AppConstant.studentID, studentID);
+      Map map = {};
+      map.addAll({"studentID": studentId});
+      map.addAll({'password': password});
+      response = await dioClient.post(AppConstant.loginURI, data: map);
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
+
+  Future<ApiResponse> signup(
+      String studentID,
+      String name,
+      String department,
+      String phoneNumber,
+      String bloodGroup,
+      String password,
+      String details,
+      String homeTown,
+      String researchArea,
+      String jobPosition,
+      String futureGoal,
+      String whatssApp,
+      String email,
+      String motive) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+    try {
+      Map map = {};
+      map.addAll({
+        "studentID": studentID,
+        "name": name,
+        "department": department,
+        "phoneNumber": phoneNumber,
+        "bloodGroup": bloodGroup,
+        "password": password,
+        "details": details,
+        "homeTown": homeTown,
+        "researchArea": researchArea,
+        "jobPosition": jobPosition,
+        "futureGoal": futureGoal,
+        "whatssApp": whatssApp,
+        "email": email,
+        "motive": motive
+      });
+      response = await dioClient.post(AppConstant.signUPURI, data: map);
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
+
+  Future<ApiResponse> setNewPassword(String password, String newPassword) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+    try {
+      Map map = {};
+
+      map.addAll({"password": password, "newPassword": newPassword});
+      response = await dioClient.post(AppConstant.setNewPasswordURI, data: map);
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
+
+  //TODO: for save User Information
+  Future<void> saveUserInformation(String userID, String name, String amount, int status) async {
+    try {
+      await sharedPreferences.setString(AppConstant.studentID, userID);
+      await sharedPreferences.setString(AppConstant.userName, name);
+      await sharedPreferences.setString(AppConstant.ammount, amount);
+      await sharedPreferences.setInt(AppConstant.userStatus, status);
+      getUserName();
+      getStudentID();
+      getUserStatus();
+      getAmount();
     } catch (e) {
       rethrow;
     }
   }
 
+  Future<void> changeUserName(String value) async {
+    try {
+      await sharedPreferences.setString(AppConstant.userName, value);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //TODO:: for get User Information
   String getStudentID() {
-    return sharedPreferences.getString(AppConstant.studentID) ?? '';
+    return sharedPreferences.getString(AppConstant.studentID) ?? "";
   }
 
-  Future<void> saveUserEmailAndPassword(String email, String password) async {
+  String getUserName() {
+    return sharedPreferences.getString(AppConstant.userName) ?? "";
+  }
+
+  // TODO; clear all user Information
+  Future<bool> clearUserInformation() async {
+    await sharedPreferences.remove(AppConstant.studentID);
+    await sharedPreferences.remove(AppConstant.userName);
+    return await sharedPreferences.remove(AppConstant.userStatus);
+  }
+
+  // for  user token
+  Future<void> saveUserToken(String token) async {
+    dioClient.token = token;
+    dioClient.dio!.options.headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'};
+
     try {
-      await sharedPreferences.setString(AppConstant.userEmail, email);
-      await sharedPreferences.setString(AppConstant.userPassword, password);
+      await sharedPreferences.setString(AppConstant.token, token);
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<bool> clearUserEmailAndPassword() async {
-    await sharedPreferences.remove(AppConstant.userPassword);
-    return await sharedPreferences.remove(AppConstant.userEmail);
+  bool checkTokenExist() {
+    return sharedPreferences.containsKey(AppConstant.token);
   }
 
-  String getUserPassword() {
-    return sharedPreferences.getString(AppConstant.userPassword) ?? "";
+  String getUserToken() {
+    return sharedPreferences.getString(AppConstant.token) ?? "";
   }
 
-  String getUserEmail() {
-    return sharedPreferences.getString(AppConstant.userEmail) ?? "";
+  String getAmount() {
+    return sharedPreferences.getString(AppConstant.ammount) ?? "0";
+  }
+
+  int getUserStatus() {
+    return sharedPreferences.getInt(AppConstant.userStatus) ?? -1;
+  }
+
+  bool isLoggedIn() {
+    return sharedPreferences.containsKey(AppConstant.token);
+  }
+
+  Future<bool> clearToken() async {
+    return sharedPreferences.remove(AppConstant.token);
   }
 }
