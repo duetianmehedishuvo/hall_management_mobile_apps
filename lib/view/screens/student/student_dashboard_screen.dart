@@ -1,5 +1,5 @@
 import 'package:duetstahall/provider/auth_provider.dart';
-import 'package:duetstahall/provider/student_provider.dart';
+import 'package:duetstahall/provider/room_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
@@ -78,7 +78,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       child: InkWell(
         onTap: () {
           Helper.toScreen(nextWidget);
-          Provider.of<StudentProvider>(context, listen: false).changeFloors(1);
+          Provider.of<RoomProvider>(context, listen: false).changeFloors(1);
         },
         child: Container(
           padding: const EdgeInsets.all(10),

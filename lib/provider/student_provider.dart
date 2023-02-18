@@ -470,24 +470,4 @@ class StudentProvider with ChangeNotifier {
 
   ///////TODO for New Data
 
-  // for Blood Group Dropdown
-  List<int> floorsLists = [1, 2, 3, 4, 5, 6, 7, 8];
-  int selectedFloors = 1;
-  List<int> roomLists = [];
-
-  changeFloors(int value) {
-    selectedFloors = value;
-    generateRooms();
-    notifyListeners();
-  }
-
-  generateRooms() {
-    roomLists.clear();
-    roomLists = [];
-    int i = selectedFloors * 100;
-    for (int j = 1; j <= 25; j++) {
-      roomLists.add(i + j);
-    }
-    notifyListeners();
-  }
 }

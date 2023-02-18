@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
+import 'package:duetstahall/provider/room_provider.dart';
 import 'package:duetstahall/provider/student_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/screens/student/roomStudent/room_details_screen.dart';
 import 'package:duetstahall/view/widgets/custom_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -43,8 +45,8 @@ class _RoomStudentFirstScreenState extends State<RoomStudentFirstScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const CustomAppBar(title: 'Room/Student History'),
-        body: Consumer<StudentProvider>(
-          builder: (context, studentProvider, child) => Padding(
+        body: Consumer<RoomProvider>(
+          builder: (context, roomProvider, child) => Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Column(
               children: [
@@ -88,15 +90,15 @@ class _RoomStudentFirstScreenState extends State<RoomStudentFirstScreen> {
                           children: [
                             const Expanded(child: Text('Select Floors: ', style: headline4)),
                             DropdownButton<int>(
-                              items: studentProvider.floorsLists.map((dep) {
+                              items: roomProvider.floorsLists.map((dep) {
                                 return DropdownMenuItem<int>(
                                     value: dep, child: Text(dep.toString(), style: headline4, textAlign: TextAlign.center));
                               }).toList(),
                               underline: const SizedBox.shrink(),
                               isExpanded: false,
-                              value: studentProvider.selectedFloors,
+                              value: roomProvider.selectedFloors,
                               onChanged: (value) async {
-                                studentProvider.changeFloors(value!);
+                                roomProvider.changeFloors(value!);
                               },
                             ),
                           ],
@@ -109,34 +111,41 @@ class _RoomStudentFirstScreenState extends State<RoomStudentFirstScreen> {
                         child: CustomButton(
                           btnTxt: 'GO',
                           onTap: () {
-                            studentProvider.generateRooms();
+                            roomProvider.generateRooms();
                           },
                           radius: 100,
                         ))
                   ],
                 ),
+                SizedBox(height: 5),
                 Expanded(
-                  child: Container(
-                      padding: const EdgeInsets.all(12.0),
-                      child: GridView.builder(
-                        itemCount: studentProvider.roomLists.length,
-                        physics: const BouncingScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 4.0, mainAxisSpacing: 4.0),
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [colorCollection[Random().nextInt(9)], colorCollection[Random().nextInt(9)]]),
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Center(
-                                child: Text('${studentProvider.roomLists[index]}',
-                                    style: robotoStyle700Bold.copyWith(color: Colors.white, fontSize: 14))),
-                          );
+                  child: GridView.builder(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    itemCount: roomProvider.roomLists.length,
+                    physics: const BouncingScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 4.0, mainAxisSpacing: 4.0),
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          roomProvider.selectRooms(roomProvider.roomLists[index]);
+                          Helper.toScreen(RoomDetailsScreen());
+                          roomProvider.getRoomInfo();
                         },
-                      )),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [colorCollection[Random().nextInt(9)], colorCollection[Random().nextInt(9)]]),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Center(
+                              child: Text('${roomProvider.roomLists[index]}',
+                                  style: robotoStyle700Bold.copyWith(color: Colors.white, fontSize: 14))),
+                        ),
+                      );
+                    },
+                  ),
                 )
               ],
             ),

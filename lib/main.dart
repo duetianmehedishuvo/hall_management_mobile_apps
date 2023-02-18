@@ -1,15 +1,16 @@
-import 'package:duetstahall/view/screens/splash_screen.dart';
 import 'package:duetstahall/provider/auth_provider.dart';
+import 'package:duetstahall/provider/room_provider.dart';
 import 'package:duetstahall/provider/splash_provider.dart';
 import 'package:duetstahall/provider/student_provider.dart';
 import 'package:duetstahall/translations/codegen_loader.g.dart';
 import 'package:duetstahall/util/helper.dart';
-import 'package:duetstahall/util/sizeConfig.dart';
+import 'package:duetstahall/view/screens/splash_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'di_container.dart' as di;
 
 void main() async {
@@ -34,6 +35,7 @@ void main() async {
           ChangeNotifierProvider(create: (context) => di.sl<SplashProvider>()),
           ChangeNotifierProvider(create: (context) => di.sl<AuthProvider>()),
           ChangeNotifierProvider(create: (context) => di.sl<StudentProvider>()),
+          ChangeNotifierProvider(create: (context) => di.sl<RoomProvider>()),
         ],
         child: const MyApp(),
       )));
@@ -44,7 +46,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'DUET STA-Hall',
       supportedLocales: context.supportedLocales,
