@@ -4,7 +4,6 @@ import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/dining/widgets/custom_loader.dart';
 import 'package:duetstahall/dining/widgets/custome_text_fields.dart';
 import 'package:duetstahall/dining/widgets/settings_button.dart';
-import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/student_provider.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
