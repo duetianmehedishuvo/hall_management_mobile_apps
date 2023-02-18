@@ -64,8 +64,8 @@ class CustomButton extends StatelessWidget {
 
   const CustomButton(
       {this.onTap,
-      @required this.btnTxt,
-      this.backgroundColor = kSecondaryColor,
+      required this.btnTxt,
+      this.backgroundColor = AppColors.primaryColorLight,
       this.height = 45.0,
       this.fontSize = 14.0,
       this.isStroked = false,
@@ -98,7 +98,8 @@ class CustomButton extends StatelessWidget {
             Expanded(
                 child: Text(
               btnTxt!,
-              style: latoStyle500Medium.copyWith(color: textWhiteColor! ? AppColors.whiteColorLight : AppColors.black, fontSize: fontSize),
+              style:
+                  robotoStyle500Medium.copyWith(color: textWhiteColor! ? AppColors.whiteColorLight : AppColors.black, fontSize: fontSize),
               textAlign: TextAlign.center,
             )),
             isShowRightIcon! ? Icon(rightIcon(context), color: isStroked! ? Colors.red : Colors.white) : const SizedBox.shrink()

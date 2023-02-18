@@ -218,8 +218,12 @@ class StudentProvider with ChangeNotifier {
         if (date['guest_meal'] != 0) {
           guestMealCount++;
         }
-        allMeals.add(
-            <String, dynamic>{'student_id': date['student_id'], 'room_no': date['room_no'], 'name': date['name'], 'guest_meal': date['guest_meal']});
+        allMeals.add(<String, dynamic>{
+          'student_id': date['student_id'],
+          'room_no': date['room_no'],
+          'name': date['name'],
+          'guest_meal': date['guest_meal']
+        });
       }
       Map<String, dynamic> fingerData = {};
       Map<String, dynamic> rfData = {};
@@ -348,12 +352,12 @@ class StudentProvider with ChangeNotifier {
       updateMealData(isIncrement: isGuestMessage ? !isGuestMeal : isGuestMeal);
       if (isGuestMessage) {
         if (isGuestMeal) {
-          showMessage('Guest Meal Added Successfully: $dateTime. Press Refresh Button for Get Update',  isError: false);
+          showMessage('Guest Meal Added Successfully: $dateTime. Press Refresh Button for Get Update', isError: false);
         } else {
-          showMessage('Guest Meal Removed Successfully: $dateTime. Press Refresh Button for Get Update',  isError: false);
+          showMessage('Guest Meal Removed Successfully: $dateTime. Press Refresh Button for Get Update', isError: false);
         }
       } else {
-        showMessage('Successfully Added Date: $dateTime',  isError: false);
+        showMessage('Successfully Added Date: $dateTime', isError: false);
       }
 
       notifyListeners();
@@ -379,7 +383,7 @@ class StudentProvider with ChangeNotifier {
       }
     });
 
-    showMessage('Remove Successfully Date: $dateTime',  isError: false);
+    showMessage('Remove Successfully Date: $dateTime', isError: false);
     notifyListeners();
   }
 
@@ -428,7 +432,7 @@ class StudentProvider with ChangeNotifier {
       });
     }
 
-    showMessage('Student Remove Successfully.',  isError: false);
+    showMessage('Student Remove Successfully.', isError: false);
     notifyListeners();
   }
 
@@ -454,9 +458,7 @@ class StudentProvider with ChangeNotifier {
           }
         }
         totalStudentMeal = totalStudentMeal;
-
       });
-
     }
     // notifyListeners();
   }
@@ -464,5 +466,28 @@ class StudentProvider with ChangeNotifier {
   addMealRate(int mealRate) async {
     //TODO for save user record
     await mealRateCollection.doc('meal_rate').set({'meal-rate': mealRate});
+  }
+
+  ///////TODO for New Data
+
+  // for Blood Group Dropdown
+  List<int> floorsLists = [1, 2, 3, 4, 5, 6, 7, 8];
+  int selectedFloors = 1;
+  List<int> roomLists = [];
+
+  changeFloors(int value) {
+    selectedFloors = value;
+    generateRooms();
+    notifyListeners();
+  }
+
+  generateRooms() {
+    roomLists.clear();
+    roomLists = [];
+    int i = selectedFloors * 100;
+    for (int j = 1; j <= 25; j++) {
+      roomLists.add(i + j);
+    }
+    notifyListeners();
   }
 }

@@ -158,6 +158,7 @@ class _CreateStudentScreenState extends State<CreateStudentScreen> {
                                       onTap: () {
                                         // authProvider.selectDate();
                                       },
+                                    btnTxt: '',
                                       radius: 15,
                                       backgroundColor: AppColors.imageBGColorLight,
                                       textWhiteColor: false,

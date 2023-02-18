@@ -1,7 +1,10 @@
 import 'package:duetstahall/provider/auth_provider.dart';
+import 'package:duetstahall/provider/student_provider.dart';
+import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/screens/student/roomStudent/room_student_firstscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -57,49 +60,42 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(color: Colors.grey.withOpacity(.2), blurRadius: 10.0, spreadRadius: 3.0, offset: const Offset(0.0, 0.0))
-                          ],
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          SvgPicture.asset(ImagesModel.newRoom, height: 80),
-                          const SizedBox(height: 10),
-                          const Text('Room/Student History', style: headline4,textAlign: TextAlign.center)
-                        ],
-                      ),
-                    ),
-                  ),
+                  menuWidget(ImagesModel.newRoom, 'Room/Student History', RoomStudentFirstScreen()),
                   const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(color: Colors.grey.withOpacity(.2), blurRadius: 10.0, spreadRadius: 3.0, offset: const Offset(0.0, 0.0))
-                          ],
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          SvgPicture.asset(ImagesModel.newCookingIcons, height: 86),
-                          const SizedBox(height: 15),
-                          const Text('Meal', style: headline4,textAlign: TextAlign.center)
-                        ],
-                      ),
-                    ),
-                  ),
+                  menuWidget(ImagesModel.newCookingIcons, 'Meal', Container(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget menuWidget(String imageUrl, String title, Widget nextWidget,
+      {double firstHeight = 10, double secondHeight = 10, double thirdHeight = 10, double imageHeight = 80}) {
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          Helper.toScreen(nextWidget);
+          Provider.of<StudentProvider>(context, listen: false).changeFloors(1);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(color: Colors.grey.withOpacity(.2), blurRadius: 10.0, spreadRadius: 3.0, offset: const Offset(0.0, 0.0))
+              ],
+              borderRadius: BorderRadius.circular(10)),
+          child: Column(
+            children: [
+              SizedBox(height: firstHeight),
+              SvgPicture.asset(imageUrl, height: imageHeight),
+              SizedBox(height: secondHeight),
+              Text(title, style: headline4, textAlign: TextAlign.center)
+            ],
+          ),
         ),
       ),
     );

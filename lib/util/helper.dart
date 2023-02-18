@@ -9,6 +9,15 @@ showLog(message) {
   log("APP SAYS: $message");
 }
 
+
+double screenHeight() {
+  return MediaQuery.of(Helper.navigatorKey.currentState!.context).size.height;
+}
+
+double screenWeight() {
+  return MediaQuery.of(Helper.navigatorKey.currentState!.context).size.width;
+}
+
 class Helper {
   static final navigatorKey = GlobalKey<NavigatorState>();
 
