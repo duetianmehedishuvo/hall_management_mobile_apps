@@ -42,7 +42,6 @@ class AuthRepo {
       String whatssApp,
       String email,
       String motive) async {
-    Response response = Response(requestOptions: RequestOptions(path: '22222'));
     try {
       Map map = {};
       map.addAll({
@@ -62,6 +61,44 @@ class AuthRepo {
         "motive": motive
       });
       response = await dioClient.post(AppConstant.signUPURI, data: map);
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
+  Future<ApiResponse> updateStudentInfo(
+      String studentID,
+      String name,
+      String department,
+      String phoneNumber,
+      String bloodGroup,
+      String details,
+      String homeTown,
+      String researchArea,
+      String jobPosition,
+      String futureGoal,
+      String whatssApp,
+      String email,
+      String motive) async {
+
+    try {
+      Map map = {};
+      map.addAll({
+        "studentID": studentID,
+        "name": name,
+        "department": department,
+        "phoneNumber": phoneNumber,
+        "bloodGroup": bloodGroup,
+        "details": details,
+        "homeTown": homeTown,
+        "researchArea": researchArea,
+        "jobPosition": jobPosition,
+        "futureGoal": futureGoal,
+        "whatssApp": whatssApp,
+        "email": email,
+        "motive": motive
+      });
+      response = await dioClient.post(AppConstant.updateUser, data: map);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);

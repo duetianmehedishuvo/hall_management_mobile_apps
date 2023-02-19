@@ -1,10 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:duetstahall/data/model/response/student_model.dart';
+import 'package:duetstahall/data/model/response/student_model1.dart';
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/dining/widgets/custom_loader.dart';
 import 'package:duetstahall/dining/widgets/custome_text_fields.dart';
 import 'package:duetstahall/dining/widgets/rounded_button.dart';
 import 'package:duetstahall/provider/auth_provider.dart';
+import 'package:duetstahall/provider/student_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/sizeConfig.dart';
@@ -17,7 +18,7 @@ import 'package:provider/provider.dart';
 
 class SignupScreen extends StatefulWidget {
   final bool isDetails;
-  final StudentModel? studentModel;
+  final StudentModel1? studentModel;
 
   const SignupScreen({this.isDetails = false, this.studentModel, Key? key}) : super(key: key);
 
@@ -57,7 +58,7 @@ class _SignupScreenState extends State<SignupScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    idController= TextEditingController();
+    idController = TextEditingController();
     nameController = TextEditingController();
     phoneController = TextEditingController();
     detailsController = TextEditingController();
@@ -71,10 +72,17 @@ class _SignupScreenState extends State<SignupScreen> {
     passwordController = TextEditingController();
 
     if (widget.isDetails) {
-      idController.text = widget.studentModel!.studentID!;
+      idController.text = widget.studentModel!.studentID!.toString();
       nameController.text = widget.studentModel!.name!;
       phoneController.text = widget.studentModel!.phoneNumber!;
-      passwordController.text = widget.studentModel!.password!;
+      detailsController.text = widget.studentModel!.details.toString();
+      homeTownController.text = widget.studentModel!.homeTown!;
+      thesisTopicController.text = widget.studentModel!.researchArea!;
+      jobPositionController.text = widget.studentModel!.jobPosition!;
+      futureGoalController.text = widget.studentModel!.futureGoal!;
+      motiveController.text = widget.studentModel!.motive!;
+      emailController.text = widget.studentModel!.email!;
+      whatsAppController.text = widget.studentModel!.whatssApp!;
     }
   }
 
@@ -82,7 +90,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryColorLight,
-      appBar: CustomAppBar(title: widget.isDetails ? "Details Student" : "Create Student Database"),
+      appBar: CustomAppBar(title: widget.isDetails ? "Update Your Bio" : "Create Account"),
       body: AutofillGroup(
         child: Consumer<AuthProvider>(
             builder: (context, authProvider, child) => GestureDetector(
@@ -107,7 +115,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(child: Text('Departments: ', style: headline4)),
+                              const Expanded(child: Text('Departments: ', style: headline4)),
                               DropdownButton<String>(
                                 items: authProvider.departments.map((dep) {
                                   return DropdownMenuItem<String>(
@@ -268,21 +276,23 @@ class _SignupScreenState extends State<SignupScreen> {
                             maxLines: 3,
                             nextFocus: passwordFocus,
                             verticalSize: 14),
-                        SizedBox(height: SizeConfig.blockSizeVertical * 2),
+                        widget.isDetails ? SizedBox() : SizedBox(height: SizeConfig.blockSizeVertical * 2),
 
                         //password
-                        CustomTextField(
-                          hintText: 'Password',
-                          controller: passwordController,
-                          isPassword: true,
-                          isShowBorder: true,
-                          focusNode: passwordFocus,
-                          isShowSuffixIcon: true,
-                          labelText: 'Password',
-                          inputAction: TextInputAction.done,
-                          autoFillHints: AutofillHints.password,
-                          isSaveAutoFillData: true,
-                        ),
+                        widget.isDetails
+                            ? SizedBox()
+                            : CustomTextField(
+                                hintText: 'Password',
+                                controller: passwordController,
+                                isPassword: true,
+                                isShowBorder: true,
+                                focusNode: passwordFocus,
+                                isShowSuffixIcon: true,
+                                labelText: 'Password',
+                                inputAction: TextInputAction.done,
+                                autoFillHints: AutofillHints.password,
+                                isSaveAutoFillData: true,
+                              ),
                         SizedBox(height: SizeConfig.blockSizeVertical * 2),
 
                         !authProvider.isLoading
@@ -293,36 +303,50 @@ class _SignupScreenState extends State<SignupScreen> {
                                       Expanded(
                                         child: RoundedButton(
                                           onPress: () {
+                                            String studentID = idController.text;
+                                            String name = nameController.text;
+                                            String phoneNumber = phoneController.text;
+                                            String details = detailsController.text;
+                                            String homeTown = homeTownController.text;
+                                            String thesisTopic = thesisTopicController.text;
+                                            String jobPosition = jobPositionController.text;
+                                            String futureGoal = futureGoalController.text;
+                                            String motive = motiveController.text;
+                                            String email = emailController.text;
+                                            String whatsApp = whatsAppController.text;
+                                            String password = passwordController.text;
+
                                             if (idController.text.isEmpty) {
                                               showMessage('Student ID fill Required');
                                             } else if (nameController.text.isEmpty) {
                                               showMessage('name Fields is Required');
                                             } else if (phoneController.text.isEmpty) {
                                               showMessage('phone Fields is Required');
-                                            } else if (passwordController.text.isEmpty) {
-                                              showMessage('password Fields is Required');
                                             } else {
-                                              String studentID = idController.text;
-                                              String name = nameController.text;
-                                              String phoneNumber = phoneController.text;
-                                              String details = detailsController.text;
-                                              String homeTown = homeTownController.text;
-                                              String thesisTopic = thesisTopicController.text;
-                                              String jobPosition = jobPositionController.text;
-                                              String futureGoal = futureGoalController.text;
-                                              String motive = motiveController.text;
-                                              String email = emailController.text;
-                                              String whatsApp = whatsAppController.text;
-                                              String password = passwordController.text;
-
-                                              authProvider
-                                                  .signup(studentID, name, phoneNumber, password, details, homeTown, thesisTopic,
-                                                      jobPosition, futureGoal, whatsApp, email, motive)
-                                                  .then((value) {
-                                                if (value == true) {
-                                                  Helper.back();
+                                              if (widget.isDetails) {
+                                                authProvider
+                                                    .updateStudentInfo(studentID, name, phoneNumber, details, homeTown, thesisTopic,
+                                                        jobPosition, futureGoal, whatsApp, email, motive)
+                                                    .then((value) {
+                                                  if (value == true) {
+                                                    Provider.of<StudentProvider>(context, listen: false).getStudentInfoByID(studentID);
+                                                    Helper.back();
+                                                  }
+                                                });
+                                              } else {
+                                                if (passwordController.text.isEmpty) {
+                                                  showMessage('password Fields is Required');
+                                                } else {
+                                                  authProvider
+                                                      .signup(studentID, name, phoneNumber, password, details, homeTown, thesisTopic,
+                                                          jobPosition, futureGoal, whatsApp, email, motive)
+                                                      .then((value) {
+                                                    if (value == true) {
+                                                      Helper.back();
+                                                    }
+                                                  });
                                                 }
-                                              });
+                                              }
                                             }
                                           },
                                           boarderRadius: 8,

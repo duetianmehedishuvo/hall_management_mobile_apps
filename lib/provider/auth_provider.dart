@@ -49,6 +49,33 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  //TODO:: for update Student Info
+
+  Future<bool> updateStudentInfo(String studentID, String name, String phoneNumber, String details, String homeTown, String researchArea,
+      String jobPosition, String futureGoal, String whatssApp, String email, String motive) async {
+    _isLoading = true;
+    notifyListeners();
+    ApiResponse apiResponse = await authRepo.updateStudentInfo(studentID, name, selectedDepartments, phoneNumber, selectedBlood, details,
+        homeTown, researchArea, jobPosition, futureGoal, whatssApp, email, motive);
+    _isLoading = false;
+    notifyListeners();
+    if (apiResponse.response.statusCode == 200) {
+      showMessage(apiResponse.response.data['message'], isError: false);
+      notifyListeners();
+      return true;
+    } else {
+      String errorMessage;
+      if (apiResponse.error is String) {
+        errorMessage = apiResponse.error.toString();
+      } else {
+        ErrorResponse errorResponse = apiResponse.error;
+        errorMessage = errorResponse.toString();
+      }
+      showMessage(errorMessage, isError: true);
+      return false;
+    }
+  }
+
   //TODO:: for reset password in Section
   //
   // Future resetPasswordConfirm(String emailOrPhone, String newPassword, String code, Function callback) async {
@@ -243,6 +270,12 @@ class AuthProvider with ChangeNotifier {
   // for Department Dropdown
   List<String> departments = ["CSE", "EEE", "CE", "IP", "ME", "MME", "CFE", "TE", "ARCE"];
   String selectedDepartments = "CSE";
+
+  initializeBloodAndDepartments(String blood, String department) {
+    selectedDepartments = department;
+    selectedBlood = blood;
+    notifyListeners();
+  }
 
   changeDepartments(String value) {
     selectedDepartments = value;

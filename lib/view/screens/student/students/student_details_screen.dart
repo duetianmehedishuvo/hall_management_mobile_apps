@@ -37,7 +37,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
 Widget studentDetailsView(StudentProvider studentProvider) {
   return Padding(
-    padding: const EdgeInsets.all(15),
+    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -65,6 +65,8 @@ Widget studentDetailsView(StudentProvider studentProvider) {
                         singleItemWithKeyValue("Student-ID:", studentProvider.studentModel1.studentID!.toString()),
                         const Divider(),
                         singleItemWithKeyValue("Hometown:", capitalize(studentProvider.studentModel1.homeTown!)),
+                        const Divider(),
+                        singleItemWithKeyValue("Blood Group:", capitalize(studentProvider.studentModel1.bloodGroup!)),
                         const Divider(),
                         singleItemWithKeyValueAndCopy("Phone No:", studentProvider.studentModel1.phoneNumber!.toString()),
                         const Divider(),

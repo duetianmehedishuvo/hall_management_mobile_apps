@@ -16,7 +16,7 @@ Widget studentWidget(BuildContext context, StudentModel studentModel, bool isUpd
       } else if (isDelete) {
         showAnimatedDialog(context, GuestDialog(isRemove: true, studentID: studentModel.studentID!), isFlip: false);
       } else {
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => SignupScreen(isDetails: true, studentModel: studentModel)));
+        // Navigator.of(context).push(MaterialPageRoute(builder: (_) => SignupScreen(isDetails: true, studentModel: studentModel)));
       }
     },
     child: Container(

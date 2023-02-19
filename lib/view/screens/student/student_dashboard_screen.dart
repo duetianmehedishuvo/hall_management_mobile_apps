@@ -5,6 +5,7 @@ import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/student/roomStudent/room_student_firstscreen.dart';
+import 'package:duetstahall/view/screens/student/students/my_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,13 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
         elevation: 0,
         centerTitle: true,
         backgroundColor: AppColors.primaryColorLight,
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.settings))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                Helper.toScreen(MyProfileScreen(Provider.of<AuthProvider>(context, listen: false).studentID));
+              },
+              icon: const Icon(Icons.settings))
+        ],
       ),
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) => ListView(
