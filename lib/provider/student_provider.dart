@@ -508,4 +508,5 @@ class StudentProvider with ChangeNotifier {
     isSelectBasicInfo = value;
     notifyListeners();
   }
+
 }

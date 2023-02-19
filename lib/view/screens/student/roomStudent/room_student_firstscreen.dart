@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/provider/room_provider.dart';
-import 'package:duetstahall/provider/student_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
@@ -60,7 +59,7 @@ class _RoomStudentFirstScreenState extends State<RoomStudentFirstScreen> {
                       SizedBox(
                           width: screenWeight() * 0.45,
                           child: CustomButton(
-                            btnTxt: 'Search Student',
+                            btnTxt: checkIsAdmin == true ? "Add Room Students" : "Search Student",
                             onTap: () {},
                           )),
                     ],
@@ -69,9 +68,15 @@ class _RoomStudentFirstScreenState extends State<RoomStudentFirstScreen> {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    const Expanded(child: Text('----------------------------------------------', maxLines: 1)),
+                    const Expanded(
+                        child: Text(
+                            '----------------------------------------------------------------------------------------------------------------------------------------------------',
+                            maxLines: 1)),
                     Text(' OR ', style: robotoStyle700Bold),
-                    const Expanded(child: Text('----------------------------------------------', maxLines: 1)),
+                    const Expanded(
+                        child: Text(
+                            '------------------------------------------------------------------------------------------------------------------------------------------',
+                            maxLines: 1)),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -117,10 +122,10 @@ class _RoomStudentFirstScreenState extends State<RoomStudentFirstScreen> {
                         ))
                   ],
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Expanded(
                   child: GridView.builder(
-                    padding: EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     itemCount: roomProvider.roomLists.length,
                     physics: const BouncingScrollPhysics(),
                     gridDelegate:
@@ -129,7 +134,7 @@ class _RoomStudentFirstScreenState extends State<RoomStudentFirstScreen> {
                       return InkWell(
                         onTap: () {
                           roomProvider.selectRooms(roomProvider.roomLists[index]);
-                          Helper.toScreen(RoomDetailsScreen());
+                          Helper.toScreen(const RoomDetailsScreen());
                           roomProvider.getRoomInfo();
                         },
                         child: Container(

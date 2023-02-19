@@ -1,5 +1,6 @@
 import 'package:duetstahall/data/model/response/room_model1.dart';
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
+import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/room_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
@@ -50,7 +51,7 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
                             itemBuilder: (context, index) {
                               RoomModel1 roomModel = roomProvider.activeStudents[index];
 
-                              return studentInfoWidget(roomModel);
+                              return studentInfoWidget(roomModel, roomProvider, index);
                             })
                         : noDataAvailable(),
                     const SizedBox(height: 10),
@@ -78,7 +79,7 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
                             itemBuilder: (context, index) {
                               RoomModel1 roomModel = roomProvider.inactiveStudents[index];
 
-                              return studentInfoWidget(roomModel);
+                              return studentInfoWidget(roomModel, roomProvider, index);
                             })
                         : noDataAvailable(),
                   ],
@@ -86,12 +87,13 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
         ));
   }
 
-
-
-  Widget studentInfoWidget(RoomModel1 roomModel) {
+  Widget studentInfoWidget(RoomModel1 roomModel, RoomProvider roomProvider, int index) {
     return InkWell(
       onTap: () {
-        Helper.toScreen(StudentDetailsScreen(roomModel.studentID.toString()));
+        roomProvider.changeRoomAccess(roomModel.isAvaible == 0 ? false : true, isFirstTime: true);
+        roomProvider.userTempData(roomModel.id.toString(), index, roomModel.studentID.toString());
+        bool isAdmin = Provider.of<AuthProvider>(context, listen: false).userStatus == 1 ? true : false;
+        Helper.toScreen(StudentDetailsScreen(roomModel.studentID.toString(), isFromRoomAndAdmin: isAdmin));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 3, top: 3),
@@ -114,8 +116,4 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
       ),
     );
   }
-
-
 }
-
-

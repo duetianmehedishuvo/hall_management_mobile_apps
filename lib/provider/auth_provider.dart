@@ -113,7 +113,7 @@ class AuthProvider with ChangeNotifier {
       authRepo.saveUserInformation(
           studentModel1.studentID.toString(), studentModel1.name!, studentModel1.balance!.toString(), studentModel1.role! as int);
       showMessage('Login Successfully', isError: false);
-      getUserInfo();
+      getUserInfo(isFirstTime: false);
       notifyListeners();
       return true;
     } else {

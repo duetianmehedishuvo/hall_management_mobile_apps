@@ -2,11 +2,13 @@ import 'dart:developer';
 
 import 'package:duetstahall/helper/animation/slideleft_toright.dart';
 import 'package:duetstahall/helper/animation/slideright_toleft.dart';
+import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/widgets/snackbar_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 showLog(message) {
   log("APP SAYS: $message");
@@ -51,6 +53,10 @@ double screenHeight() {
 
 double screenWeight() {
   return MediaQuery.of(Helper.navigatorKey.currentState!.context).size.width;
+}
+
+bool get checkIsAdmin {
+  return Provider.of<AuthProvider>(Helper.navigatorKey.currentState!.context, listen: false).userStatus == 1 ? true : false;
 }
 
 class Helper {

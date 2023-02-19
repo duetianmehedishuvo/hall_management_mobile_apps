@@ -19,4 +19,14 @@ class RoomRepo {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
     }
   }
+
+  Future<ApiResponse> updateRoomStatus(String id, int available) async {
+    try {
+      response = await dioClient.get('updateRoomStatusByStudentID?id=$id&isAvaible=$available');
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
+
 }

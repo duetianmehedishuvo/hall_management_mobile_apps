@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:duetstahall/provider/auth_provider.dart';
+import 'package:duetstahall/view/screens/admin/dashboard/admin_dashboard_screen.dart';
 import 'package:duetstahall/view/screens/auth/signin_screen.dart';
 import 'package:duetstahall/dining/widgets/custom_loader.dart';
 import 'package:duetstahall/util/image.dart';
@@ -32,9 +33,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
         if (Provider.of<AuthProvider>(context, listen: false).userStatus == 0) {
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const StudentDashboardScreen()), (route) => false);
+        } else if (Provider.of<AuthProvider>(context, listen: false).userStatus == 1) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const AdminDashboardScreen()), (route) => false);
         }
       }
-
     });
   }
 

@@ -76,4 +76,54 @@ class RoomProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  bool hasRemoveRoomAccess = false;
+
+  changeRoomAccess(bool value, {bool isFirstTime = false}) {
+    hasRemoveRoomAccess = value;
+    if (!isFirstTime) {
+      notifyListeners();
+      updateRoomStatus();
+    }
+  }
+
+  String userID = '';
+  String id = '';
+  int index = 0;
+
+  void userTempData(String rID, int i, String sID) {
+    id = rID;
+    index = i;
+    userID = sID;
+    notifyListeners();
+  }
+
+  updateRoomStatus() async {
+    ApiResponse apiResponse = await roomRepo.updateRoomStatus(id, hasRemoveRoomAccess == true ? 1 : 0);
+
+    if (apiResponse.response.statusCode == 200) {
+      showMessage(apiResponse.response.data['message'],isError: false);
+      if (hasRemoveRoomAccess == true) {
+        inactiveStudents[index].isAvaible=1;
+        activeStudents.add(inactiveStudents[index]);
+        inactiveStudents.removeAt(index);
+      } else {
+        activeStudents[index].isAvaible=0;
+        inactiveStudents.add(activeStudents[index]);
+        activeStudents.removeAt(index);
+      }
+
+      notifyListeners();
+    } else {
+      String errorMessage;
+      if (apiResponse.error is String) {
+        errorMessage = apiResponse.error.toString();
+      } else {
+        ErrorResponse errorResponse = apiResponse.error;
+        errorMessage = errorResponse.toString();
+      }
+      showMessage(errorMessage, isError: true);
+      notifyListeners();
+    }
+  }
 }

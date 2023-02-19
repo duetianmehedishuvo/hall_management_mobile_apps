@@ -1,24 +1,23 @@
 import 'package:duetstahall/provider/auth_provider.dart';
-import 'package:duetstahall/provider/room_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/auth/signin_screen.dart';
 import 'package:duetstahall/view/screens/student/roomStudent/room_student_firstscreen.dart';
+import 'package:duetstahall/view/screens/student/student_dashboard_screen.dart';
 import 'package:duetstahall/view/screens/student/students/my_profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class StudentDashboardScreen extends StatefulWidget {
-  const StudentDashboardScreen({Key? key}) : super(key: key);
+class AdminDashboardScreen extends StatefulWidget {
+  const AdminDashboardScreen({Key? key}) : super(key: key);
 
   @override
-  State<StudentDashboardScreen> createState() => _StudentDashboardScreenState();
+  State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
 }
 
-class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
+class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   @override
   void initState() {
     // TODO: implement initState
@@ -31,7 +30,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Student Panel'),
+        title: const Text('Administrator Panel'),
         elevation: 0,
         centerTitle: true,
         backgroundColor: AppColors.primaryColorLight,
@@ -66,8 +65,6 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                   children: <Widget>[
                     Text("Welcome, ${authProvider.name}", style: headline4.copyWith(color: Colors.white, fontSize: 18)),
                     const SizedBox(height: 5),
-                    Text('Current Balance:  ${authProvider.balance}',
-                        style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
                   ],
                 ),
               ),
@@ -77,9 +74,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  menuWidget(ImagesModel.newRoom, 'Room/Student History', const RoomStudentFirstScreen()),
+                  menuWidget(ImagesModel.newRoom, 'Room', const RoomStudentFirstScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Meal', Container(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.newCookingIcons, 'Meal', Container()),
                 ],
               ),
             )
@@ -88,31 +85,4 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       ),
     );
   }
-}
-
-Widget menuWidget(String imageUrl, String title, Widget nextWidget,
-    {double firstHeight = 10, double secondHeight = 10, double thirdHeight = 10, double imageHeight = 80}) {
-  return Expanded(
-    child: InkWell(
-      onTap: () {
-        Helper.toScreen(nextWidget);
-        Provider.of<RoomProvider>(Helper.navigatorKey.currentState!.context, listen: false).changeFloors(1);
-      },
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [BoxShadow(color: Colors.grey.withOpacity(.2), blurRadius: 10.0, spreadRadius: 3.0, offset: const Offset(0.0, 0.0))],
-            borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          children: [
-            SizedBox(height: firstHeight),
-            SvgPicture.asset(imageUrl, height: imageHeight),
-            SizedBox(height: secondHeight),
-            Text(title, style: headline4, textAlign: TextAlign.center)
-          ],
-        ),
-      ),
-    ),
-  );
 }
