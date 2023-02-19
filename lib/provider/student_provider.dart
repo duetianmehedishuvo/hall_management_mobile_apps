@@ -3,8 +3,12 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:duetstahall/data/model/response/base/api_response.dart';
+import 'package:duetstahall/data/model/response/base/error_response.dart';
 import 'package:duetstahall/data/model/response/student_model.dart';
+import 'package:duetstahall/data/model/response/student_model1.dart';
 import 'package:duetstahall/data/repository/auth_repo.dart';
+import 'package:duetstahall/data/repository/student_repo.dart';
 import 'package:duetstahall/helper/date_converter.dart';
 import 'package:duetstahall/util/app_constant.dart';
 import 'package:duetstahall/view/widgets/snackbar_message.dart';
@@ -15,8 +19,9 @@ import '../data/model/response/meal_date_utils.dart';
 
 class StudentProvider with ChangeNotifier {
   final AuthRepo authRepo;
+  final StudentRepo studentRepo;
 
-  StudentProvider({required this.authRepo});
+  StudentProvider({required this.authRepo, required this.studentRepo});
 
   bool _isLoading = false;
 
@@ -468,6 +473,39 @@ class StudentProvider with ChangeNotifier {
     await mealRateCollection.doc('meal_rate').set({'meal-rate': mealRate});
   }
 
-  ///////TODO for New Data
+///////TODO for New Data
 
+  // for get  Student By ID
+  StudentModel1 studentModel1 = StudentModel1();
+
+  getStudentInfoByID(String studentID) async {
+    _isLoading = true;
+    isSelectBasicInfo = true;
+    studentModel1 = StudentModel1();
+    // notifyListeners();
+    ApiResponse apiResponse = await studentRepo.getStudentInfoByID(studentID);
+    _isLoading = false;
+
+    if (apiResponse.response.statusCode == 200) {
+      studentModel1 = StudentModel1.fromJson(apiResponse.response.data);
+      notifyListeners();
+    } else {
+      String errorMessage;
+      if (apiResponse.error is String) {
+        errorMessage = apiResponse.error.toString();
+      } else {
+        ErrorResponse errorResponse = apiResponse.error;
+        errorMessage = errorResponse.toString();
+      }
+      showMessage(errorMessage, isError: true);
+      notifyListeners();
+    }
+  }
+
+  bool isSelectBasicInfo = true;
+
+  changeBasicInfo(bool value) {
+    isSelectBasicInfo = value;
+    notifyListeners();
+  }
 }

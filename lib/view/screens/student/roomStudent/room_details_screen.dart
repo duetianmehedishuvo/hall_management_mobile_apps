@@ -1,7 +1,9 @@
 import 'package:duetstahall/data/model/response/room_model1.dart';
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/provider/room_provider.dart';
+import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/screens/student/students/student_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +24,7 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
               ? const Center(child: CircularProgressIndicator())
               : ListView(
                   padding: const EdgeInsets.all(15),
+                  physics: const BouncingScrollPhysics(),
                   children: [
                     Container(
                       padding: const EdgeInsets.all(10),
@@ -49,7 +52,7 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
 
                               return studentInfoWidget(roomModel);
                             })
-                        : noDataAvaible(),
+                        : noDataAvailable(),
                     const SizedBox(height: 10),
                     Container(
                       padding: const EdgeInsets.all(10),
@@ -77,46 +80,42 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
 
                               return studentInfoWidget(roomModel);
                             })
-                        : noDataAvaible(),
+                        : noDataAvailable(),
                   ],
                 ),
         ));
   }
 
-  Center noDataAvaible() {
-    return Center(
-        child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            child: Text('No Data Available', style: robotoStyle500Medium.copyWith(fontSize: 16))));
-  }
+
 
   Widget studentInfoWidget(RoomModel1 roomModel) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 3, top: 3),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(.09), blurRadius: 10.0, spreadRadius: 3.0, offset: const Offset(0.0, 0.0))],
-          borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        children: [
-          singleItem('S-ID:', roomModel.studentID.toString()),
-          singleItem('Name:', roomModel.name.toString()),
-          singleItem('Department:', roomModel.department.toString()),
-          singleItem('Joining Date:', roomModel.updatedAt.toString()),
-          // Divider()
-        ],
+    return InkWell(
+      onTap: () {
+        Helper.toScreen(StudentDetailsScreen(roomModel.studentID.toString()));
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 3, top: 3),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(color: Colors.grey.withOpacity(.09), blurRadius: 10.0, spreadRadius: 3.0, offset: const Offset(0.0, 0.0))
+            ],
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          children: [
+            singleItemWithKeyValue('S-ID:', roomModel.studentID.toString()),
+            singleItemWithKeyValue('Name:', roomModel.name.toString()),
+            singleItemWithKeyValue('Department:', roomModel.department.toString()),
+            singleItemWithKeyValue('Joining Date:', roomModel.updatedAt.toString()),
+            // Divider()
+          ],
+        ),
       ),
     );
   }
 
-  Widget singleItem(String key, String value) {
-    return Row(
-      children: [
-        Text(key, style: robotoStyle600SemiBold.copyWith(color: Colors.black, fontSize: 15)),
-        const SizedBox(width: 5),
-        Expanded(child: Text(value, style: robotoStyle400Regular.copyWith(fontSize: 16))),
-      ],
-    );
-  }
+
 }
+
+

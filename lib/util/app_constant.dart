@@ -22,6 +22,7 @@ class AppConstant {
   static const String logoutURI = 'logout';
   static const String setNewPasswordURI = 'resetPassword';
   static const String getRoomInfo = 'getAllRoomsByYear?roomNo=';
+  static const String getStudentInfoByID = 'getUserByStudentID?studentID=';
 
 
   static const String otpSendURI = '/accounts/otp/send/';
