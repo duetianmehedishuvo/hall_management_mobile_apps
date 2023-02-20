@@ -32,7 +32,7 @@ class SearchStudentScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         CustomTextField(
-                          hintText: 'Search Student ID/Name',
+                          hintText: 'Write Student ID/Name/Dep/District',
                           isShowBorder: true,
                           verticalSize: 12,
                           isShowSuffixIcon: true,

@@ -25,6 +25,7 @@ class AppConstant {
   static const String getStudentInfoByID = 'getUserByStudentID?studentID=';
   static const String updateUser = 'updateUser';
   static const String searchStudent = 'searchStudent?query=';
+  static const String deleteStudentsRoom = 'deleteStudentsRoom?id=';
 
 
   static const String otpSendURI = '/accounts/otp/send/';

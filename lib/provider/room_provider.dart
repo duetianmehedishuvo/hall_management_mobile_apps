@@ -127,6 +127,35 @@ class RoomProvider with ChangeNotifier {
     }
   }
 
+  deleteRoomStatus() async {
+    _isLoading = true;
+    notifyListeners();
+    ApiResponse apiResponse = await roomRepo.deleteRoom(id);
+    _isLoading = false;
+    notifyListeners();
+
+    if (apiResponse.response.statusCode == 200) {
+      showMessage(apiResponse.response.data['message'], isError: false);
+      if (hasRemoveRoomAccess == true) {
+        activeStudents.removeAt(index);
+      } else {
+        inactiveStudents.removeAt(index);
+      }
+
+      notifyListeners();
+    } else {
+      String errorMessage;
+      if (apiResponse.error is String) {
+        errorMessage = apiResponse.error.toString();
+      } else {
+        ErrorResponse errorResponse = apiResponse.error;
+        errorMessage = errorResponse.toString();
+      }
+      showMessage(errorMessage, isError: true);
+      notifyListeners();
+    }
+  }
+
   List<int> years = [];
   int selectYears = DateTime.now().year;
 

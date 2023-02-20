@@ -4,6 +4,7 @@ import 'package:duetstahall/provider/student_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -78,13 +79,31 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                                           : Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Text('Room Access:', style: robotoStyle500Medium),
+                                                Text('Room Access:', style: robotoStyle500Medium.copyWith(color: Colors.green)),
                                                 Switch(
                                                     value: roomProvider.hasRemoveRoomAccess,
                                                     activeColor: AppColors.primaryColorLight,
                                                     onChanged: (value) {
                                                       roomProvider.changeRoomAccess(value);
                                                     })
+                                              ],
+                                            ),
+                                      !widget.isFromRoomAndAdmin ? const SizedBox.shrink() : const Divider(),
+                                      !widget.isFromRoomAndAdmin
+                                          ? const SizedBox.shrink()
+                                          : Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text('Remove Access:', style: robotoStyle500Medium.copyWith(color: Colors.red)),
+                                                Container(
+                                                    width: 100,
+                                                    height: 30,
+                                                    child: CustomButton(
+                                                        btnTxt: 'Confirm',
+                                                        onTap: () {
+                                                          roomProvider.deleteRoomStatus();
+                                                          Helper.back();
+                                                        }))
                                               ],
                                             ),
                                       const Divider(),

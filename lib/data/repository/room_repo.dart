@@ -28,13 +28,22 @@ class RoomRepo {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
     }
   }
-  Future<ApiResponse> addRoom(String roomID, String studentID,int year) async {
+
+  Future<ApiResponse> addRoom(String roomID, String studentID, int year) async {
     try {
-      response = await dioClient.post('addRoom',data: {"roomNo":roomID, "studentID":studentID, "year":year});
+      response = await dioClient.post('addRoom', data: {"roomNo": roomID, "studentID": studentID, "year": year});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
     }
   }
 
+  Future<ApiResponse> deleteRoom(String roomID) async {
+    try {
+      response = await dioClient.delete('${AppConstant.deleteStudentsRoom}$roomID');
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
 }
