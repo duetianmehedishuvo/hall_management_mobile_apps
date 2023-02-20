@@ -19,6 +19,12 @@ class StudentRepo {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
     }
   }
-
-
+  Future<ApiResponse> searchStudent(String query) async {
+    try {
+      response = await dioClient.get(AppConstant.searchStudent + query);
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
 }

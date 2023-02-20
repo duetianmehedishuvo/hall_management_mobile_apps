@@ -24,7 +24,7 @@ class AddStudentScreen extends StatelessWidget {
           CustomButton(
               btnTxt: 'Add Room',
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) =>  const AddRoomScreen()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) =>   AddRoomScreen()));
               }),
           CustomButton(
               btnTxt: 'SHow all Students',

@@ -95,3 +95,17 @@ class StudentModel1 {
     return map;
   }
 }
+
+class StudentSubModel {
+  StudentSubModel({this.studentID, this.name, this.department});
+
+  StudentSubModel.fromJson(dynamic json) {
+    studentID = json['studentID'];
+    name = json['name'];
+    department = json['department'];
+  }
+
+  num? studentID;
+  String? name;
+  String? department;
+}

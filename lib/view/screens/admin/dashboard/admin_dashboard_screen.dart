@@ -62,7 +62,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               child: SizedBox(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
+                  children: [
                     Text("Welcome, ${authProvider.name}", style: headline4.copyWith(color: Colors.white, fontSize: 18)),
                     const SizedBox(height: 5),
                   ],

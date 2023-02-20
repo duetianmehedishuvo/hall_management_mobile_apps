@@ -28,5 +28,13 @@ class RoomRepo {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
     }
   }
+  Future<ApiResponse> addRoom(String roomID, String studentID,int year) async {
+    try {
+      response = await dioClient.post('addRoom',data: {"roomNo":roomID, "studentID":studentID, "year":year});
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
 
 }

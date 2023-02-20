@@ -2,9 +2,12 @@ import 'package:duetstahall/data/model/response/room_model1.dart';
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/room_provider.dart';
+import 'package:duetstahall/provider/student_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/screens/admin/room/add_room_screen.dart';
 import 'package:duetstahall/view/screens/student/students/student_details_screen.dart';
+import 'package:duetstahall/view/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +30,15 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
                   padding: const EdgeInsets.all(15),
                   physics: const BouncingScrollPhysics(),
                   children: [
+                    checkIsAdmin == true
+                        ? CustomButton(
+                            btnTxt: 'Room Assign',
+                            onTap: () {
+                              Provider.of<StudentProvider>(context, listen: false).clearSearchStudent();
+                              Helper.toScreen(AddRoomScreen());
+                            },
+                          )
+                        : const SizedBox(),
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -50,7 +62,6 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               RoomModel1 roomModel = roomProvider.activeStudents[index];
-
                               return studentInfoWidget(roomModel, roomProvider, index);
                             })
                         : noDataAvailable(),

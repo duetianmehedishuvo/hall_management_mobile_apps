@@ -59,8 +59,10 @@ class _RoomStudentFirstScreenState extends State<RoomStudentFirstScreen> {
                       SizedBox(
                           width: screenWeight() * 0.45,
                           child: CustomButton(
-                            btnTxt: checkIsAdmin == true ? "Add Room Students" : "Search Student",
-                            onTap: () {},
+                            btnTxt:  "Search Student",
+                            onTap: () {
+
+                            },
                           )),
                     ],
                   ),

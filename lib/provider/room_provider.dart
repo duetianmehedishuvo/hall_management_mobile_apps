@@ -102,13 +102,13 @@ class RoomProvider with ChangeNotifier {
     ApiResponse apiResponse = await roomRepo.updateRoomStatus(id, hasRemoveRoomAccess == true ? 1 : 0);
 
     if (apiResponse.response.statusCode == 200) {
-      showMessage(apiResponse.response.data['message'],isError: false);
+      showMessage(apiResponse.response.data['message'], isError: false);
       if (hasRemoveRoomAccess == true) {
-        inactiveStudents[index].isAvaible=1;
+        inactiveStudents[index].isAvaible = 1;
         activeStudents.add(inactiveStudents[index]);
         inactiveStudents.removeAt(index);
       } else {
-        activeStudents[index].isAvaible=0;
+        activeStudents[index].isAvaible = 0;
         inactiveStudents.add(activeStudents[index]);
         activeStudents.removeAt(index);
       }
@@ -124,6 +124,49 @@ class RoomProvider with ChangeNotifier {
       }
       showMessage(errorMessage, isError: true);
       notifyListeners();
+    }
+  }
+
+  List<int> years = [];
+  int selectYears = DateTime.now().year;
+
+  void initializeYears() {
+    if (years.isEmpty) {
+      years = [];
+      years.clear();
+      for (int i = 1995; i <= DateTime.now().year; i++) {
+        years.add(i);
+      }
+      notifyListeners();
+    }
+  }
+
+  changeYear(int value) {
+    selectYears = value;
+    notifyListeners();
+  }
+
+  Future<bool> addRoom(String studentID) async {
+    _isLoading = true;
+    notifyListeners();
+    ApiResponse apiResponse = await roomRepo.addRoom(selectedRooms.toString(), studentID, selectYears);
+    _isLoading = false;
+    notifyListeners();
+    if (apiResponse.response.statusCode == 200) {
+      showMessage('Assign successful', isError: false);
+      getRoomInfo();
+      return true;
+    } else {
+      String errorMessage;
+      if (apiResponse.error is String) {
+        errorMessage = apiResponse.error.toString();
+      } else {
+        ErrorResponse errorResponse = apiResponse.error;
+        errorMessage = errorResponse.toString();
+      }
+      showMessage(errorMessage, isError: true);
+
+      return false;
     }
   }
 }

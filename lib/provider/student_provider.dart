@@ -509,4 +509,44 @@ class StudentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  List<StudentSubModel> searchStudents = [];
+  String selectStudentID = 'none';
+
+  callForSearchStudent(String query) async {
+    _isLoading = true;
+    searchStudents.clear();
+    searchStudents = [];
+    selectStudentID = 'none';
+    notifyListeners();
+    ApiResponse apiResponse = await studentRepo.searchStudent(query);
+    _isLoading = false;
+
+    if (apiResponse.response.statusCode == 200) {
+      for (var element in apiResponse.response.data) {
+        searchStudents.add(StudentSubModel.fromJson(element));
+      }
+      notifyListeners();
+    } else {
+      String errorMessage;
+      if (apiResponse.error is String) {
+        errorMessage = apiResponse.error.toString();
+      } else {
+        ErrorResponse errorResponse = apiResponse.error;
+        errorMessage = errorResponse.toString();
+      }
+      showMessage(errorMessage, isError: true);
+      notifyListeners();
+    }
+  }
+
+  changeSelectStudentID(int index) {
+    selectStudentID = searchStudents[index].studentID.toString();
+    notifyListeners();
+  }
+
+  clearSearchStudent() {
+    searchStudents.clear();
+    searchStudents = [];
+    selectStudentID = 'none';
+  }
 }

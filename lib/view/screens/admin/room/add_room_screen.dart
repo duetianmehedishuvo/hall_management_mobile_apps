@@ -1,55 +1,32 @@
-import 'package:duetstahall/data/model/response/room_model.dart';
-import 'package:duetstahall/provider/auth_provider.dart';
+import 'package:duetstahall/provider/room_provider.dart';
+import 'package:duetstahall/provider/student_provider.dart';
+import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/sizeConfig.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
+import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/widgets/custom_app_bar.dart';
 import 'package:duetstahall/view/widgets/custom_button.dart';
-import 'package:duetstahall/view/widgets/custom_loader.dart';
 import 'package:duetstahall/view/widgets/custom_text_field.dart';
 import 'package:duetstahall/view/widgets/snackbar_message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AddRoomScreen extends StatefulWidget {
-  const AddRoomScreen({Key? key}) : super(key: key);
+class AddRoomScreen extends StatelessWidget {
+  AddRoomScreen({super.key});
 
-  @override
-  State<AddRoomScreen> createState() => _AddRoomScreenState();
-}
-
-class _AddRoomScreenState extends State<AddRoomScreen> {
-  late TextEditingController roomIDController;
-  late TextEditingController yearController;
-  late TextEditingController floorIDController;
-  FocusNode roomIDFocus = FocusNode();
-  FocusNode yearFocus = FocusNode();
-  FocusNode floorIDFocus = FocusNode();
-  FocusNode student1Focus = FocusNode();
-  FocusNode student2Focus = FocusNode();
-  FocusNode student3Focus = FocusNode();
-  FocusNode student4Focus = FocusNode();
-  FocusNode student5Focus = FocusNode();
-  FocusNode student6Focus = FocusNode();
-  FocusNode studentExtraFocus = FocusNode();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    roomIDController = TextEditingController();
-    yearController = TextEditingController();
-    floorIDController = TextEditingController();
-  }
+  final TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<RoomProvider>(context, listen: false).initializeYears();
+
     return Scaffold(
-      backgroundColor: AppColors.whiteColorDark,
-      appBar: const CustomAppBar(title: "Create Room Database"),
+      backgroundColor: Colors.white,
+      appBar: const CustomAppBar(title: "Assign Students"),
       body: AutofillGroup(
-        child: Consumer<AuthProvider>(
-            builder: (context, authProvider, child) => GestureDetector(
+        child: Consumer2<StudentProvider, RoomProvider>(
+            builder: (context, studentProvider, roomProvider, child) => GestureDetector(
                   onTap: () {
                     FocusManager.instance.primaryFocus?.unfocus();
                   },
@@ -58,132 +35,151 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
                     child: ListView(
                       physics: const BouncingScrollPhysics(),
                       children: [
-                        CustomTextField(
-                          hintText: 'Room ID',
-                          labelText: 'Write Room ID:',
-                          isShowBorder: true,
-                          controller: roomIDController,
-                          verticalSize: 14,
-                          focusNode: roomIDFocus,
-                          nextFocus: yearFocus,
-                          inputType: TextInputType.number,
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          height: 45,
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(245, 246, 248, 1),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: CupertinoColors.systemGrey)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Selected Rooms: ', style: headline4),
+                              Text(roomProvider.selectedRooms.toString(), style: headline4),
+                            ],
+                          ),
                         ),
                         SizedBox(height: SizeConfig.blockSizeVertical * 1),
-                        CustomTextField(
-                            hintText: 'Year',
-                            labelText: 'Write Year:',
-                            inputType: TextInputType.number,
-                            isShowBorder: true,
-                            focusNode: yearFocus,
-                            nextFocus: floorIDFocus,
-                            controller: yearController,
-                            verticalSize: 14),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          height: 45,
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(245, 246, 248, 1),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: CupertinoColors.systemGrey)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Select Years: ', style: headline4),
+                              SizedBox(
+                                width: 65,
+                                child: DropdownButton<int>(
+                                  items: roomProvider.years.map((year) {
+                                    return DropdownMenuItem<int>(
+                                        value: year, child: Text(year.toString(), style: headline4, textAlign: TextAlign.center));
+                                  }).toList(),
+                                  underline: const SizedBox.shrink(),
+                                  isExpanded: false,
+                                  value: roomProvider.selectYears,
+                                  onChanged: (value) async {
+                                    roomProvider.changeYear(value!);
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         SizedBox(height: SizeConfig.blockSizeVertical * 1),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          height: 45,
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(245, 246, 248, 1),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: CupertinoColors.systemGrey)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Selected Student: ', style: headline4),
+                              Text(studentProvider.selectStudentID, style: headline4),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.blockSizeVertical * 1),
+                        studentProvider.selectStudentID == 'none'
+                            ? const SizedBox.shrink()
+                            : roomProvider.isLoading
+                                ? const Center(child: CircularProgressIndicator())
+                                : CustomButton(
+                                    btnTxt: 'Add',
+                                    onTap: () {
+                                      roomProvider.addRoom(studentProvider.selectStudentID).then((value){
+                                        if(value==true){
+                                          Helper.back();
+                                        }
+                                      });
+                                    },
+                                  ),
+                        SizedBox(height: studentProvider.selectStudentID == 'none' ? 2 : 30),
                         CustomTextField(
+                          hintText: 'Search Student ID/Name',
                           isShowBorder: true,
-                          hintText: 'Floor',
-                          labelText: 'Write Floor NO:',
-                          controller: floorIDController,
-                          verticalSize: 14,
-                          focusNode: floorIDFocus,
-                          inputType: TextInputType.number,
+                          verticalSize: 12,
+                          isShowSuffixIcon: true,
+                          isShowSuffixWidget: true,
+                          controller: searchController,
                           inputAction: TextInputAction.done,
+                          suffixWidget: InkWell(
+                              onTap: () {
+                                if (searchController.text.isEmpty) {
+                                  showMessage('Please Enter a search term');
+                                } else {
+                                  studentProvider.callForSearchStudent(searchController.text);
+                                  FocusScope.of(context).unfocus();
+                                }
+                              },
+                              child: const Icon(Icons.search, color: AppColors.primaryColorLight, size: 30)),
                         ),
-                        SizedBox(height: SizeConfig.blockSizeVertical * 1),
-                        suggestionTextField(authProvider, 0),
-                        SizedBox(height: SizeConfig.blockSizeVertical * 1),
-                        suggestionTextField(authProvider, 1),
-                        SizedBox(height: SizeConfig.blockSizeVertical * 1),
-                        suggestionTextField(authProvider, 2),
-                        SizedBox(height: SizeConfig.blockSizeVertical * 1),
-                        suggestionTextField(authProvider, 3),
-                        SizedBox(height: SizeConfig.blockSizeVertical * 1),
-                        suggestionTextField(authProvider, 4),
-                        SizedBox(height: SizeConfig.blockSizeVertical * 1),
-                        suggestionTextField(authProvider, 5),
-                        SizedBox(height: SizeConfig.blockSizeVertical * 1),
-                        suggestionTextField(authProvider, 6),
-                        SizedBox(height: SizeConfig.blockSizeVertical * 2),
-                        !authProvider.isLoading
-                            ? CustomButton(
-                                onTap: () {
-                                  if (roomIDController.text.isEmpty || yearController.text.isEmpty || floorIDController.text.isEmpty) {
-                                    showMessage('please fill up all fields');
-                                  } else {
-                                    // int totalStudents = 0;
-                                    // if (authProvider.selectStudent1.isNotEmpty) totalStudents += 1;
-                                    // if (authProvider.selectStudent2.isNotEmpty) totalStudents += 1;
-                                    // if (authProvider.selectStudent3.isNotEmpty) totalStudents += 1;
-                                    // if (authProvider.selectStudent4.isNotEmpty) totalStudents += 1;
-                                    // if (authProvider.selectStudent5.isNotEmpty) totalStudents += 1;
-                                    // if (authProvider.selectStudent6.isNotEmpty) totalStudents += 1;
-                                    // if (authProvider.selectStudentExtra.isNotEmpty) totalStudents += 1;
-                                    //
-                                    // RoomModel roomModel = RoomModel(
-                                    //     floor: int.parse(floorIDController.text),
-                                    //     roomID: int.parse(roomIDController.text),
-                                    //     year: int.parse(yearController.text),
-                                    //     student1: authProvider.selectStudent1,
-                                    //     student2: authProvider.selectStudent2,
-                                    //     student3: authProvider.selectStudent3,
-                                    //     student4: authProvider.selectStudent4,
-                                    //     student5: authProvider.selectStudent5,
-                                    //     student6: authProvider.selectStudent6,
-                                    //     studentExtra: authProvider.selectStudentExtra,
-                                    //     totalStudents: totalStudents);
-                                    //
-                                    // authProvider.addRooms(roomModel);
-                                    // authProvider.resetStudents();
-                                  }
-                                },
-                                btnTxt: "Submit",
-                              )
-                            : const CustomLoader(),
+                        studentProvider.isLoading
+                            ? Container(height: 200, alignment: Alignment.center, child: const CircularProgressIndicator())
+                            : studentProvider.searchStudents.isEmpty
+                                ? Container(
+                                    height: 200,
+                                    alignment: Alignment.center,
+                                    child: Text('No Students Records found', style: robotoStyle500Medium.copyWith(fontSize: 16)))
+                                : ListView.builder(
+                                    itemCount: studentProvider.searchStudents.length,
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    padding: const EdgeInsets.only(top: 5),
+                                    itemBuilder: (context, index) {
+                                      return InkWell(
+                                        onTap: () {
+                                          studentProvider.changeSelectStudentID(index);
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          margin: const EdgeInsets.only(bottom: 5, top: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(10),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.grey.withOpacity(.2),
+                                                  blurRadius: 10.0,
+                                                  spreadRadius: 3.0,
+                                                  offset: const Offset(0.0, 0.0))
+                                            ],
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              singleItemWithKeyValue('Name:', studentProvider.searchStudents[index].name!),
+                                              const SizedBox(height: 2),
+                                              singleItemWithKeyValue(
+                                                  'Student-ID:', studentProvider.searchStudents[index].studentID!.toString()),
+                                              const SizedBox(height: 2),
+                                              singleItemWithKeyValue('Department:', studentProvider.searchStudents[index].department!),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    })
                       ],
                     ),
                   ),
                 )),
       ),
-    );
-  }
-
-  Widget suggestionTextField(AuthProvider authProvider, int position) {
-    return Autocomplete<String>(
-      optionsBuilder: (TextEditingValue value) async {
-        if (value.text.isEmpty) {
-          return List.empty();
-        }
-        // List<String> data = await authProvider.getSuggestionsData(value.text);
-        // return data.where((element) => element.toLowerCase().contains(value.text.toLowerCase())).toList();
-        return List.empty();
-      },
-      fieldViewBuilder: (BuildContext context, TextEditingController controller, FocusNode node, Function onSubmit) => CustomTextField(
-        controller: controller,
-        focusNode: node,
-        labelText:
-            '${position == 0 ? "First" : position == 1 ? "Second" : position == 2 ? "Third" : position == 3 ? "Fourth" : position == 4 ? "Fifth" : position == 5 ? "Sixth" : "Extra"} Student ID:',
-        hintText:
-            'Type here ${position == 0 ? "First" : position == 1 ? "Second" : position == 2 ? "Third" : position == 3 ? "Fourth" : position == 4 ? "Fifth" : position == 5 ? "Sixth" : "Extra"} Student ID... ',
-        isShowBorder: true,
-        verticalSize: 14,
-        inputType: TextInputType.number,
-        inputAction: TextInputAction.done,
-      ),
-      optionsViewBuilder: (BuildContext context, Function onSelect, Iterable<String> dataList) {
-        return Material(
-          child: ListView.builder(
-            itemCount: dataList.length,
-            itemBuilder: (context, index) {
-              String d = dataList.elementAt(index);
-              return InkWell(onTap: () => onSelect(d), child: ListTile(title: Text(d)));
-            },
-          ),
-        );
-      },
-      onSelected: (value) {
-        // authProvider.changeValue(value, position);
-      },
-      displayStringForOption: (String d) => d,
     );
   }
 }
