@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/provider/room_provider.dart';
+import 'package:duetstahall/provider/student_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/student/roomStudent/room_details_screen.dart';
+import 'package:duetstahall/view/screens/student/students/search_student_screen.dart';
 import 'package:duetstahall/view/widgets/custom_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +63,8 @@ class _RoomStudentFirstScreenState extends State<RoomStudentFirstScreen> {
                           child: CustomButton(
                             btnTxt:  "Search Student",
                             onTap: () {
-
+                              Provider.of<StudentProvider>(context, listen: false).clearSearchStudent();
+                              Helper.toScreen(SearchStudentScreen());
                             },
                           )),
                     ],

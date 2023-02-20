@@ -4,6 +4,7 @@ import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/sizeConfig.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/screens/student/students/search_student_screen.dart';
 import 'package:duetstahall/view/widgets/custom_app_bar.dart';
 import 'package:duetstahall/view/widgets/custom_button.dart';
 import 'package:duetstahall/view/widgets/custom_text_field.dart';
@@ -104,8 +105,8 @@ class AddRoomScreen extends StatelessWidget {
                                 : CustomButton(
                                     btnTxt: 'Add',
                                     onTap: () {
-                                      roomProvider.addRoom(studentProvider.selectStudentID).then((value){
-                                        if(value==true){
+                                      roomProvider.addRoom(studentProvider.selectStudentID).then((value) {
+                                        if (value == true) {
                                           Helper.back();
                                         }
                                       });
@@ -148,31 +149,7 @@ class AddRoomScreen extends StatelessWidget {
                                         onTap: () {
                                           studentProvider.changeSelectStudentID(index);
                                         },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          margin: const EdgeInsets.only(bottom: 5, top: 5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(10),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.grey.withOpacity(.2),
-                                                  blurRadius: 10.0,
-                                                  spreadRadius: 3.0,
-                                                  offset: const Offset(0.0, 0.0))
-                                            ],
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              singleItemWithKeyValue('Name:', studentProvider.searchStudents[index].name!),
-                                              const SizedBox(height: 2),
-                                              singleItemWithKeyValue(
-                                                  'Student-ID:', studentProvider.searchStudents[index].studentID!.toString()),
-                                              const SizedBox(height: 2),
-                                              singleItemWithKeyValue('Department:', studentProvider.searchStudents[index].department!),
-                                            ],
-                                          ),
-                                        ),
+                                        child: searchStudentWidget(studentProvider.searchStudents[index]),
                                       );
                                     })
                       ],
