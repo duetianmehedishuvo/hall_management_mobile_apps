@@ -48,7 +48,7 @@ class DateConverter {
   }
 
   static String isoStringToDatePushServer(String dateTime) {
-    return DateFormat('dd-MM-yyyy').format(isoStringToLocalDate(dateTime));
+    return DateFormat('yyyy-MM-dd').format(isoStringToLocalDate(dateTime));
   }
   static DateTime isoStringToDateGetServer(String dateTime) {
     return DateFormat('dd-MM-yyyy').parse(dateTime, true).toLocal();

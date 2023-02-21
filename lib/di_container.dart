@@ -25,7 +25,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => AuthRepo(sharedPreferences: sl(),dioClient: sl()));
   sl.registerLazySingleton(() => SplashRepo(dioClient: sl(), authRepo: sl()));
   sl.registerLazySingleton(() => RoomRepo(dioClient: sl()));
-  sl.registerLazySingleton(() => StudentRepo(dioClient: sl()));
+  sl.registerLazySingleton(() => StudentRepo(dioClient: sl(),sharedPreferences: sl()));
   sl.registerLazySingleton(() => SettingsRepo(dioClient: sl()));
 
   // Provider

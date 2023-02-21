@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:duetstahall/data/model/response/base/api_response.dart';
 import 'package:duetstahall/data/model/response/base/error_response.dart';
+import 'package:duetstahall/data/model/response/meal_model.dart';
 import 'package:duetstahall/data/model/response/student_model.dart';
 import 'package:duetstahall/data/model/response/student_model1.dart';
 import 'package:duetstahall/data/repository/auth_repo.dart';
@@ -15,7 +16,7 @@ import 'package:duetstahall/view/widgets/snackbar_message.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../data/model/response/meal_date_utils.dart';
+import '../data/model/response/event_model.dart';
 
 class StudentProvider with ChangeNotifier {
   final AuthRepo authRepo;
@@ -127,8 +128,8 @@ class StudentProvider with ChangeNotifier {
 
   void initializeCurrentTime() async {
     _isLoadingMeal = true;
-    Response apiResponse = await Dio().get('http://worldtimeapi.org/api/timezone/Asia/Dhaka');
-    _isLoadingMeal = false;
+    Response apiResponse = await Dio().get('http://worldtimeapi.org/api/timezone/Asia/Dhaka/');
+
     if (apiResponse.statusCode == 200 || apiResponse.statusCode == 201) {
       DateTime d = DateTime.parse(apiResponse.data['datetime']);
       currentDateTime = DateTime(d.year, d.month, d.day);
@@ -171,18 +172,18 @@ class StudentProvider with ChangeNotifier {
     });
   }
 
-  List<Event> getEventsForDay(DateTime day) {
-    final kEvents = LinkedHashMap<DateTime, List<Event>>(equals: isSameDay, hashCode: getHashCode)..addAll(kEventSource);
+  List<EventModel> getEventsForDay(DateTime day) {
+    final kEvents = LinkedHashMap<DateTime, List<EventModel>>(equals: isSameDay, hashCode: getHashCode)..addAll(kEventSource);
     return kEvents[day] ?? [];
   }
 
-  Map<DateTime, List<Event>> kEventSource = {};
+  Map<DateTime, List<EventModel>> kEventSource = {};
 
   initializeAllDate(List<DateTime> dates) {
     kEventSource = {};
     int p = 0;
     for (var item in dates) {
-      var list = (guestMeal[p] != 0 ? [Event('Today\'s Event 1'), Event('Today\'s Event 1')] : [Event('Today\'s Event 1')]);
+      var list = (guestMeal[p] != 0 ? [EventModel('Today\'s Event 1'), EventModel('Today\'s Event 1')] : [EventModel('Today\'s Event 1')]);
       kEventSource[DateTime.utc(item.year, item.month, item.day)] = list;
       p++;
     }
@@ -264,10 +265,6 @@ class StudentProvider with ChangeNotifier {
 
   List<String> selectedDates = [];
 
-  initializeEmptyDates() {
-    selectedDates = [];
-  }
-
   void addDates(String value, BuildContext context, {bool isRemove = false}) {
     if (isRemove) {
       if (dateTimesForQuery.contains(DateConverter.isoStringToDatePushServer(value))) {
@@ -279,118 +276,99 @@ class StudentProvider with ChangeNotifier {
     } else {
       if (!selectedDates.contains(value)) {
         if (dateTimesForQuery.contains(DateConverter.isoStringToDatePushServer(value))) {
-          showMessage('This Day will Already be started On Meal.');
+          showMessage('This day already has been added, Please select other dates from the open calendar');
         } else {
           selectedDates.add(value);
           notifyListeners();
         }
       } else {
-        showMessage('This Date Has Already been Select.');
+        showMessage('This date has already been selected.');
       }
     }
   }
 
   void removeDates(int index) {
     selectedDates.removeAt(index);
-
     notifyListeners();
   }
 
   List<String> dateTimesForQuery = [];
+  List<MealModel> myMealLists = [];
 
   void getAllDateForQuery() async {
-    mealStudentCollection.doc(authRepo.getStudentID()).collection(authRepo.getStudentID()).get().then((querySnapshot) {
-      _isLoadingMeal = true;
-      dateTimesForQuery = [];
-      for (DocumentSnapshot ds in querySnapshot.docs) {
-        Map? date = ds.data() as Map;
-        dateTimesForQuery.add(date['date']);
-      }
+    initializeCurrentTime();
+    dateTimes.clear();
+    dateTimes = [];
+    guestMeal.clear();
+    guestMeal = [];
+    myMealLists.clear();
+    myMealLists = [];
+    selectedDates = [];
+    // notifyListeners();
+    ApiResponse apiResponse = await studentRepo.getAllMealByStudentID();
+    _isLoadingMeal = false;
 
-      _isLoadingMeal = false;
+    if (apiResponse.response.statusCode == 200) {
+      for (var element in apiResponse.response.data) {
+        MealModel mealModel = MealModel.fromJson(element);
+        myMealLists.add(mealModel);
+        dateTimes.add(DateConverter.isoStringToLocalDate(mealModel.createdAt!));
+        guestMeal.add((mealModel.totalMeal as int) - 1);
+      }
       notifyListeners();
-    });
+      initializeAllDate(dateTimes);
+    } else {
+      String errorMessage = apiResponse.error.toString();
+      showMessage(errorMessage, isError: true);
+    }
+    notifyListeners();
   }
 
-  void uploadDateOnServer(BuildContext context, bool isRemove) {
+
+
+  void addDateToServer(String dateTime, {bool isGuestMeal = false}) async {
     _isLoadingMeal = true;
     notifyListeners();
-    for (var element in selectedDates) {
-      if (isRemove) {
-        removeDateFromServer(DateConverter.isoStringToDatePushServer(element), context);
-      } else {
-        addDateToServer(DateConverter.isoStringToDatePushServer(element), context);
-      }
-      if (selectedDates.last == element) {
-        if (isRemove) {
-          updateMealData(isIncrement: true, removeCount: selectedDates.length);
-        }
-
-        Timer(const Duration(seconds: 2), () {
-          _isLoadingMeal = false;
-          selectedDates = [];
-          getAllDateForQuery();
-        });
-      }
-    }
-
-    notifyListeners();
-  }
-
-  void addDateToServer(String dateTime, BuildContext context, {bool isGuestMeal = false, bool isGuestMessage = false}) {
-    if (studentModel.allowableMeal == 0) {
-      showMessage('You Haven\'t any meal');
+    ApiResponse apiResponse1;
+    if (isGuestMeal == true) {
+      apiResponse1 = await studentRepo.addGuestMeal(dateTime);
     } else {
-      //TODO for save user record
-      mealStudentCollection
-          .doc(authRepo.getStudentID())
-          .collection(authRepo.getStudentID())
-          .doc(dateTime)
-          .set({'date': dateTime, 'guest_meal': isGuestMeal ? 1 : 0});
-      //TODO for save admin record
-      mealAdminCollection.doc('admin_meal').collection(dateTime).doc(authRepo.getStudentID()).set({
-        'student_id': authRepo.getStudentID(),
-        'room_no': studentModel.roomNO.toString(),
-        'name': studentModel.name,
-        'guest_meal': isGuestMeal ? 1 : 0
-      });
-      updateMealData(isIncrement: isGuestMessage ? !isGuestMeal : isGuestMeal);
-      if (isGuestMessage) {
-        if (isGuestMeal) {
-          showMessage('Guest Meal Added Successfully: $dateTime. Press Refresh Button for Get Update', isError: false);
-        } else {
-          showMessage('Guest Meal Removed Successfully: $dateTime. Press Refresh Button for Get Update', isError: false);
-        }
-      } else {
-        showMessage('Successfully Added Date: $dateTime', isError: false);
-      }
-
-      notifyListeners();
+      apiResponse1 = await studentRepo.addMeal(dateTime);
     }
-  }
 
-  removeDateFromServer(String dateTime, BuildContext context) async {
-    mealStudentCollection.doc(authRepo.getStudentID()).collection(authRepo.getStudentID()).get().then((querySnapshot) {
-      for (DocumentSnapshot ds in querySnapshot.docs) {
-        Map? date = ds.data() as Map;
-        if (dateTime == date['date']) {
-          ds.reference.delete();
-        }
-      }
-    });
-
-    mealAdminCollection.doc('admin_meal').collection(dateTime).get().then((querySnapshot) {
-      for (DocumentSnapshot ds in querySnapshot.docs) {
-        Map? date = ds.data() as Map;
-        if (authRepo.getStudentID() == date['student_id']) {
-          ds.reference.delete();
-        }
-      }
-    });
-
-    showMessage('Remove Successfully Date: $dateTime', isError: false);
+    _isLoadingMeal = false;
+    notifyListeners();
+    if (apiResponse1.response.statusCode == 200) {
+      showMessage('Added ${isGuestMeal == true ? "Guest " : ""}Meal On Date $dateTime Successfully', isError: false);
+      getAllDateForQuery();
+    } else {
+      String errorMessage = apiResponse1.error.toString();
+      showMessage(errorMessage);
+    }
     notifyListeners();
   }
+
+  void cancelMeal(String dateTime, {bool isGuestMeal = false}) async {
+    _isLoadingMeal = true;
+    notifyListeners();
+    ApiResponse apiResponse1;
+    if (isGuestMeal == true) {
+      apiResponse1 = await studentRepo.deleteGuestMealByID(dateTime);
+    } else {
+      apiResponse1 = await studentRepo.deleteMealByID(dateTime);
+    }
+    _isLoadingMeal = false;
+    notifyListeners();
+    if (apiResponse1.response.statusCode == 200) {
+      showMessage(apiResponse1.response.data['message'], isError: false);
+      getAllDateForQuery();
+    } else {
+      String errorMessage = apiResponse1.error.toString();
+      showMessage(errorMessage);
+    }
+    notifyListeners();
+  }
+
 
   bool isMealOn = false;
 

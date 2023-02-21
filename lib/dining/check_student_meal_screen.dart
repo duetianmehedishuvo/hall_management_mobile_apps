@@ -1,4 +1,4 @@
-import 'package:duetstahall/data/model/response/meal_date_utils.dart';
+import 'package:duetstahall/data/model/response/event_model.dart';
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/dining/widgets/custom_loader.dart';
 import 'package:duetstahall/provider/student_provider.dart';
@@ -16,7 +16,7 @@ class CheckStudentMealScreen extends StatefulWidget {
 }
 
 class _CheckStudentMealScreenState extends State<CheckStudentMealScreen> {
-  late final ValueNotifier<List<Event>> _selectedEvents;
+  late final ValueNotifier<List<EventModel>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
   DateTime _focusedDay = DateTime.now();
@@ -39,7 +39,7 @@ class _CheckStudentMealScreenState extends State<CheckStudentMealScreen> {
     super.dispose();
   }
 
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
+  List<EventModel> _getEventsForRange(DateTime start, DateTime end) {
     // Implementation example
     final days = Provider.of<StudentProvider>(context, listen: false).daysInRange(start, end);
     _selectedEvents = ValueNotifier(Provider.of<StudentProvider>(context, listen: false).getEventsForDay(_selectedDay!));
@@ -91,7 +91,7 @@ class _CheckStudentMealScreenState extends State<CheckStudentMealScreen> {
         return !studentProvider.isLoadingMeal
             ? Column(
                 children: [
-                  TableCalendar<Event>(
+                  TableCalendar<EventModel>(
                     firstDay: kFirstDay,
                     lastDay: kLastDay,
                     focusedDay: _focusedDay,

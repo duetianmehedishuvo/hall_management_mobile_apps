@@ -1,4 +1,4 @@
-import 'package:duetstahall/data/model/response/meal_date_utils.dart';
+import 'package:duetstahall/data/model/response/event_model.dart';
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/dining/widgets/custom_button.dart';
 import 'package:duetstahall/dining/widgets/custom_loader.dart';
@@ -17,7 +17,7 @@ class MyMealScreen extends StatefulWidget {
 }
 
 class _MyMealScreenState extends State<MyMealScreen> {
-  late final ValueNotifier<List<Event>> _selectedEvents;
+  late final ValueNotifier<List<EventModel>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
   DateTime _focusedDay = DateTime.now();
@@ -34,8 +34,9 @@ class _MyMealScreenState extends State<MyMealScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<StudentProvider>(context, listen: false).getAllDate();
+    // Provider.of<StudentProvider>(context, listen: false).getAllDate();
     // Provider.of<StudentProvider>(context, listen: false).initializeCurrentTime();
+    Provider.of<StudentProvider>(context, listen: false).getAllDateForQuery();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(Provider.of<StudentProvider>(context, listen: false).getEventsForDay(_selectedDay!));
   }
@@ -44,15 +45,6 @@ class _MyMealScreenState extends State<MyMealScreen> {
   void dispose() {
     _selectedEvents.dispose();
     super.dispose();
-  }
-
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
-    // Implementation example
-    final days = Provider.of<StudentProvider>(context, listen: false).daysInRange(start, end);
-    _selectedEvents = ValueNotifier(Provider.of<StudentProvider>(context, listen: false).getEventsForDay(_selectedDay!));
-    return [
-      for (final d in days) ...Provider.of<StudentProvider>(context, listen: false).getEventsForDay(d),
-    ];
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -69,32 +61,32 @@ class _MyMealScreenState extends State<MyMealScreen> {
     }
   }
 
-  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
-    setState(() {
-      _selectedDay = null;
-      _focusedDay = focusedDay;
-      _rangeStart = start;
-      _rangeEnd = end;
-      _rangeSelectionMode = RangeSelectionMode.toggledOn;
-    });
-
-    // `start` or `end` could be null
-    if (start != null && end != null) {
-      _selectedEvents.value = _getEventsForRange(start, end);
-    } else if (start != null) {
-      _selectedEvents.value = Provider.of<StudentProvider>(context, listen: false).getEventsForDay(start);
-      // _selectedEvents.value = _getEventsForDay(start);
-    } else if (end != null) {
-      // _selectedEvents.value = _getEventsForDay(end);
-      _selectedEvents.value = Provider.of<StudentProvider>(context, listen: false).getEventsForDay(end);
-    }
-  }
+  // void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
+  //   setState(() {
+  //     _selectedDay = null;
+  //     _focusedDay = focusedDay;
+  //     _rangeStart = start;
+  //     _rangeEnd = end;
+  //     _rangeSelectionMode = RangeSelectionMode.toggledOn;
+  //   });
+  //
+  //   // `start` or `end` could be null
+  //   if (start != null && end != null) {
+  //     _selectedEvents.value = _getEventsForRange(start, end);
+  //   } else if (start != null) {
+  //     _selectedEvents.value = Provider.of<StudentProvider>(context, listen: false).getEventsForDay(start);
+  //     // _selectedEvents.value = _getEventsForDay(start);
+  //   } else if (end != null) {
+  //     // _selectedEvents.value = _getEventsForDay(end);
+  //     _selectedEvents.value = Provider.of<StudentProvider>(context, listen: false).getEventsForDay(end);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'My Meal',
+        title: 'My Meal Status',
         isRefreshEnable2: true,
         onRefreshPressed: () {
           Provider.of<StudentProvider>(context, listen: false).getAllDate();
@@ -105,7 +97,7 @@ class _MyMealScreenState extends State<MyMealScreen> {
         return !studentProvider.isLoadingMeal
             ? Column(
                 children: [
-                  TableCalendar<Event>(
+                  TableCalendar<EventModel>(
                     firstDay: kFirstDay,
                     lastDay: kLastDay,
                     focusedDay: _focusedDay,
@@ -146,7 +138,7 @@ class _MyMealScreenState extends State<MyMealScreen> {
                         // selectedColor: Theme.of(context).primaryColor,
                         todayTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0, color: Colors.white)),
                     onDaySelected: _onDaySelected,
-                    onRangeSelected: _onRangeSelected,
+                    // onRangeSelected: _onRangeSelected,
                     onFormatChanged: (format) {
                       if (_calendarFormat != format) {
                         setState(() {
@@ -160,7 +152,7 @@ class _MyMealScreenState extends State<MyMealScreen> {
                   ),
                   const SizedBox(height: 8.0),
                   Expanded(
-                    child: ValueListenableBuilder<List<Event>>(
+                    child: ValueListenableBuilder<List<EventModel>>(
                       valueListenable: _selectedEvents,
                       builder: (context, value, _) {
                         return value.isNotEmpty
@@ -176,30 +168,86 @@ class _MyMealScreenState extends State<MyMealScreen> {
                                     margin: const EdgeInsets.only(right: 15),
                                     child: SizedBox(
                                         width: 180,
-                                        child: CustomButton(
-                                            btnTxt: '${value.length == 1 ? "Add" : "Cancel"} Guest Meal',
-                                            isShowRightIcon: true,
-                                            iconData: value.length == 1 ? Icons.set_meal : Icons.no_meals,
-                                            onTap: () {
-                                              studentProvider.addDateToServer(
-                                                  DateConverter.isoStringToDatePushServer(_selectedDay!.toIso8601String()), context,
-                                                  isGuestMeal: value.length == 1, isGuestMessage: true);
+                                        child: Column(
+                                          children: [
+                                            CustomButton(
+                                                btnTxt: '${"Cancel"} Meal',
+                                                isShowRightIcon: true,
+                                                iconData: Icons.no_meals,
+                                                onTap: () {
+                                                  studentProvider.cancelMeal(
+                                                      DateConverter.isoStringToDatePushServer(_selectedDay!.toIso8601String()),
+                                                      isGuestMeal: false);
 
-                                              Provider.of<StudentProvider>(context, listen: false).getAllDate();
-                                              _selectedDay = DateTime.now();
+                                                  Provider.of<StudentProvider>(context, listen: false).getAllDate();
+                                                  _selectedDay = DateTime.now();
+                                                  _selectedEvents = ValueNotifier(
+                                                      Provider.of<StudentProvider>(context, listen: false).getEventsForDay(_selectedDay!));
+                                                },
+                                                backgroundColor: Colors.red,
+                                                height: 45,
+                                                radius: 10),
+                                            SizedBox(height: 10),
+                                            CustomButton(
+                                                btnTxt: '${value.length == 1 ? "Add" : "Cancel"} Guest Meal',
+                                                isShowRightIcon: true,
+                                                iconData: value.length == 1 ? Icons.set_meal : Icons.no_meals,
+                                                onTap: () {
+                                                  if (value.length == 1) {
+                                                    studentProvider.addDateToServer(
+                                                        DateConverter.isoStringToDatePushServer(_selectedDay!.toIso8601String()),
+                                                        isGuestMeal: true);
+                                                  } else {
+                                                    studentProvider.cancelMeal(
+                                                        DateConverter.isoStringToDatePushServer(_selectedDay!.toIso8601String()),
+                                                        isGuestMeal: true);
+                                                  }
 
-                                              //_selectedEvents = ValueNotifier(Provider.of<StudentProvider>(context, listen: false).getEventsForDay(_selectedDay!));
-                                            },
-                                            backgroundColor: value.length == 1 ? Colors.teal : Colors.red,
-                                            height: 45,
-                                            radius: 10)),
+                                                  Provider.of<StudentProvider>(context, listen: false).getAllDate();
+                                                  _selectedDay = DateTime.now();
+                                                  _selectedEvents = ValueNotifier(
+                                                      Provider.of<StudentProvider>(context, listen: false).getEventsForDay(_selectedDay!));
+                                                },
+                                                backgroundColor: value.length == 1 ? Colors.teal : Colors.red,
+                                                height: 45,
+                                                radius: 10),
+                                          ],
+                                        )),
                                   )
                             : _selectedDay!.isBefore(studentProvider.currentDateTime) ||
                                     (_selectedDay!.year == studentProvider.currentDateTime.year &&
                                         _selectedDay!.month == studentProvider.currentDateTime.month &&
                                         _selectedDay!.day == studentProvider.currentDateTime.day)
-                                ? Text('You Haven\'t Any Meal Status on this day!', style: headline2.copyWith(color: Colors.orange, fontSize: 15))
-                                : const SizedBox.shrink();
+                                ? Text('You haven\'t any meal status on this day!',
+                                    style: headline2.copyWith(color: Colors.orange, fontSize: 15))
+                                : Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 20,
+                                    alignment: Alignment.topRight,
+                                    margin: const EdgeInsets.only(right: 15),
+                                    child: SizedBox(
+                                        width: 180,
+                                        child: Column(
+                                          children: [
+                                            CustomButton(
+                                                btnTxt: 'Add  Meal',
+                                                isShowRightIcon: true,
+                                                iconData: Icons.set_meal,
+                                                onTap: () {
+                                                  studentProvider.addDateToServer(
+                                                      DateConverter.isoStringToDatePushServer(_selectedDay!.toIso8601String()));
+
+                                                  _selectedDay = DateTime.now();
+
+                                                  _selectedEvents = ValueNotifier(
+                                                      Provider.of<StudentProvider>(context, listen: false).getEventsForDay(_selectedDay!));
+                                                },
+                                                backgroundColor: Colors.teal,
+                                                height: 45,
+                                                radius: 10),
+                                          ],
+                                        )),
+                                  );
                       },
                     ),
                   ),
@@ -223,7 +271,8 @@ class _MyMealScreenState extends State<MyMealScreen> {
               isShowRightIcon: true,
               iconData: Icons.set_meal,
               onTap: () {
-                studentProvider.addDateToServer(DateConverter.isoStringToDatePushServer(_selectedDay!.toIso8601String()), context, isGuestMeal: true);
+                studentProvider.addDateToServer(DateConverter.isoStringToDatePushServer(_selectedDay!.toIso8601String()),
+                    isGuestMeal: true);
 
                 // studentProvider.addDate(_selectedDay!.add(Duration(days: 1)));
                 // studentProvider.removeDate(_selectedDay!);

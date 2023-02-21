@@ -31,6 +31,10 @@ class AppConstant {
   static const String updateGuestMealRate = 'updateGuestMealRate';
   static const String changeGuestMealAddedStatus = 'chanegGuestMealAddedStatus';
   static const String updateOfflineTakaCollectTime = 'updateOfflineTakaCollectTime';
+  static const String getAllMealByStudentID = 'getAllMealByStudentID?studentID=';
+  static const String addMeal = 'addMeal';
+  static const String deleteMealByID = 'deleteMealByID?created_at=';
+  static const String deleteGuestMealByID = 'deleteGuestMealByID?created_at=';
 
 
   static const String otpSendURI = '/accounts/otp/send/';
@@ -89,7 +93,7 @@ class AppConstant {
   static const String userPassword = 'user_password';
   static const String theme = 'theme';
   static const String userStatus = 'userStatus';
-  static const String ammount = 'ammount';
+  static const String amount = 'ammount';
   static const String token = 'token';
   static const String countryCode = 'country_code';
   static const String languageCode = 'language_code';

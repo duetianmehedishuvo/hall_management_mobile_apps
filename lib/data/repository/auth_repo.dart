@@ -123,7 +123,7 @@ class AuthRepo {
     try {
       await sharedPreferences.setString(AppConstant.studentID, userID);
       await sharedPreferences.setString(AppConstant.userName, name);
-      await sharedPreferences.setString(AppConstant.ammount, amount);
+      await sharedPreferences.setString(AppConstant.amount, amount);
       await sharedPreferences.setInt(AppConstant.userStatus, status);
       getUserName();
       getStudentID();
@@ -179,7 +179,7 @@ class AuthRepo {
   }
 
   String getAmount() {
-    return sharedPreferences.getString(AppConstant.ammount) ?? "0";
+    return sharedPreferences.getString(AppConstant.amount) ?? "0";
   }
 
   int getUserStatus() {

@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /// Example event class.
-class Event {
+class EventModel {
   final String title;
 
-  const Event(this.title);
+  const EventModel(this.title);
 
   @override
   String toString() => title;

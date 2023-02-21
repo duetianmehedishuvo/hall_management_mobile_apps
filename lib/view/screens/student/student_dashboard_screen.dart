@@ -1,3 +1,4 @@
+import 'package:duetstahall/dining/user_dashboard.dart';
 import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/room_provider.dart';
 import 'package:duetstahall/provider/settings_provider.dart';
@@ -84,7 +85,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.newRoom, 'Room/Student History', const RoomStudentFirstScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Meal', Container(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.newCookingIcons, 'Meal', UserDashboardScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             )
