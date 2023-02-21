@@ -26,6 +26,11 @@ class AppConstant {
   static const String updateUser = 'updateUser';
   static const String searchStudent = 'searchStudent?query=';
   static const String deleteStudentsRoom = 'deleteStudentsRoom?id=';
+  static const String getConfig = 'getConfig';
+  static const String updateMealRate = 'updateMealRate';
+  static const String updateGuestMealRate = 'updateGuestMealRate';
+  static const String changeGuestMealAddedStatus = 'chanegGuestMealAddedStatus';
+  static const String updateOfflineTakaCollectTime = 'updateOfflineTakaCollectTime';
 
 
   static const String otpSendURI = '/accounts/otp/send/';

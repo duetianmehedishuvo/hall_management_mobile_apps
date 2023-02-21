@@ -1,8 +1,10 @@
 import 'package:duetstahall/provider/auth_provider.dart';
+import 'package:duetstahall/provider/settings_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/screens/admin/settings/settings_screen.dart';
 import 'package:duetstahall/view/screens/auth/signin_screen.dart';
 import 'package:duetstahall/view/screens/student/roomStudent/room_student_firstscreen.dart';
 import 'package:duetstahall/view/screens/student/student_dashboard_screen.dart';
@@ -27,6 +29,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<SettingsProvider>(context, listen: false).configModel.mealRate == null ||
+        Provider.of<SettingsProvider>(context, listen: false).configModel.mealRate!.isEmpty) {
+      Provider.of<SettingsProvider>(context, listen: false).getConfigData();
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -79,7 +85,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   menuWidget(ImagesModel.newCookingIcons, 'Meal', Container()),
                 ],
               ),
-            )
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  menuWidget(ImagesModel.newRoom, 'Settings',  SettingsScreen()),
+                  const SizedBox(width: 10),
+                  menuWidget(ImagesModel.newCookingIcons, 'Meal', Container()),
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -66,6 +66,7 @@ dependencies:
   flutter_sslcommerz: ^2.2.2-nullsafety.0
   auto_size_text: ^3.0.0
   carousel_slider: ^4.2.1
+  modal_progress_hud_nsn: ^0.3.0
 
 dev_dependencies:
   flutter_test:

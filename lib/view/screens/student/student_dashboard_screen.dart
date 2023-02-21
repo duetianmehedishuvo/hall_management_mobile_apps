@@ -1,5 +1,6 @@
 import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/room_provider.dart';
+import 'package:duetstahall/provider/settings_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
@@ -28,6 +29,10 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<SettingsProvider>(context, listen: false).configModel.mealRate == null ||
+        Provider.of<SettingsProvider>(context, listen: false).configModel.mealRate!.isEmpty) {
+      Provider.of<SettingsProvider>(context, listen: false).getConfigData();
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
