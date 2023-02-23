@@ -324,8 +324,6 @@ class StudentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
-
   void addDateToServer(String dateTime, {bool isGuestMeal = false}) async {
     _isLoadingMeal = true;
     notifyListeners();
@@ -369,6 +367,22 @@ class StudentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<Map> updateBalance(String balance) async {
+    _isLoading = true;
+    notifyListeners();
+    ApiResponse apiResponse1 = await studentRepo.updateBalance(balance);
+    _isLoading = false;
+    notifyListeners();
+    if (apiResponse1.response.statusCode == 200) {
+      showMessage(apiResponse1.response.data['message'], isError: false);
+      authRepo.updateBalance(balance, true);
+      return {'status': true, 'value': balance};
+    } else {
+      String errorMessage = apiResponse1.error.toString();
+      showMessage(errorMessage);
+      return {'status': false, 'value': "0"};
+    }
+  }
 
   bool isMealOn = false;
 

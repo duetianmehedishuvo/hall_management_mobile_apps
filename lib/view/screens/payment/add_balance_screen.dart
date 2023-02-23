@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:duetstahall/data/model/response/student_model.dart';
 import 'package:duetstahall/dining/widgets/animated_button.dart';
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/dining/widgets/custom_loader.dart';
 import 'package:duetstahall/dining/widgets/custome_text_fields.dart';
+import 'package:duetstahall/provider/auth_provider.dart';
+import 'package:duetstahall/provider/settings_provider.dart';
 import 'package:duetstahall/provider/student_provider.dart';
-import 'package:duetstahall/util/app_constant.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/widgets/snackbar_message.dart';
@@ -20,15 +19,15 @@ import 'package:flutter_sslcommerz/model/SSLCurrencyType.dart';
 import 'package:flutter_sslcommerz/sslcommerz.dart';
 import 'package:provider/provider.dart';
 
-class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({Key? key}) : super(key: key);
+class AddBalanceScreen extends StatefulWidget {
+  const AddBalanceScreen({Key? key}) : super(key: key);
 
   @override
-  State<PaymentScreen> createState() => _PaymentScreenState();
+  State<AddBalanceScreen> createState() => _AddBalanceScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
-  Future<void> sslCommerzGeneralCall({int mealRate = 0}) async {
+class _AddBalanceScreenState extends State<AddBalanceScreen> {
+  Future<void> sslCommerzGeneralCall(StudentProvider studentProvider) async {
     Sslcommerz sslcommerz = Sslcommerz(
         initializer: SSLCommerzInitialization(
             //Use the ipn if you have valid one, or it will fail the transaction.
@@ -39,7 +38,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             sdkType: SSLCSdkType.TESTBOX,
             store_id: 'duet62987ee0a6af1',
             store_passwd: 'duet62987ee0a6af1@ssl',
-            total_amount: int.parse(mealCountController.text) * mealRate * 1.0,
+            total_amount: int.parse(amountController.text) * 1.0,
             tran_id: "1231321321321312"));
     sslcommerz.addShipmentInfoInitializer(
         sslcShipmentInfoInitializer: SSLCShipmentInfoInitializer(
@@ -64,76 +63,72 @@ class _PaymentScreenState extends State<PaymentScreen> {
     var result = await sslcommerz.payNow();
     if (result is PlatformException) {
       showMessage(
-        "the response is: " + result.amount! + " code: " + result.cardNo!,
+        "the response is: ${result.amount!} code: ${result.cardNo!}",
       );
     } else {
       SSLCTransactionInfoModel model = result;
       showMessage("Transaction successful: Amount ${model.amount} TK", isError: false);
       _onConfirmed();
-      StudentModel studentModel = Provider.of<StudentProvider>(context, listen: false).studentModel;
-      studentModel.allowableMeal = studentModel.allowableMeal! + (int.parse(mealCountController.text));
-      Provider.of<StudentProvider>(context, listen: false).addStudent(studentModel).then((value) {
-        if (value) {
-          mealCountController.text = '';
+
+      studentProvider.updateBalance(amountController.text).then((value) {
+        if (value['status'] == true) {
+          amountController.text = '';
+          Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
         } else {
-          showMessage('Meal Added Failed');
+          showMessage('Balance Added Failed');
         }
       });
     }
   }
 
-  TextEditingController mealCountController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Add  Meal'),
-      body: Consumer<StudentProvider>(builder: (context, studentProvider, child) {
+      appBar: const CustomAppBar(title: 'Add  Balance'),
+      body: Consumer2<StudentProvider, SettingsProvider>(builder: (context, studentProvider, settingsProvider, child) {
         return !studentProvider.isLoading
-            ? StreamBuilder<QuerySnapshot>(
-                stream: mealRateCollection.snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: [
-                            const SizedBox(height: 20),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: CustomTextField(
-                                hintText: 'Quantity',
-                                labelText: 'How Many Meal Want to Add?',
-                                isShowBorder: true,
-                                borderRadius: 9,
-                                verticalSize: 14,
-                                inputType: TextInputType.number,
-                                inputAction: TextInputAction.done,
-                                controller: mealCountController,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Center(
-                                child: Text('Current Meal Rate : ${snapshot.data!.docs[0]['meal-rate']}৳',
-                                    style: headline4.copyWith(fontSize: 14, color: AppColors.grey))),
-                          ],
+            ? Column(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        const SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: CustomTextField(
+                            hintText: 'Write Here.',
+                            labelText: 'How Many Amount do you want to Add?',
+                            isShowBorder: true,
+                            borderRadius: 9,
+                            verticalSize: 14,
+                            hintFontSize: 13,
+                            inputType: TextInputType.number,
+                            inputAction: TextInputAction.done,
+                            controller: amountController,
+                          ),
                         ),
-                      ),
-                      //Animated button
-                      AnimatedButton(onComplete: () {
-                        if (mealCountController.text.isEmpty) {
-                          showMessage('Please Enter Meal Quantity');
-                        } else if (int.tryParse(mealCountController.text) != null) {
-                          sslCommerzGeneralCall(mealRate: snapshot.data!.docs[0]['meal-rate']);
-                        } else {
-                          showMessage('Please Input Valid Integer Number like 1,2,3... Thanks.');
-                        }
-                      })
-                    ],
-                  );
-                })
+                        const SizedBox(height: 20),
+                        Center(
+                            child: Text('Current Meal Rate : ${settingsProvider.configModel.mealRate}৳',
+                                style: headline4.copyWith(fontSize: 14, color: AppColors.grey))),
+                      ],
+                    ),
+                  ),
+                  //Animated button
+                  AnimatedButton(onComplete: () {
+                    if (amountController.text.isEmpty) {
+                      showMessage('Please Enter Amount First');
+                    } else if (int.tryParse(amountController.text) != null) {
+                      sslCommerzGeneralCall(studentProvider);
+                    } else {
+                      showMessage('Please Input Valid Integer Number like 1,2,3... Thanks.');
+                    }
+                  })
+                ],
+              )
             : const CustomLoader();
       }),
     );
@@ -155,11 +150,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   children: const [
                     Icon(Icons.check, color: AppColors.primaryColorLight, size: 96),
                     Center(
-                      child: Text(
-                        "Meal Added Successfully",
-                        style: TextStyle(color: AppColors.primaryColorLight, fontSize: 16),
-                      ),
-                    )
+                        child:
+                            Text("Balance added successfully,Thanks", style: TextStyle(color: AppColors.primaryColorLight, fontSize: 16)))
                   ],
                 ),
               ),

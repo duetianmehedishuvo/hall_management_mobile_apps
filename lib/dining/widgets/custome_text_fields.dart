@@ -92,8 +92,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       decoration: BoxDecoration(
         color: widget.fillColor ?? const Color.fromRGBO(245, 246, 248, 1),
         boxShadow: [
-          BoxShadow(
-              color: AppColors.primaryColorLight.withOpacity(.1), offset: const Offset(0, 0), blurRadius: 20, spreadRadius: 3)
+          BoxShadow(color: AppColors.primaryColorLight.withOpacity(.1), offset: const Offset(0, 0), blurRadius: 20, spreadRadius: 3)
         ],
         borderRadius: BorderRadius.circular(widget.borderRadius!),
       ),
@@ -106,7 +105,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         },
 
         autofillHints: const [AutofillHints.newPassword],
-        style: headline4.copyWith(color: Theme.of(context).textTheme.bodyText1!.color, fontSize: 16),
+        style: headline4.copyWith(color: AppColors.primaryColorLight, fontSize: 16),
         textInputAction: widget.inputAction,
         keyboardType: widget.inputType,
         cursorColor: AppColors.primaryColorLight,
@@ -115,34 +114,30 @@ class _CustomTextFieldState extends State<CustomTextField> {
         autofocus: widget.autoFocus!,
         //onChanged: widget.isSearch ? widget.languageProvider.searchLanguage : null,
         obscureText: widget.isPassword! ? _obscureText : false,
-        inputFormatters: widget.inputType == TextInputType.phone
-            ? <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp('[0-9+]'))]
-            : null,
+        inputFormatters:
+            widget.inputType == TextInputType.phone ? <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp('[0-9+]'))] : null,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(vertical: widget.verticalSize!, horizontal: widget.horizontalSize!),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius!),
               borderSide: BorderSide(
-                  color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent,
-                  width: widget.isShowBorder! ? 1 : 0)),
+                  color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent, width: widget.isShowBorder! ? 1 : 0)),
           disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius!),
               borderSide: BorderSide(
-                  color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent,
-                  width: widget.isShowBorder! ? 1 : 0)),
+                  color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent, width: widget.isShowBorder! ? 1 : 0)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius!),
               borderSide: BorderSide(
-                  color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent,
-                  width: widget.isShowBorder! ? 1 : 0)),
+                  color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent, width: widget.isShowBorder! ? 1 : 0)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius!),
               borderSide: BorderSide(
-                  color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent,
-                  width: widget.isShowBorder! ? 1 : 1)),
+                  color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent, width: widget.isShowBorder! ? 1 : 1)),
           isDense: true,
           hintText: widget.hintText,
           labelText: widget.labelText,
+          labelStyle: headline4.copyWith(color: AppColors.primaryColorLight, fontSize: widget.hintFontSize),
           fillColor: widget.fillColor ?? const Color.fromRGBO(245, 246, 248, 1),
           hintStyle: input.copyWith(fontSize: widget.hintFontSize, color: Colors.grey[500]),
           filled: true,
@@ -169,13 +164,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   ? widget.suffixWidget
                   : null,
         ),
-        onFieldSubmitted: (String? text) =>
-            widget.nextFocus != null ? FocusScope.of(context).requestFocus(widget.nextFocus) : widget.onSubmit!(),
+        onFieldSubmitted: (String? text) {
+          widget.nextFocus != null ? FocusScope.of(context).requestFocus(widget.nextFocus) : FocusScope.of(context).unfocus();
+        },
         onChanged: (String? value) {
           if (widget.isSearchStudent!) {
             Provider.of<StudentProvider>(context, listen: false).searchStudent(value!);
           }
-
         },
       ),
     );

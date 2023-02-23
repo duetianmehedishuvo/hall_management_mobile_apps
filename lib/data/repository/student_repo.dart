@@ -82,4 +82,15 @@ class StudentRepo {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
     }
   }
+
+  Future<ApiResponse> updateBalance(String balance) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+    try {
+      var studentID = sharedPreferences.getString(AppConstant.studentID);
+      response = await dioClient.get("${AppConstant.updateBalance}$balance&studentID=$studentID&isAddition=0");
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
 }

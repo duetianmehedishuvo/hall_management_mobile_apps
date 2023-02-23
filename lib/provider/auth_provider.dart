@@ -131,58 +131,6 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // for OTP send
-  // Future otpSend(String emailORPhone, bool isEmail, Function callback) async {
-  //   _isLoading = true;
-  //   data = emailORPhone;
-  //   isNumber = isEmail;
-  //   notifyListeners();
-  //   ApiResponse apiResponse = await authRepo.otpSend(emailORPhone, isEmail);
-  //   _isLoading = false;
-  //
-  //   if (apiResponse.response.statusCode == 200) {
-  //     startTimer();
-  //     callback(true, apiResponse.response.data['message']);
-  //   } else {
-  //     callback(false, apiResponse.error.toString());
-  //   }
-  //   notifyListeners();
-  // }
-  //
-  // // for Reset OTP Send
-  // Future resetOtpSend(String emailORPhone, bool isEmail, Function callback) async {
-  //   _isLoading = true;
-  //   data = emailORPhone;
-  //   isNumber = isEmail;
-  //   notifyListeners();
-  //   ApiResponse apiResponse = await authRepo.resetOtpSend(emailORPhone, isEmail);
-  //   _isLoading = false;
-  //
-  //   if (apiResponse.response.statusCode == 200) {
-  //     startTimer();
-  //     callback(true, apiResponse.response.data['message']);
-  //   } else {
-  //     callback(false, apiResponse.error.toString());
-  //   }
-  //   notifyListeners();
-  // }
-  //
-  // // for OTP Verify
-  //
-  // otpVerify(String code, Function callback) async {
-  //   _isLoading = true;
-  //   notifyListeners();
-  //   ApiResponse apiResponse = await authRepo.otpVerify(data, code, isNumber);
-  //   _isLoading = false;
-  //
-  //   if (apiResponse.response.statusCode == 200) {
-  //     callback(true, 'Successfully Verified');
-  //   } else {
-  //     callback(false, apiResponse.error.toString());
-  //   }
-  //   notifyListeners();
-  // }
-
   //// TODO: for send User Information
   String dateTime = "${DateTime.now().year.toString()}-${DateTime.now().month.toString()}-${DateTime.now().day.toString()}";
   String dateTimeForUser = "${DateTime.now().day.toString()}/${DateTime.now().month.toString()}/${DateTime.now().year.toString()}";

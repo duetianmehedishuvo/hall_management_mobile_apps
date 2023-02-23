@@ -66,6 +66,7 @@ class AuthRepo {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
     }
   }
+
   Future<ApiResponse> updateStudentInfo(
       String studentID,
       String name,
@@ -80,7 +81,6 @@ class AuthRepo {
       String whatssApp,
       String email,
       String motive) async {
-
     try {
       Map map = {};
       map.addAll({
@@ -158,13 +158,28 @@ class AuthRepo {
     return await sharedPreferences.remove(AppConstant.userStatus);
   }
 
-  // for  user token
+  // for  user Balance
   Future<void> saveUserToken(String token) async {
     dioClient.token = token;
     dioClient.dio!.options.headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'};
 
     try {
       await sharedPreferences.setString(AppConstant.token, token);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // for  user token
+  Future<void> updateBalance(String balance, bool isAdd) async {
+    try {
+      int amount = int.parse(getAmount());
+      if (isAdd) {
+        amount += int.parse(balance);
+      } else {
+        amount -= int.parse(balance);
+      }
+      await sharedPreferences.setString(AppConstant.amount, amount.toString());
     } catch (e) {
       rethrow;
     }

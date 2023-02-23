@@ -88,7 +88,18 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                   menuWidget(ImagesModel.newCookingIcons, 'Meal', UserDashboardScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
-            )
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  menuWidget(ImagesModel.newRoom, 'Balance', const RoomStudentFirstScreen()),
+                  const SizedBox(width: 10),
+                  menuWidget(ImagesModel.newCookingIcons, 'Transaction', UserDashboardScreen(), imageHeight: 86, secondHeight: 15),
+                ],
+              ),
+            ),
           ],
         ),
       ),

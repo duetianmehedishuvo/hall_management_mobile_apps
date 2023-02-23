@@ -1,5 +1,5 @@
 import 'package:duetstahall/dining/my_meal_screen.dart';
-import 'package:duetstahall/dining/payment_screen.dart';
+import 'package:duetstahall/view/screens/payment/add_balance_screen.dart';
 import 'package:duetstahall/dining/update_user_profile_screen.dart';
 import 'package:duetstahall/dining/widgets/animated_custom_dialog.dart';
 import 'package:duetstahall/dining/widgets/custom_button.dart';
@@ -43,7 +43,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                           CustomButton(
                               btnTxt: 'Add Meal Balance',
                               onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PaymentScreen()));
+                                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AddBalanceScreen()));
                               },
                               isStroked: false,
                               radius: 10),

@@ -35,6 +35,7 @@ class AppConstant {
   static const String addMeal = 'addMeal';
   static const String deleteMealByID = 'deleteMealByID?created_at=';
   static const String deleteGuestMealByID = 'deleteGuestMealByID?created_at=';
+  static const String updateBalance = 'updateStudentBalance?balance=';
 
 
   static const String otpSendURI = '/accounts/otp/send/';
