@@ -86,7 +86,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                                         cells: [
                                           DataCell(Center(child: Text('${index + 1}'))),
                                           DataCell(Center(child: Text(studentProvider.transactionList[index].transactionID.toString()))),
-                                          DataCell(Center(child: Text(studentProvider.transactionList[index].amount.toString()))),
+                                          DataCell(Center(child: Text(studentProvider.transactionList[index].amount.toString()+"৳"))),
                                           DataCell(Center(
                                             child: Text(DateConverter.localDateToString(
                                                 studentProvider.transactionList[index].createdAt.toString())),

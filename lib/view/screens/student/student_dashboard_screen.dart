@@ -103,6 +103,17 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 ],
               ),
             ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  menuWidget(ImagesModel.newRoom, 'Share Balance', const AddBalanceScreen(isShare: true)),
+                  const SizedBox(width: 10),
+                  menuWidget(ImagesModel.newCookingIcons, 'Transaction', Container(), imageHeight: 86, secondHeight: 15),
+                ],
+              ),
+            ),
           ],
         ),
       ),

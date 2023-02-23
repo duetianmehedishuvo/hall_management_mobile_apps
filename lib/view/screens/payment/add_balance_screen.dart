@@ -5,9 +5,12 @@ import 'package:duetstahall/dining/widgets/custome_text_fields.dart';
 import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/settings_provider.dart';
 import 'package:duetstahall/provider/student_provider.dart';
+import 'package:duetstahall/util/sizeConfig.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/screens/student/students/search_student_screen.dart';
 import 'package:duetstahall/view/widgets/snackbar_message.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sslcommerz/model/SSLCCustomerInfoInitializer.dart';
@@ -20,13 +23,17 @@ import 'package:flutter_sslcommerz/sslcommerz.dart';
 import 'package:provider/provider.dart';
 
 class AddBalanceScreen extends StatefulWidget {
-  const AddBalanceScreen({Key? key}) : super(key: key);
+  final bool isShare;
+
+  const AddBalanceScreen({this.isShare = false, Key? key}) : super(key: key);
 
   @override
   State<AddBalanceScreen> createState() => _AddBalanceScreenState();
 }
 
 class _AddBalanceScreenState extends State<AddBalanceScreen> {
+  final TextEditingController searchController = TextEditingController();
+
   Future<void> sslCommerzGeneralCall(StudentProvider studentProvider) async {
     Sslcommerz sslcommerz = Sslcommerz(
         initializer: SSLCommerzInitialization(
@@ -69,64 +76,156 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
       SSLCTransactionInfoModel model = result;
       showMessage("Transaction successful: Amount ${model.amount} TK", isError: false);
       _onConfirmed();
-
-      studentProvider.updateBalance(amountController.text).then((value) {
-        if (value['status'] == true) {
-          amountController.text = '';
-          Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
-        } else {
-          showMessage('Balance Added Failed');
-        }
-      });
+      if (widget.isShare == true) {
+        studentProvider.shareBalance(amountController.text).then((value) {
+          if (value['status'] == true) {
+            amountController.text = '';
+            Provider.of<StudentProvider>(context, listen: false).clearSearchStudent(isFirstTime: false);
+            Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
+          } else {
+            showMessage('Balance Shared Failed');
+          }
+        });
+      } else {
+        studentProvider.updateBalance(amountController.text).then((value) {
+          if (value['status'] == true) {
+            amountController.text = '';
+            Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
+          } else {
+            showMessage('Balance Added Failed');
+          }
+        });
+      }
     }
   }
 
   TextEditingController amountController = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<StudentProvider>(context, listen: false).clearSearchStudent();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Add  Balance'),
-      body: Consumer2<StudentProvider, SettingsProvider>(builder: (context, studentProvider, settingsProvider, child) {
+      appBar: CustomAppBar(title: '${widget.isShare ? "Share Your" : "Add New"} Balance'),
+      body: Consumer3<StudentProvider, SettingsProvider, AuthProvider>(
+          builder: (context, studentProvider, settingsProvider, authProvider, child) {
         return !studentProvider.isLoading
             ? Column(
                 children: [
                   Expanded(
                     child: ListView(
-                      shrinkWrap: true,
+                      physics: BouncingScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       children: [
                         const SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: CustomTextField(
-                            hintText: 'Write Here.',
-                            labelText: 'How Many Amount do you want to Add?',
-                            isShowBorder: true,
-                            borderRadius: 9,
-                            verticalSize: 14,
-                            hintFontSize: 13,
-                            inputType: TextInputType.number,
-                            inputAction: TextInputAction.done,
-                            controller: amountController,
-                          ),
+                        CustomTextField(
+                          hintText: 'Write Here.',
+                          labelText: 'How Many Amount do you want to ${widget.isShare ? "share" : "Add"}?',
+                          isShowBorder: true,
+                          borderRadius: 9,
+                          verticalSize: 14,
+                          hintFontSize: 13,
+                          inputType: TextInputType.number,
+                          inputAction: TextInputAction.done,
+                          controller: amountController,
                         ),
                         const SizedBox(height: 20),
                         Center(
-                            child: Text('Current Meal Rate : ${settingsProvider.configModel.mealRate}৳',
-                                style: headline4.copyWith(fontSize: 14, color: AppColors.grey))),
+                            child: Text('Today Meal Rate : ${settingsProvider.configModel.mealRate}৳',
+                                style: robotoStyle600SemiBold.copyWith(fontSize: 16))),
+                        const SizedBox(height: 5),
+                        Center(
+                            child:
+                                Text('My Current Balance: ${authProvider.balance}৳', style: robotoStyle600SemiBold.copyWith(fontSize: 16))),
+                        !widget.isShare ? SizedBox.shrink() : SizedBox(height: SizeConfig.blockSizeVertical * 1),
+                        !widget.isShare
+                            ? SizedBox.shrink()
+                            : Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                height: 45,
+                                decoration: BoxDecoration(
+                                    color: const Color.fromRGBO(245, 246, 248, 1),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(color: CupertinoColors.systemGrey)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Selected Student: ', style: headline4),
+                                    Text(studentProvider.selectStudentID, style: headline4),
+                                  ],
+                                ),
+                              ),
+                        !widget.isShare ? SizedBox.shrink() : SizedBox(height: studentProvider.selectStudentID == 'none' ? 20 : 30),
+                        !widget.isShare
+                            ? SizedBox.shrink()
+                            : CustomTextField(
+                                hintText: 'Search Student ID/Name',
+                                labelText: 'Search Student ID/Name/Dept',
+                                isShowBorder: true,
+                                verticalSize: 12,
+                                isShowSuffixIcon: true,
+                                isShowSuffixWidget: true,
+                                controller: searchController,
+                                inputAction: TextInputAction.done,
+                                suffixWidget: InkWell(
+                                    onTap: () {
+                                      if (searchController.text.isEmpty) {
+                                        showMessage('Please Enter a search term');
+                                      } else {
+                                        studentProvider.callForSearchStudent(searchController.text);
+                                        FocusScope.of(context).unfocus();
+                                      }
+                                    },
+                                    child: const Icon(Icons.search, color: AppColors.primaryColorLight, size: 30)),
+                              ),
+                        !widget.isShare
+                            ? SizedBox.shrink()
+                            : studentProvider.isLoading
+                                ? Container(height: 200, alignment: Alignment.center, child: const CircularProgressIndicator())
+                                : studentProvider.searchStudents.isEmpty
+                                    ? Container(
+                                        height: 200,
+                                        alignment: Alignment.center,
+                                        child: Text('No Students Records found', style: robotoStyle500Medium.copyWith(fontSize: 16)))
+                                    : ListView.builder(
+                                        itemCount: studentProvider.searchStudents.length,
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        padding: const EdgeInsets.only(top: 5),
+                                        itemBuilder: (context, index) {
+                                          return InkWell(
+                                            onTap: () {
+                                              studentProvider.changeSelectStudentID(index);
+                                            },
+                                            child: searchStudentWidget(studentProvider.searchStudents[index]),
+                                          );
+                                        })
                       ],
                     ),
                   ),
                   //Animated button
-                  AnimatedButton(onComplete: () {
-                    if (amountController.text.isEmpty) {
-                      showMessage('Please Enter Amount First');
-                    } else if (int.tryParse(amountController.text) != null) {
-                      sslCommerzGeneralCall(studentProvider);
-                    } else {
-                      showMessage('Please Input Valid Integer Number like 1,2,3... Thanks.');
-                    }
-                  })
+                  widget.isShare == true && studentProvider.selectStudentID == 'none'
+                      ? SizedBox()
+                      : AnimatedButton(onComplete: () {
+                          if (amountController.text.isEmpty) {
+                            showMessage('Please Enter Amount First');
+                          } else {
+                            if (int.tryParse(amountController.text) != null) {
+                              if (widget.isShare == true && int.parse(amountController.text) > int.parse(authProvider.balance)) {
+                                showMessage('Insufficient Amount Found!');
+                              } else {
+                                sslCommerzGeneralCall(studentProvider);
+                              }
+                            } else {
+                              showMessage('Please Input Valid Integer Number like 1,2,3... Thanks.');
+                            }
+                          }
+                        })
                 ],
               )
             : const CustomLoader();

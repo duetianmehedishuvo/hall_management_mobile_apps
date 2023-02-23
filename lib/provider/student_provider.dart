@@ -388,6 +388,23 @@ class StudentProvider with ChangeNotifier {
     }
   }
 
+  Future<Map> shareBalance(String balance) async {
+    _isLoading = true;
+    notifyListeners();
+    ApiResponse apiResponse1 = await studentRepo.shareBalance(balance, selectStudentID);
+    _isLoading = false;
+    notifyListeners();
+    if (apiResponse1.response.statusCode == 200) {
+      showMessage(apiResponse1.response.data['message'], isError: false);
+      authRepo.updateBalance(balance, false);
+      return {'status': true, 'value': balance};
+    } else {
+      String errorMessage = apiResponse1.error.toString();
+      showMessage(errorMessage);
+      return {'status': false, 'value': "0"};
+    }
+  }
+
   bool isMealOn = false;
 
   changeMealOn(bool value) {
@@ -540,10 +557,11 @@ class StudentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  clearSearchStudent() {
+  clearSearchStudent({bool isFirstTime = true}) {
     searchStudents.clear();
     searchStudents = [];
     selectStudentID = 'none';
+    if (!isFirstTime) notifyListeners();
   }
 
   // TODO:: for group All Posts

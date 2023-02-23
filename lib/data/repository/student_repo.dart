@@ -94,6 +94,17 @@ class StudentRepo {
     }
   }
 
+  Future<ApiResponse> shareBalance(String balance, String toStudentID) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+    try {
+      var studentID = sharedPreferences.getString(AppConstant.studentID);
+      response = await dioClient.post("shareBalance?balance=$balance&fromStudentID=$studentID&toStudentID=$toStudentID");
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
+
   Future<ApiResponse> userAllTransaction(int page) async {
     Response response = Response(requestOptions: RequestOptions(path: '22222'));
     try {
