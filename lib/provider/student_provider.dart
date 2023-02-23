@@ -8,12 +8,14 @@ import 'package:duetstahall/data/model/response/base/error_response.dart';
 import 'package:duetstahall/data/model/response/meal_model.dart';
 import 'package:duetstahall/data/model/response/student_model.dart';
 import 'package:duetstahall/data/model/response/student_model1.dart';
+import 'package:duetstahall/data/model/response/transaction_model.dart';
 import 'package:duetstahall/data/repository/auth_repo.dart';
 import 'package:duetstahall/data/repository/student_repo.dart';
 import 'package:duetstahall/helper/date_converter.dart';
 import 'package:duetstahall/util/app_constant.dart';
 import 'package:duetstahall/view/widgets/snackbar_message.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../data/model/response/event_model.dart';
@@ -183,7 +185,9 @@ class StudentProvider with ChangeNotifier {
     kEventSource = {};
     int p = 0;
     for (var item in dates) {
-      var list = (guestMeal[p] != 0 ? [EventModel('Today\'s Event 1'), EventModel('Today\'s Event 1')] : [EventModel('Today\'s Event 1')]);
+      var list = (guestMeal[p] != 0
+          ? [const EventModel('Today\'s Event 1'), const EventModel('Today\'s Event 1')]
+          : [const EventModel('Today\'s Event 1')]);
       kEventSource[DateTime.utc(item.year, item.month, item.day)] = list;
       p++;
     }
@@ -540,5 +544,49 @@ class StudentProvider with ChangeNotifier {
     searchStudents.clear();
     searchStudents = [];
     selectStudentID = 'none';
+  }
+
+  // TODO:: for group All Posts
+  List<TransactionModel> transactionList = [];
+  bool isBottomLoading = false;
+  int selectPage = 1;
+  bool hasNextData = false;
+
+  updateUserTransactionListNo() {
+    selectPage++;
+    callForGetUserAllTransaction(page: selectPage);
+    notifyListeners();
+  }
+
+  callForGetUserAllTransaction({int page = 1, bool isFirstTime = true}) async {
+    if (page == 1) {
+      selectPage = 1;
+      transactionList.clear();
+      transactionList = [];
+      _isLoading = true;
+      hasNextData = false;
+      isBottomLoading = false;
+      if (!isFirstTime) {
+        notifyListeners();
+      }
+    } else {
+      isBottomLoading = true;
+      notifyListeners();
+    }
+
+    ApiResponse response = await studentRepo.userAllTransaction(selectPage);
+
+    _isLoading = false;
+    isBottomLoading = false;
+
+    if (response.response.statusCode == 200) {
+      hasNextData = response.response.data['next_page_url'] != null ? true : false;
+      response.response.data['data'].forEach((element) {
+        transactionList.add(TransactionModel.fromJson(element));
+      });
+    } else {
+      Fluttertoast.showToast(msg: response.response.statusMessage!);
+    }
+    notifyListeners();
   }
 }

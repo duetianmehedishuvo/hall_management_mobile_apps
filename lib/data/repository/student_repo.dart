@@ -93,4 +93,15 @@ class StudentRepo {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
     }
   }
+
+  Future<ApiResponse> userAllTransaction(int page) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+    try {
+      var studentID = sharedPreferences.getString(AppConstant.studentID);
+      response = await dioClient.get("getUserAllTransAction?studentID=$studentID&page=$page");
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
 }

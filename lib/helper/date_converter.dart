@@ -39,7 +39,7 @@ class DateConverter {
   }
 
   static String localDateToString(String dateTime) {
-    return DateFormat('dd/MM/yyyy HH:mm a')
+    return DateFormat('dd/MM/yyyy hh:mm a')
         .format(DateFormat("yyyy-MM-ddTHH:mm:ss.SSS").parse(dateTime));
   }
 

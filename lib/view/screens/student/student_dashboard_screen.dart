@@ -1,3 +1,4 @@
+import 'package:duetstahall/dining/my_meal_screen.dart';
 import 'package:duetstahall/dining/user_dashboard.dart';
 import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/room_provider.dart';
@@ -7,8 +8,10 @@ import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/auth/signin_screen.dart';
+import 'package:duetstahall/view/screens/payment/add_balance_screen.dart';
 import 'package:duetstahall/view/screens/student/roomStudent/room_student_firstscreen.dart';
 import 'package:duetstahall/view/screens/student/students/my_profile_screen.dart';
+import 'package:duetstahall/view/screens/student/transaction/transaction_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -85,7 +88,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.newRoom, 'Room/Student History', const RoomStudentFirstScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Meal', UserDashboardScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.newCookingIcons, 'Meal', MyMealScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),
@@ -94,9 +97,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  menuWidget(ImagesModel.newRoom, 'Balance', const RoomStudentFirstScreen()),
+                  menuWidget(ImagesModel.newRoom, 'Balance', const AddBalanceScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Transaction', UserDashboardScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.newCookingIcons, 'Transaction', TransactionDetailsScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),
