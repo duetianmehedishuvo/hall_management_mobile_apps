@@ -30,13 +30,13 @@ class HallFeeProvider with ChangeNotifier {
   bool hasNextData = false;
   bool hasNextData2 = false;
 
-  updateUserAllHallFeeByID() {
+  updateUserAllHallFeeByID({bool isAdmin = false}) {
     selectPage++;
-    getUserAllHallFeeByID(page: selectPage);
+    getUserAllHallFeeByID(page: selectPage, isAdmin: isAdmin);
     notifyListeners();
   }
 
-  getUserAllHallFeeByID({int page = 1, bool isFirstTime = true}) async {
+  getUserAllHallFeeByID({int page = 1, bool isFirstTime = true, bool isAdmin = false}) async {
     if (page == 1) {
       selectPage = 1;
       hallFeeList.clear();
@@ -51,8 +51,12 @@ class HallFeeProvider with ChangeNotifier {
       isBottomLoading = true;
       notifyListeners();
     }
-
-    ApiResponse response = await hallFeeRepo.getUserAllHallFeeByID(selectPage);
+    ApiResponse response;
+    if (isAdmin) {
+      response = await hallFeeRepo.getUserAllHallFee(selectPage);
+    } else {
+      response = await hallFeeRepo.getUserAllHallFeeByID(selectPage);
+    }
 
     _isLoading = false;
     isBottomLoading = false;
@@ -123,5 +127,58 @@ class HallFeeProvider with ChangeNotifier {
       showMessage(errorMessage);
       return {'status': false, 'value': "0"};
     }
+  }
+
+  deleteHallFee(int id, int index) async {
+    _isLoading = true;
+    notifyListeners();
+    ApiResponse apiResponse1 = await hallFeeRepo.deleteHallFee(id);
+    _isLoading = false;
+    notifyListeners();
+    if (apiResponse1.response.statusCode == 200) {
+      showMessage(apiResponse1.response.data['message'], isError: false);
+      hallFeeList.removeAt(index);
+      getUserAllHallFeeByID(isAdmin: true);
+      notifyListeners();
+    } else {
+      String errorMessage = apiResponse1.error.toString();
+      showMessage(errorMessage);
+    }
+  }
+
+  finalHallFee() async {
+    _isLoading = true;
+    notifyListeners();
+    ApiResponse apiResponse1 = await hallFeeRepo.fineHallFee();
+    _isLoading = false;
+    notifyListeners();
+    if (apiResponse1.response.statusCode == 200) {
+      showMessage(apiResponse1.response.data['message'], isError: false);
+    } else {
+      String errorMessage = apiResponse1.error.toString();
+      showMessage(errorMessage);
+    }
+  }
+
+  addHallFee(int amount, String purpose) async {
+    _isLoading = true;
+    notifyListeners();
+    ApiResponse apiResponse1 = await hallFeeRepo.addHallFee(selectFeeType == feeType[0] ? 0 : 1, amount, purpose);
+    _isLoading = false;
+    notifyListeners();
+    if (apiResponse1.response.statusCode == 200) {
+      showMessage(apiResponse1.response.data['message'], isError: false);
+    } else {
+      String errorMessage = apiResponse1.error.toString();
+      showMessage(errorMessage);
+    }
+  }
+
+  List<String> feeType = ['monthly fee', 'other fee'];
+  String selectFeeType = 'monthly fee';
+
+  changeFeeType(String value) {
+    selectFeeType = value;
+    notifyListeners();
   }
 }

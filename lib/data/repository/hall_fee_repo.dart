@@ -11,6 +11,16 @@ class HallFeeRepo {
 
   HallFeeRepo({required this.dioClient, required this.sharedPreferences});
 
+  Future<ApiResponse> getUserAllHallFee(int page) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+    try {
+      response = await dioClient.get('getUserAllHallFee?page=$page');
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
+
   Future<ApiResponse> getUserAllHallFeeByID(int page) async {
     Response response = Response(requestOptions: RequestOptions(path: '22222'));
     var studentID = sharedPreferences.getString(AppConstant.studentID);

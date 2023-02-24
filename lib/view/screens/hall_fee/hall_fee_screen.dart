@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HallFeeScreen extends StatefulWidget {
-  const HallFeeScreen({Key? key}) : super(key: key);
+  final bool isAdmin;
+
+  const HallFeeScreen({this.isAdmin = false, Key? key}) : super(key: key);
 
   @override
   State<HallFeeScreen> createState() => _HallFeeScreenState();
@@ -23,18 +25,18 @@ class _HallFeeScreenState extends State<HallFeeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<HallFeeProvider>(context, listen: false).getUserAllHallFeeByID();
+    Provider.of<HallFeeProvider>(context, listen: false).getUserAllHallFeeByID(isAdmin: widget.isAdmin);
     controller.addListener(() {
       if (controller.offset >= controller.position.maxScrollExtent &&
           !controller.position.outOfRange &&
           Provider.of<HallFeeProvider>(context, listen: false).hasNextData) {
-        Provider.of<HallFeeProvider>(context, listen: false).updateUserAllHallFeeByID();
+        Provider.of<HallFeeProvider>(context, listen: false).updateUserAllHallFeeByID(isAdmin: widget.isAdmin);
       }
     });
   }
 
   Future<void> _refresh(BuildContext context) async {
-    Provider.of<HallFeeProvider>(context, listen: false).getUserAllHallFeeByID(isFirstTime: false);
+    Provider.of<HallFeeProvider>(context, listen: false).getUserAllHallFeeByID(isFirstTime: false, isAdmin: widget.isAdmin);
   }
 
   @override
@@ -71,42 +73,80 @@ class _HallFeeScreenState extends State<HallFeeScreen> {
                             dataTextStyle: robotoStyle400Regular.copyWith(color: Colors.white, fontSize: 12),
                             columnSpacing: 20,
                             // horizontalMargin: 1,
-                            columns: [
-                              buildDataColumn('ID', 'represents if Index No.'),
-                              buildDataColumn('Amount', 'represents Transaction ID.'),
-                              buildDataColumn('Due', 'represents Balance Amount.'),
-                              buildDataColumn('Fine', 'represents Transaction Time'),
-                              buildDataColumn('Time', 'represents Transaction Time'),
-                              buildDataColumn('Purpose', 'represents Transaction Purpose'),
-                            ],
+                            columns: widget.isAdmin
+                                ? [
+                                    buildDataColumn('ID', 'represents if Index No.'),
+                                    buildDataColumn('Student ID', 'represents if Index No.'),
+                                    buildDataColumn('Amount', 'represents Transaction ID.'),
+                                    buildDataColumn('Due', 'represents Balance Amount.'),
+                                    buildDataColumn('Fine', 'represents Transaction Time'),
+                                    buildDataColumn('Time', 'represents Transaction Time'),
+                                    buildDataColumn('Purpose', 'represents Transaction Purpose'),
+                                  ]
+                                : [
+                                    buildDataColumn('ID', 'represents if Index No.'),
+                                    buildDataColumn('Amount', 'represents Transaction ID.'),
+                                    buildDataColumn('Due', 'represents Balance Amount.'),
+                                    buildDataColumn('Fine', 'represents Transaction Time'),
+                                    buildDataColumn('Time', 'represents Transaction Time'),
+                                    buildDataColumn('Purpose', 'represents Transaction Purpose'),
+                                  ],
                             rows: List.generate(
                                 hallFeeProvider.hallFeeList.length,
-                                (index) => DataRow(
+                                (index) => widget.isAdmin?DataRow(
                                         color: MaterialStateColor.resolveWith((states) {
                                           return hallFeeProvider.hallFeeList[index].due == 0 ? Colors.green : Colors.red; //make tha magic!
                                         }),
                                         cells: [
-                                          DataCell(Center(child: Text('${index + 1}')), onTap: (){
-                                            route(hallFeeProvider.hallFeeList[index]);
+                                          DataCell(Center(child: Text('${hallFeeProvider.hallFeeList[index].id}')), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
                                           }),
-                                          DataCell(Center(child: Text("${hallFeeProvider.hallFeeList[index].amount}৳")), onTap: (){
-                                            route(hallFeeProvider.hallFeeList[index]);
+                                          DataCell(Center(child: Text('${hallFeeProvider.hallFeeList[index].studentID}')), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
                                           }),
-                                          DataCell(Center(child: Text("${hallFeeProvider.hallFeeList[index].due}৳")), onTap: (){
-                                            route(hallFeeProvider.hallFeeList[index]);
+                                          DataCell(Center(child: Text("${hallFeeProvider.hallFeeList[index].amount}৳")), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
                                           }),
-                                          DataCell(Center(child: Text("${hallFeeProvider.hallFeeList[index].fine}৳")), onTap: (){
-                                            route(hallFeeProvider.hallFeeList[index]);
+                                          DataCell(Center(child: Text("${hallFeeProvider.hallFeeList[index].due}৳")), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
+                                          }),
+                                          DataCell(Center(child: Text("${hallFeeProvider.hallFeeList[index].fine}৳")), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
                                           }),
                                           DataCell(
                                               Center(
                                                   child: Text(DateConverter.localDateToString(
-                                                      hallFeeProvider.hallFeeList[index].createdAt.toString()))),
-                                              onTap: (){
-                                                route(hallFeeProvider.hallFeeList[index]);
-                                              }),
-                                          DataCell(Text(hallFeeProvider.hallFeeList[index].purpose!), onTap: (){
-                                            route(hallFeeProvider.hallFeeList[index]);
+                                                      hallFeeProvider.hallFeeList[index].createdAt.toString()))), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
+                                          }),
+                                          DataCell(Text(hallFeeProvider.hallFeeList[index].purpose!), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
+                                          }),
+                                        ]):DataRow(
+                                        color: MaterialStateColor.resolveWith((states) {
+                                          return hallFeeProvider.hallFeeList[index].due == 0 ? Colors.green : Colors.red; //make tha magic!
+                                        }),
+                                        cells: [
+                                          DataCell(Center(child: Text('${index + 1}')), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
+                                          }),
+                                          DataCell(Center(child: Text("${hallFeeProvider.hallFeeList[index].amount}৳")), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
+                                          }),
+                                          DataCell(Center(child: Text("${hallFeeProvider.hallFeeList[index].due}৳")), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
+                                          }),
+                                          DataCell(Center(child: Text("${hallFeeProvider.hallFeeList[index].fine}৳")), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
+                                          }),
+                                          DataCell(
+                                              Center(
+                                                  child: Text(DateConverter.localDateToString(
+                                                      hallFeeProvider.hallFeeList[index].createdAt.toString()))), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
+                                          }),
+                                          DataCell(Text(hallFeeProvider.hallFeeList[index].purpose!), onTap: () {
+                                            route(hallFeeProvider.hallFeeList[index], index);
                                           }),
                                         ])),
                           ),
@@ -117,7 +157,7 @@ class _HallFeeScreenState extends State<HallFeeScreen> {
                           : hallFeeProvider.hasNextData
                               ? InkWell(
                                   onTap: () {
-                                    hallFeeProvider.updateUserAllHallFeeByID();
+                                    hallFeeProvider.updateUserAllHallFeeByID(isAdmin: widget.isAdmin);
                                   },
                                   child: Container(
                                     height: 30,
@@ -136,8 +176,8 @@ class _HallFeeScreenState extends State<HallFeeScreen> {
     );
   }
 
-  void route(HallFeeModel hallFeeModel) {
-    Helper.toScreen(HallFeeDetailsScreen(hallFeeModel));
+  void route(HallFeeModel hallFeeModel, int index) {
+    Helper.toScreen(HallFeeDetailsScreen(hallFeeModel, isAdmin: widget.isAdmin, index: index));
   }
 
   DataColumn buildDataColumn(String title, String tooltips) =>

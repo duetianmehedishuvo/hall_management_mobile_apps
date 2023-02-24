@@ -1,5 +1,6 @@
 import 'package:duetstahall/data/model/response/hall_fee_model.dart';
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
+import 'package:duetstahall/dining/widgets/custom_button.dart';
 import 'package:duetstahall/helper/date_converter.dart';
 import 'package:duetstahall/provider/hall_fee_provider.dart';
 import 'package:duetstahall/util/app_constant.dart';
@@ -12,8 +13,10 @@ import 'package:provider/provider.dart';
 
 class HallFeeDetailsScreen extends StatefulWidget {
   final HallFeeModel hallFeeModel;
+  final bool isAdmin;
+  final int index;
 
-  const HallFeeDetailsScreen(this.hallFeeModel, {Key? key}) : super(key: key);
+  const HallFeeDetailsScreen(this.hallFeeModel, {this.isAdmin = false, this.index = 0, Key? key}) : super(key: key);
 
   @override
   State<HallFeeDetailsScreen> createState() => _HallFeeDetailsScreenState();
@@ -74,26 +77,34 @@ class _HallFeeDetailsScreenState extends State<HallFeeDetailsScreen> {
                             const SizedBox(height: 7),
                             Text(widget.hallFeeModel.purpose!, style: robotoStyle500Medium),
                             const Divider(),
-                            widget.hallFeeModel.due as int > 0
-                                ? Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      InkWell(
-                                          onTap: () {
-                                            Helper.toScreen(AddBalanceScreen(
-                                                isPayBalance: true,
-                                                amount: int.parse(widget.hallFeeModel.due.toString()),
-                                                id: widget.hallFeeModel.id as int));
-                                          },
-                                          child: Container(
-                                            decoration:
-                                                BoxDecoration(color: AppColors.primaryColorLight, borderRadius: BorderRadius.circular(10)),
-                                            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                            child: Text('Pay Now', style: robotoStyle600SemiBold.copyWith(color: Colors.white)),
-                                          )),
-                                    ],
-                                  )
-                                : const SizedBox.shrink()
+                            widget.isAdmin
+                                ? CustomButton(
+                                    btnTxt: 'Delete',
+                                    onTap: () {
+                                      hallFeeProvider.deleteHallFee(widget.hallFeeModel.id as int, widget.index);
+                                      Helper.back();
+                                    },
+                                    backgroundColor: AppColors.primaryColorLight,radius: 20)
+                                : widget.hallFeeModel.due as int > 0
+                                    ? Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          InkWell(
+                                              onTap: () {
+                                                Helper.toScreen(AddBalanceScreen(
+                                                    isPayBalance: true,
+                                                    amount: int.parse(widget.hallFeeModel.due.toString()),
+                                                    id: widget.hallFeeModel.id as int));
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: AppColors.primaryColorLight, borderRadius: BorderRadius.circular(10)),
+                                                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                                child: Text('Pay Now', style: robotoStyle600SemiBold.copyWith(color: Colors.white)),
+                                              )),
+                                        ],
+                                      )
+                                    : const SizedBox.shrink()
                           ],
                         ),
                       ),
