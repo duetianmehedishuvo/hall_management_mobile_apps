@@ -202,6 +202,15 @@ class AuthRepo {
     }
   }
 
+  // for  user token
+  Future<void> updateBalance1(String balance) async {
+    try {
+      await sharedPreferences.setString(AppConstant.amount, balance.toString());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> updateDue1(String balance) async {
     try {
       await sharedPreferences.setString(AppConstant.due, balance.toString());

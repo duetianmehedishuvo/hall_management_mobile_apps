@@ -38,7 +38,7 @@ class StudentModel1 {
     password = json['password'];
     balance = json['balance'];
     details = json['details'];
-    homeTown = json['homeTown'];
+    homeTown = json['homeTown']??"";
     researchArea = json['researchArea'];
     jobPosition = json['jobPosition'];
     futureGoal = json['futureGoal'];

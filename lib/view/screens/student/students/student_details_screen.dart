@@ -64,7 +64,11 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                                     children: [
                                       singleItemWithKeyValue("Student-ID:", studentProvider.studentModel1.studentID!.toString()),
                                       const Divider(),
-                                      singleItemWithKeyValue("Hometown:", capitalize(studentProvider.studentModel1.homeTown!)),
+                                      singleItemWithKeyValue(
+                                          "Hometown:",
+                                          studentProvider.studentModel1.homeTown!.isEmpty
+                                              ? "None"
+                                              : capitalize(studentProvider.studentModel1.homeTown!)),
                                       const Divider(),
                                       singleItemWithKeyValue("Blood Group:", capitalize(studentProvider.studentModel1.bloodGroup!)),
                                       const Divider(),

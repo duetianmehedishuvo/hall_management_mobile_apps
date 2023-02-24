@@ -10,6 +10,7 @@ import 'package:duetstahall/view/screens/auth/signin_screen.dart';
 import 'package:duetstahall/view/screens/hall_fee/hall_fee_screen.dart';
 import 'package:duetstahall/view/screens/payment/add_balance_screen.dart';
 import 'package:duetstahall/view/screens/student/complain/complain_screen.dart';
+import 'package:duetstahall/view/screens/student/guest_room_book/guest_room_screen.dart';
 import 'package:duetstahall/view/screens/student/roomStudent/room_student_firstscreen.dart';
 import 'package:duetstahall/view/screens/student/students/my_profile_screen.dart';
 import 'package:duetstahall/view/screens/student/transaction/transaction_details_screen.dart';
@@ -62,8 +63,10 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               icon: const Icon(Icons.logout)),
         ],
       ),
-      body: Consumer<AuthProvider>(
-        builder: (context, authProvider, child) => ListView(
+      body: Consumer2<AuthProvider, SettingsProvider>(
+        builder: (context, authProvider, settingsProvider, child) => ListView(
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.only(bottom: 20),
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
@@ -75,11 +78,15 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text("Welcome, ${authProvider.name}", style: headline4.copyWith(color: Colors.white, fontSize: 18)),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 3),
                     Text('My Balance:  ${authProvider.balance}৳',
                         style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
-                    const SizedBox(height: 5),
                     Text('Total Hall Fee:  ${authProvider.dueBalance}৳',
+                        style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
+                    const SizedBox(height: 3),
+                    Text('Service Time ', style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
+                    const SizedBox(height: 3),
+                    Text('${settingsProvider.configModel.offlineTakaLoadTime}',
                         style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
                   ],
                 ),
@@ -103,7 +110,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.newRoom, 'Balance', const AddBalanceScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Transaction', const TransactionDetailsScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.newCookingIcons, 'Transaction', const TransactionDetailsScreen(),
+                      imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),
@@ -125,7 +133,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.newRoom, 'Complain', const ComplainScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Hall Fee', const HallFeeScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.newCookingIcons, 'Guest Room', const GuestRoomScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),

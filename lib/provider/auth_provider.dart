@@ -139,7 +139,7 @@ class AuthProvider with ChangeNotifier {
     _isLoading = false;
 
     if (apiResponse.response.statusCode == 200) {
-      authRepo.updateBalance(apiResponse.response.data['balance'].toString(), true);
+      authRepo.updateBalance1(apiResponse.response.data['balance'].toString());
       authRepo.updateDue1(apiResponse.response.data['due'].toString());
 
       getUserInfo(isFirstTime: false);

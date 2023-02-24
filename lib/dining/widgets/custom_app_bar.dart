@@ -1,3 +1,4 @@
+import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/student_provider.dart';
 import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
@@ -50,13 +51,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         icon: Image.asset(ImagesModel.backIcon, width: 20, height: 20),
                         onPressed: () {
                           Navigator.of(context).pop();
+                          Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
                         },
                       )
                     : const SizedBox.shrink(),
                 Expanded(
                   child: Padding(
                       padding: EdgeInsets.only(left: !isBackButtonExist! ? 30.0 : 15, top: !isBackButtonExist! ? 10.0 : 0),
-                      child: Text(title!, style: const TextStyle(fontSize: 18, color: Colors.white), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                      child: Text(title!,
+                          style: const TextStyle(fontSize: 18, color: Colors.white), maxLines: 1, overflow: TextOverflow.ellipsis)),
                 ),
                 //
                 isRefreshEnable
@@ -67,13 +70,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: const Icon(Icons.refresh, color: Colors.white),
                       )
                     : isRefreshEnable2
-                    ? InkWell(
-                        onTap: (){
-                          onRefreshPressed!();
-                        },
-                        child: const Icon(Icons.refresh, color: Colors.white),
-                      )
-                    : const SizedBox.shrink(),
+                        ? InkWell(
+                            onTap: () {
+                              onRefreshPressed!();
+                            },
+                            child: const Icon(Icons.refresh, color: Colors.white),
+                          )
+                        : const SizedBox.shrink(),
                 const SizedBox(width: 10)
               ],
             ),

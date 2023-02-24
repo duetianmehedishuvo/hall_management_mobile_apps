@@ -328,7 +328,7 @@ class StudentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void addDateToServer(String dateTime, {bool isGuestMeal = false}) async {
+  void addDateToServer(String dateTime, String balance, {bool isGuestMeal = false}) async {
     _isLoadingMeal = true;
     notifyListeners();
     ApiResponse apiResponse1;
@@ -343,14 +343,15 @@ class StudentProvider with ChangeNotifier {
     if (apiResponse1.response.statusCode == 200) {
       showMessage('Added ${isGuestMeal == true ? "Guest " : ""}Meal On Date $dateTime Successfully', isError: false);
       getAllDateForQuery();
+
+      authRepo.updateBalance(balance, false);
     } else {
       String errorMessage = apiResponse1.error.toString();
       showMessage(errorMessage);
     }
-    notifyListeners();
   }
 
-  void cancelMeal(String dateTime, {bool isGuestMeal = false}) async {
+  void cancelMeal(String dateTime, String balance, {bool isGuestMeal = false}) async {
     _isLoadingMeal = true;
     notifyListeners();
     ApiResponse apiResponse1;
@@ -363,6 +364,7 @@ class StudentProvider with ChangeNotifier {
     notifyListeners();
     if (apiResponse1.response.statusCode == 200) {
       showMessage(apiResponse1.response.data['message'], isError: false);
+      authRepo.updateBalance(balance, true);
       getAllDateForQuery();
     } else {
       String errorMessage = apiResponse1.error.toString();
