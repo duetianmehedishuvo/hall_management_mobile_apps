@@ -7,6 +7,7 @@ import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/admin/hall_fee/hall_fee_admin_screen.dart';
 import 'package:duetstahall/view/screens/admin/settings/settings_screen.dart';
 import 'package:duetstahall/view/screens/auth/signin_screen.dart';
+import 'package:duetstahall/view/screens/student/complain/complain_screen.dart';
 import 'package:duetstahall/view/screens/student/roomStudent/room_student_firstscreen.dart';
 import 'package:duetstahall/view/screens/student/student_dashboard_screen.dart';
 import 'package:duetstahall/view/screens/student/students/my_profile_screen.dart';
@@ -93,6 +94,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               child: Row(
                 children: [
                   menuWidget(ImagesModel.newRoom, 'Settings', SettingsScreen()),
+                  const SizedBox(width: 10),
+                  menuWidget(ImagesModel.newCookingIcons, 'Hall Fee', HallFeeAdminScreen()),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  menuWidget(ImagesModel.newRoom, 'Complain', ComplainScreen(isAdmin: true)),
                   const SizedBox(width: 10),
                   menuWidget(ImagesModel.newCookingIcons, 'Hall Fee', HallFeeAdminScreen()),
                 ],

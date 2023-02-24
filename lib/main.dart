@@ -1,4 +1,5 @@
 import 'package:duetstahall/provider/auth_provider.dart';
+import 'package:duetstahall/provider/complain_provider.dart';
 import 'package:duetstahall/provider/hall_fee_provider.dart';
 import 'package:duetstahall/provider/room_provider.dart';
 import 'package:duetstahall/provider/settings_provider.dart';
@@ -40,6 +41,7 @@ void main() async {
           ChangeNotifierProvider(create: (context) => di.sl<RoomProvider>()),
           ChangeNotifierProvider(create: (context) => di.sl<SettingsProvider>()),
           ChangeNotifierProvider(create: (context) => di.sl<HallFeeProvider>()),
+          ChangeNotifierProvider(create: (context) => di.sl<ComplainProvider>()),
         ],
         child: const MyApp(),
       )));

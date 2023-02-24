@@ -1,5 +1,4 @@
 import 'package:duetstahall/dining/my_meal_screen.dart';
-import 'package:duetstahall/dining/user_dashboard.dart';
 import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/room_provider.dart';
 import 'package:duetstahall/provider/settings_provider.dart';
@@ -10,6 +9,7 @@ import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/auth/signin_screen.dart';
 import 'package:duetstahall/view/screens/hall_fee/hall_fee_screen.dart';
 import 'package:duetstahall/view/screens/payment/add_balance_screen.dart';
+import 'package:duetstahall/view/screens/student/complain/complain_screen.dart';
 import 'package:duetstahall/view/screens/student/roomStudent/room_student_firstscreen.dart';
 import 'package:duetstahall/view/screens/student/students/my_profile_screen.dart';
 import 'package:duetstahall/view/screens/student/transaction/transaction_details_screen.dart';
@@ -92,7 +92,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.newRoom, 'Room/Student History', const RoomStudentFirstScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Meal', MyMealScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.newCookingIcons, 'Meal', const MyMealScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),
@@ -103,7 +103,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.newRoom, 'Balance', const AddBalanceScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Transaction', TransactionDetailsScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.newCookingIcons, 'Transaction', const TransactionDetailsScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),
@@ -114,7 +114,18 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.newRoom, 'Share Balance', const AddBalanceScreen(isShare: true)),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Hall Fee', HallFeeScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.newCookingIcons, 'Hall Fee', const HallFeeScreen(), imageHeight: 86, secondHeight: 15),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  menuWidget(ImagesModel.newRoom, 'Complain', const ComplainScreen()),
+                  const SizedBox(width: 10),
+                  menuWidget(ImagesModel.newCookingIcons, 'Hall Fee', const HallFeeScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),

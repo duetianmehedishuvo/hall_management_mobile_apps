@@ -1,5 +1,4 @@
 import 'package:duetstahall/provider/hall_fee_provider.dart';
-import 'package:duetstahall/provider/settings_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/sizeConfig.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
@@ -45,13 +44,13 @@ class HallFeeAdminScreen extends StatelessWidget {
                               onTap: () {
                                 hallFeeProvider.finalHallFee();
                               }),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           CustomButton(
                               btnTxt: 'All History',
                               onTap: () {
-                                Helper.toScreen(HallFeeScreen(isAdmin: true));
+                                Helper.toScreen(const HallFeeScreen(isAdmin: true));
                               }),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           Row(
                             children: [
                               const Expanded(
@@ -65,7 +64,7 @@ class HallFeeAdminScreen extends StatelessWidget {
                                       maxLines: 1)),
                             ],
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             height: 45,
@@ -115,13 +114,13 @@ class HallFeeAdminScreen extends StatelessWidget {
                             inputType: TextInputType.text,
                             inputAction: TextInputAction.done,
                           ),
-                          SizedBox(height: 15),
+                          const SizedBox(height: 15),
                           Text(
                             'NOTE: this is very important and sensitive so please add before carefully, thanks',
                             style: robotoStyle600SemiBold.copyWith(color: Colors.red),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           CustomButton(
                               btnTxt: 'Assign',
                               onTap: () {
