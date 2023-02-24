@@ -8,6 +8,7 @@ import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/auth/signin_screen.dart';
+import 'package:duetstahall/view/screens/hall_fee/hall_fee_screen.dart';
 import 'package:duetstahall/view/screens/payment/add_balance_screen.dart';
 import 'package:duetstahall/view/screens/student/roomStudent/room_student_firstscreen.dart';
 import 'package:duetstahall/view/screens/student/students/my_profile_screen.dart';
@@ -28,7 +29,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<AuthProvider>(context, listen: false).getUserInfo();
+    Provider.of<AuthProvider>(context, listen: false).getBalance(Provider.of<AuthProvider>(context, listen: false).studentID);
   }
 
   @override
@@ -75,7 +76,10 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                   children: <Widget>[
                     Text("Welcome, ${authProvider.name}", style: headline4.copyWith(color: Colors.white, fontSize: 18)),
                     const SizedBox(height: 5),
-                    Text('Current Balance:  ${authProvider.balance}',
+                    Text('My Balance:  ${authProvider.balance}৳',
+                        style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
+                    const SizedBox(height: 5),
+                    Text('Total Hall Fee:  ${authProvider.dueBalance}৳',
                         style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
                   ],
                 ),
@@ -110,7 +114,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.newRoom, 'Share Balance', const AddBalanceScreen(isShare: true)),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Transaction', Container(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.newCookingIcons, 'Hall Fee', HallFeeScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),

@@ -90,11 +90,13 @@ class AppConstant {
 
 
   // Shared Key
+  static const String currencySymbolTaka = '৳';
   static const String studentID = 'StudentID';
   static const String userPassword = 'user_password';
   static const String theme = 'theme';
   static const String userStatus = 'userStatus';
-  static const String amount = 'ammount';
+  static const String amount = 'amount';
+  static const String due = 'due';
   static const String token = 'token';
   static const String countryCode = 'country_code';
   static const String languageCode = 'language_code';

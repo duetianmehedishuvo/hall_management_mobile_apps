@@ -110,9 +110,10 @@ class AuthProvider with ChangeNotifier {
       }
       authRepo.saveUserToken(apiResponse.response.data['token'].toString());
       studentModel1 = StudentModel1.fromJson(apiResponse.response.data['user']);
-      authRepo.saveUserInformation(
-          studentModel1.studentID.toString(), studentModel1.name!, studentModel1.balance!.toString(), studentModel1.role! as int);
+      authRepo.saveUserInformation(studentModel1.studentID.toString(), studentModel1.name!, studentModel1.balance!.toString(),
+          apiResponse.response.data['due'].toString(), studentModel1.role! as int);
       showMessage('Login Successfully', isError: false);
+      // getBalance(studentID);
       getUserInfo(isFirstTime: false);
       notifyListeners();
       return true;
@@ -128,6 +129,24 @@ class AuthProvider with ChangeNotifier {
       showMessage(errorMessage, isError: true);
       notifyListeners();
       return false;
+    }
+  }
+
+  getBalance(String studentID) async {
+    _isLoading = true;
+    // notifyListeners();
+    ApiResponse apiResponse = await authRepo.getBalance(studentID);
+    _isLoading = false;
+
+    if (apiResponse.response.statusCode == 200) {
+      authRepo.updateBalance(apiResponse.response.data['balance'].toString(), true);
+      authRepo.updateDue1(apiResponse.response.data['due'].toString());
+
+      getUserInfo(isFirstTime: false);
+    } else {
+      String errorMessage = apiResponse.error.toString();
+      showMessage(errorMessage, isError: true);
+      notifyListeners();
     }
   }
 
@@ -189,6 +208,7 @@ class AuthProvider with ChangeNotifier {
   String name = '';
   String studentID = '';
   String balance = '';
+  String dueBalance = '';
   int userStatus = -1;
 
   void getUserInfo({bool isFirstTime = true}) {
@@ -196,6 +216,7 @@ class AuthProvider with ChangeNotifier {
     studentID = authRepo.getStudentID();
     balance = authRepo.getAmount();
     userStatus = authRepo.getUserStatus();
+    dueBalance = authRepo.getDue();
     if (!isFirstTime) notifyListeners();
   }
 

@@ -13,14 +13,25 @@ class AuthRepo {
 
   AuthRepo({required this.dioClient, required this.sharedPreferences});
 
-  Response response = Response(requestOptions: RequestOptions(path: '22222'));
-
   Future<ApiResponse> login(String studentId, String password) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+
     try {
       Map map = {};
       map.addAll({"studentID": studentId});
       map.addAll({'password': password});
       response = await dioClient.post(AppConstant.loginURI, data: map);
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
+
+  Future<ApiResponse> getBalance(String studentId) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+
+    try {
+      response = await dioClient.get('getBalance?studentID=$studentId');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
@@ -42,6 +53,8 @@ class AuthRepo {
       String whatssApp,
       String email,
       String motive) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+
     try {
       Map map = {};
       map.addAll({
@@ -81,6 +94,8 @@ class AuthRepo {
       String whatssApp,
       String email,
       String motive) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+
     try {
       Map map = {};
       map.addAll({
@@ -119,16 +134,18 @@ class AuthRepo {
   }
 
   //TODO: for save User Information
-  Future<void> saveUserInformation(String userID, String name, String amount, int status) async {
+  Future<void> saveUserInformation(String userID, String name, String amount, String due, int status) async {
     try {
       await sharedPreferences.setString(AppConstant.studentID, userID);
       await sharedPreferences.setString(AppConstant.userName, name);
       await sharedPreferences.setString(AppConstant.amount, amount);
+      await sharedPreferences.setString(AppConstant.due, due);
       await sharedPreferences.setInt(AppConstant.userStatus, status);
       getUserName();
       getStudentID();
       getUserStatus();
       getAmount();
+      getDue();
     } catch (e) {
       rethrow;
     }
@@ -185,6 +202,24 @@ class AuthRepo {
     }
   }
 
+  Future<void> updateDue1(String balance) async {
+    try {
+      await sharedPreferences.setString(AppConstant.due, balance.toString());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateDue(String balance) async {
+    try {
+      int amount = int.parse(getDue());
+      amount -= int.parse(balance);
+      await sharedPreferences.setString(AppConstant.due, amount.toString());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   bool checkTokenExist() {
     return sharedPreferences.containsKey(AppConstant.token);
   }
@@ -195,6 +230,10 @@ class AuthRepo {
 
   String getAmount() {
     return sharedPreferences.getString(AppConstant.amount) ?? "0";
+  }
+
+  String getDue() {
+    return sharedPreferences.getString(AppConstant.due) ?? "0";
   }
 
   int getUserStatus() {

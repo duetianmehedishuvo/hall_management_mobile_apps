@@ -3,8 +3,10 @@ import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/dining/widgets/custom_loader.dart';
 import 'package:duetstahall/dining/widgets/custome_text_fields.dart';
 import 'package:duetstahall/provider/auth_provider.dart';
+import 'package:duetstahall/provider/hall_fee_provider.dart';
 import 'package:duetstahall/provider/settings_provider.dart';
 import 'package:duetstahall/provider/student_provider.dart';
+import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/sizeConfig.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
@@ -24,8 +26,11 @@ import 'package:provider/provider.dart';
 
 class AddBalanceScreen extends StatefulWidget {
   final bool isShare;
+  final bool isPayBalance;
+  final int amount;
+  final int id;
 
-  const AddBalanceScreen({this.isShare = false, Key? key}) : super(key: key);
+  const AddBalanceScreen({this.isShare = false, this.isPayBalance = false, this.amount = 0, this.id = 0, Key? key}) : super(key: key);
 
   @override
   State<AddBalanceScreen> createState() => _AddBalanceScreenState();
@@ -76,7 +81,19 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
       SSLCTransactionInfoModel model = result;
       showMessage("Transaction successful: Amount ${model.amount} TK", isError: false);
       _onConfirmed();
-      if (widget.isShare == true) {
+      if (widget.isPayBalance == true) {
+        Provider.of<HallFeeProvider>(context, listen: false).payNow(widget.id, int.parse(amountController.text)).then((value) {
+          if (value['status'] == true) {
+            amountController.text = '';
+            Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
+            Helper.back();
+            Helper.back();
+            Helper.back();
+          } else {
+            showMessage('Balance Shared Failed');
+          }
+        });
+      } else if (widget.isShare == true) {
         studentProvider.shareBalance(amountController.text).then((value) {
           if (value['status'] == true) {
             amountController.text = '';
@@ -106,6 +123,10 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
     // TODO: implement initState
     super.initState();
     Provider.of<StudentProvider>(context, listen: false).clearSearchStudent();
+
+    if (widget.isPayBalance == true) {
+      amountController.text = widget.amount.toString();
+    }
   }
 
   @override
@@ -119,7 +140,7 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
                 children: [
                   Expanded(
                     child: ListView(
-                      physics: BouncingScrollPhysics(),
+                      physics: const BouncingScrollPhysics(),
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       children: [
                         const SizedBox(height: 20),
@@ -133,6 +154,7 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
                           inputType: TextInputType.number,
                           inputAction: TextInputAction.done,
                           controller: amountController,
+                          isEnabled: !widget.isPayBalance,
                         ),
                         const SizedBox(height: 20),
                         Center(
@@ -142,9 +164,9 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
                         Center(
                             child:
                                 Text('My Current Balance: ${authProvider.balance}৳', style: robotoStyle600SemiBold.copyWith(fontSize: 16))),
-                        !widget.isShare ? SizedBox.shrink() : SizedBox(height: SizeConfig.blockSizeVertical * 1),
+                        !widget.isShare ? const SizedBox.shrink() : SizedBox(height: SizeConfig.blockSizeVertical * 1),
                         !widget.isShare
-                            ? SizedBox.shrink()
+                            ? const SizedBox.shrink()
                             : Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 20),
                                 height: 45,
@@ -160,9 +182,9 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
                                   ],
                                 ),
                               ),
-                        !widget.isShare ? SizedBox.shrink() : SizedBox(height: studentProvider.selectStudentID == 'none' ? 20 : 30),
+                        !widget.isShare ? const SizedBox.shrink() : SizedBox(height: studentProvider.selectStudentID == 'none' ? 20 : 30),
                         !widget.isShare
-                            ? SizedBox.shrink()
+                            ? const SizedBox.shrink()
                             : CustomTextField(
                                 hintText: 'Search Student ID/Name',
                                 labelText: 'Search Student ID/Name/Dept',
@@ -184,7 +206,7 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
                                     child: const Icon(Icons.search, color: AppColors.primaryColorLight, size: 30)),
                               ),
                         !widget.isShare
-                            ? SizedBox.shrink()
+                            ? const SizedBox.shrink()
                             : studentProvider.isLoading
                                 ? Container(height: 200, alignment: Alignment.center, child: const CircularProgressIndicator())
                                 : studentProvider.searchStudents.isEmpty
@@ -210,7 +232,7 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
                   ),
                   //Animated button
                   widget.isShare == true && studentProvider.selectStudentID == 'none'
-                      ? SizedBox()
+                      ? const SizedBox()
                       : AnimatedButton(onComplete: () {
                           if (amountController.text.isEmpty) {
                             showMessage('Please Enter Amount First');
@@ -246,11 +268,11 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.check, color: AppColors.primaryColorLight, size: 96),
+                  children: [
+                    const Icon(Icons.check, color: AppColors.primaryColorLight, size: 96),
                     Center(
-                        child:
-                            Text("Balance added successfully,Thanks", style: TextStyle(color: AppColors.primaryColorLight, fontSize: 16)))
+                        child: Text("${widget.isPayBalance ? "Pay" : "Balance added"} successfully,Thanks",
+                            style: const TextStyle(color: AppColors.primaryColorLight, fontSize: 16)))
                   ],
                 ),
               ),

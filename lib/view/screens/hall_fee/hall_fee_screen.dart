@@ -1,37 +1,40 @@
+import 'package:duetstahall/data/model/response/hall_fee_model.dart';
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/helper/date_converter.dart';
-import 'package:duetstahall/provider/student_provider.dart';
+import 'package:duetstahall/provider/hall_fee_provider.dart';
+import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/screens/hall_fee/hall_fee_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class TransactionDetailsScreen extends StatefulWidget {
-  const TransactionDetailsScreen({Key? key}) : super(key: key);
+class HallFeeScreen extends StatefulWidget {
+  const HallFeeScreen({Key? key}) : super(key: key);
 
   @override
-  State<TransactionDetailsScreen> createState() => _TransactionDetailsScreenState();
+  State<HallFeeScreen> createState() => _HallFeeScreenState();
 }
 
-class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
+class _HallFeeScreenState extends State<HallFeeScreen> {
   ScrollController controller = ScrollController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<StudentProvider>(context, listen: false).callForGetUserAllTransaction();
+    Provider.of<HallFeeProvider>(context, listen: false).getUserAllHallFeeByID();
     controller.addListener(() {
       if (controller.offset >= controller.position.maxScrollExtent &&
           !controller.position.outOfRange &&
-          Provider.of<StudentProvider>(context, listen: false).hasNextData) {
-        Provider.of<StudentProvider>(context, listen: false).updateUserTransactionListNo();
+          Provider.of<HallFeeProvider>(context, listen: false).hasNextData) {
+        Provider.of<HallFeeProvider>(context, listen: false).updateUserAllHallFeeByID();
       }
     });
   }
 
   Future<void> _refresh(BuildContext context) async {
-    Provider.of<StudentProvider>(context, listen: false).callForGetUserAllTransaction(isFirstTime: false);
+    Provider.of<HallFeeProvider>(context, listen: false).getUserAllHallFeeByID(isFirstTime: false);
   }
 
   @override
@@ -42,9 +45,9 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
       },
       child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: const CustomAppBar(title: 'My All Statements', borderRadius: 0),
-          body: Consumer<StudentProvider>(
-            builder: (context, studentProvider, child) => studentProvider.isLoading
+          appBar: const CustomAppBar(title: 'Hall Fee Statements', borderRadius: 0),
+          body: Consumer<HallFeeProvider>(
+            builder: (context, hallFeeProvider, child) => hallFeeProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : ListView(
                     controller: controller,
@@ -70,38 +73,51 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                             // horizontalMargin: 1,
                             columns: [
                               buildDataColumn('ID', 'represents if Index No.'),
-                              buildDataColumn('Transaction ID', 'represents Transaction ID.'),
-                              buildDataColumn('Amount', 'represents Balance Amount.'),
+                              buildDataColumn('Amount', 'represents Transaction ID.'),
+                              buildDataColumn('Due', 'represents Balance Amount.'),
+                              buildDataColumn('Fine', 'represents Transaction Time'),
                               buildDataColumn('Time', 'represents Transaction Time'),
                               buildDataColumn('Purpose', 'represents Transaction Purpose'),
                             ],
                             rows: List.generate(
-                                studentProvider.transactionList.length,
+                                hallFeeProvider.hallFeeList.length,
                                 (index) => DataRow(
                                         color: MaterialStateColor.resolveWith((states) {
-                                          return studentProvider.transactionList[index].isIn != 0
-                                              ? Colors.green
-                                              : Colors.red; //make tha magic!
+                                          return hallFeeProvider.hallFeeList[index].due == 0 ? Colors.green : Colors.red; //make tha magic!
                                         }),
                                         cells: [
-                                          DataCell(Center(child: Text('${index + 1}'))),
-                                          DataCell(Center(child: Text(studentProvider.transactionList[index].transactionID.toString()))),
-                                          DataCell(Center(child: Text("${studentProvider.transactionList[index].amount}৳"))),
-                                          DataCell(Center(
-                                            child: Text(DateConverter.localDateToString(
-                                                studentProvider.transactionList[index].createdAt.toString())),
-                                          )),
-                                          DataCell(Text(studentProvider.transactionList[index].purpose!)),
+                                          DataCell(Center(child: Text('${index + 1}')), onTap: (){
+                                            route(hallFeeProvider.hallFeeList[index]);
+                                          }),
+                                          DataCell(Center(child: Text("${hallFeeProvider.hallFeeList[index].amount}৳")), onTap: (){
+                                            route(hallFeeProvider.hallFeeList[index]);
+                                          }),
+                                          DataCell(Center(child: Text("${hallFeeProvider.hallFeeList[index].due}৳")), onTap: (){
+                                            route(hallFeeProvider.hallFeeList[index]);
+                                          }),
+                                          DataCell(Center(child: Text("${hallFeeProvider.hallFeeList[index].fine}৳")), onTap: (){
+                                            route(hallFeeProvider.hallFeeList[index]);
+                                          }),
+                                          DataCell(
+                                              Center(
+                                                  child: Text(DateConverter.localDateToString(
+                                                      hallFeeProvider.hallFeeList[index].createdAt.toString()))),
+                                              onTap: (){
+                                                route(hallFeeProvider.hallFeeList[index]);
+                                              }),
+                                          DataCell(Text(hallFeeProvider.hallFeeList[index].purpose!), onTap: (){
+                                            route(hallFeeProvider.hallFeeList[index]);
+                                          }),
                                         ])),
                           ),
                         ),
                       ),
-                      studentProvider.isBottomLoading
+                      hallFeeProvider.isBottomLoading
                           ? const Center(child: CircularProgressIndicator())
-                          : studentProvider.hasNextData
+                          : hallFeeProvider.hasNextData
                               ? InkWell(
                                   onTap: () {
-                                    studentProvider.updateUserTransactionListNo();
+                                    hallFeeProvider.updateUserAllHallFeeByID();
                                   },
                                   child: Container(
                                     height: 30,
@@ -118,6 +134,10 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                   ),
           )),
     );
+  }
+
+  void route(HallFeeModel hallFeeModel) {
+    Helper.toScreen(HallFeeDetailsScreen(hallFeeModel));
   }
 
   DataColumn buildDataColumn(String title, String tooltips) =>

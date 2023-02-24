@@ -42,6 +42,10 @@ class DateConverter {
     return DateFormat('dd/MM/yyyy hh:mm a')
         .format(DateFormat("yyyy-MM-ddTHH:mm:ss.SSS").parse(dateTime));
   }
+  static String localDateToString1(String dateTime) {
+    return DateFormat('dd/MM/yyyy hh:mm a')
+        .format(DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateTime));
+  }
 
   static String convertTimeToTime(String time) {
     return DateFormat('hh:mm a').format(DateFormat('hh:mm:ss').parse(time));

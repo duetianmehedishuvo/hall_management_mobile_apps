@@ -182,6 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                               Navigator.of(context).pushReplacement(
                                                                   MaterialPageRoute(builder: (_) => const AdminDashboardScreen()));
                                                             } else {
+                                                              Provider.of<AuthProvider>(context, listen: false).getUserInfo();
                                                               Navigator.of(context).pushReplacement(
                                                                   MaterialPageRoute(builder: (_) => const StudentDashboardScreen()));
                                                             }
