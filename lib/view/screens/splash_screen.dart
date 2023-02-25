@@ -54,7 +54,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
           Positioned(
               bottom: 20,
               right: 65,
-              child: Text('DUET Sta Hall Management System', style: headline3.copyWith(color: AppColors.whiteColorDark, fontSize: 15))),
+              child: Text('E-Hall:Cost Effective IOT based Smart Hall',
+                  style: headline3.copyWith(color: AppColors.whiteColorDark, fontSize: 15))),
           const Positioned(bottom: 40, right: 30, child: CustomLoader(color: AppColors.whiteColorDark))
         ],
       ),

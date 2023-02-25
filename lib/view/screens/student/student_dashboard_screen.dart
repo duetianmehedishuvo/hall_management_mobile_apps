@@ -15,7 +15,6 @@ import 'package:duetstahall/view/screens/student/roomStudent/room_student_firsts
 import 'package:duetstahall/view/screens/student/students/my_profile_screen.dart';
 import 'package:duetstahall/view/screens/student/transaction/transaction_details_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class StudentDashboardScreen extends StatefulWidget {
@@ -66,7 +65,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       body: Consumer2<AuthProvider, SettingsProvider>(
         builder: (context, authProvider, settingsProvider, child) => ListView(
           physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.only(bottom: 20),
+          padding: const EdgeInsets.only(bottom: 20),
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
@@ -97,9 +96,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  menuWidget(ImagesModel.newRoom, 'Room/Student History', const RoomStudentFirstScreen()),
+                  menuWidget(ImagesModel.room, 'Room/Student History', const RoomStudentFirstScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Meal', const MyMealScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.meal, 'Meal', const MyMealScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),
@@ -108,9 +107,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  menuWidget(ImagesModel.newRoom, 'Balance', const AddBalanceScreen()),
+                  menuWidget(ImagesModel.balance, 'Balance', const AddBalanceScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Transaction', const TransactionDetailsScreen(),
+                  menuWidget(ImagesModel.cash, 'Transaction', const TransactionDetailsScreen(),
                       imageHeight: 86, secondHeight: 15),
                 ],
               ),
@@ -120,9 +119,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  menuWidget(ImagesModel.newRoom, 'Share Balance', const AddBalanceScreen(isShare: true)),
+                  menuWidget(ImagesModel.share, 'Share Balance', const AddBalanceScreen(isShare: true)),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Hall Fee', const HallFeeScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.hall_fee, 'Hall Fee', const HallFeeScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),
@@ -131,9 +130,20 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  menuWidget(ImagesModel.newRoom, 'Complain', const ComplainScreen()),
+                  menuWidget(ImagesModel.complaint, 'Complain', const ComplainScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Guest Room', const GuestRoomScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.guest_room, 'Guest Room', const GuestRoomScreen(), imageHeight: 86, secondHeight: 15),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  menuWidget(ImagesModel.community, 'Community', const ComplainScreen()),
+                  const SizedBox(width: 10),
+                  menuWidget(ImagesModel.notice, 'Notice', const GuestRoomScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),
@@ -161,7 +171,7 @@ Widget menuWidget(String imageUrl, String title, Widget nextWidget,
         child: Column(
           children: [
             SizedBox(height: firstHeight),
-            SvgPicture.asset(imageUrl, height: imageHeight),
+            Image.asset(imageUrl, height: imageHeight),
             SizedBox(height: secondHeight),
             Text(title, style: headline4, textAlign: TextAlign.center)
           ],

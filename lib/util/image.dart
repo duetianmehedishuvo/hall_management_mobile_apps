@@ -23,6 +23,17 @@ class ImagesModel {
 
   //Image
   static const String loginBannerOne = 'assets/images/login_banner_1.png';
+  static const String balance = 'assets/images/balance.png';
+  static const String cash = 'assets/images/cash.png';
+  static const String complaint = 'assets/images/complaint.png';
+  static const String guest_room = 'assets/images/guest_room.png';
+  static const String hall_fee = 'assets/images/hall_fee.png';
+  static const String meal = 'assets/images/meal.png';
+  static const String room = 'assets/images/room.png';
+  static const String community = 'assets/images/community.png';
+  static const String notice = 'assets/images/notice.png';
+  static const String settings = 'assets/images/settings.png';
+  static const String share = 'assets/images/share.png';
   static const String loginBannerTwo = 'assets/images/login_banner_2.png';
   static const String login = 'assets/images/login.png';
   static const String no_internet = 'assets/images/opps_internet.png';

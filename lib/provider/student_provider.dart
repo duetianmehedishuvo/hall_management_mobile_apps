@@ -609,4 +609,54 @@ class StudentProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  List<MealModel> mealLists = [];
+  int totalMealCountValue = 0;
+  int guestMealCountValue = 0;
+  int orginalCountValue = 0;
+
+  void checkTodayMeal(String date, {bool isFirstTime = false}) async {
+    _isLoading = true;
+    totalMealCountValue = 0;
+    guestMealCountValue = 0;
+    orginalCountValue = 0;
+    mealLists.clear();
+    mealLists = [];
+    if (!isFirstTime) {
+      notifyListeners();
+    } else {
+      selectDate = DateConverter.formatDate(DateTime.now());
+      dateTime = DateTime.now();
+    }
+    ApiResponse apiResponse1 = await studentRepo.checkTodayMeal(date);
+
+    _isLoading = false;
+    notifyListeners();
+    if (apiResponse1.response.statusCode == 200) {
+      apiResponse1.response.data.forEach((element) {
+        mealLists.add(MealModel.fromJson(element));
+        totalMealCountValue += element['total_meal'] as int;
+      });
+      orginalCountValue = mealLists.length;
+      guestMealCountValue = totalMealCountValue - mealLists.length;
+    } else {
+      String errorMessage = apiResponse1.error.toString();
+      showMessage(errorMessage);
+    }
+  }
+
+  DateTime dateTime = DateTime.now();
+  String selectDate = DateConverter.formatDate(DateTime.now());
+
+  changeSelectDateTime(bool isAdd) {
+    if (isAdd) {
+      dateTime = DateTime(dateTime.year, dateTime.month, dateTime.day + 1);
+    } else {
+      dateTime = DateTime(dateTime.year, dateTime.month, dateTime.day - 1);
+    }
+    selectDate = DateConverter.formatDate(dateTime);
+
+    checkTodayMeal(selectDate);
+    notifyListeners();
+  }
 }

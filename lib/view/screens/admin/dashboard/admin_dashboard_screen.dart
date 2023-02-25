@@ -5,9 +5,11 @@ import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/admin/hall_fee/hall_fee_admin_screen.dart';
+import 'package:duetstahall/view/screens/admin/meal/check_meal_screen.dart';
 import 'package:duetstahall/view/screens/admin/settings/settings_screen.dart';
 import 'package:duetstahall/view/screens/auth/signin_screen.dart';
 import 'package:duetstahall/view/screens/student/complain/complain_screen.dart';
+import 'package:duetstahall/view/screens/student/guest_room_book/guest_room_screen.dart';
 import 'package:duetstahall/view/screens/student/roomStudent/room_student_firstscreen.dart';
 import 'package:duetstahall/view/screens/student/student_dashboard_screen.dart';
 import 'package:duetstahall/view/screens/student/students/my_profile_screen.dart';
@@ -82,9 +84,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  menuWidget(ImagesModel.newRoom, 'Room', const RoomStudentFirstScreen()),
+                  menuWidget(ImagesModel.room, 'Room', const RoomStudentFirstScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Meal', Container()),
+                  menuWidget(ImagesModel.meal, 'Meal', CheckMealScreen()),
                 ],
               ),
             ),
@@ -93,9 +95,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  menuWidget(ImagesModel.newRoom, 'Settings', SettingsScreen()),
+                  menuWidget(ImagesModel.settings, 'Settings', SettingsScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Hall Fee', HallFeeAdminScreen()),
+                  menuWidget(ImagesModel.hall_fee, 'Hall Fee', HallFeeAdminScreen()),
                 ],
               ),
             ),
@@ -104,9 +106,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  menuWidget(ImagesModel.newRoom, 'Complain', ComplainScreen(isAdmin: true)),
+                  menuWidget(ImagesModel.complaint, 'Complain', ComplainScreen(isAdmin: true)),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.newCookingIcons, 'Hall Fee', HallFeeAdminScreen()),
+                  menuWidget(ImagesModel.guest_room, 'Guest Room', GuestRoomScreen(isAdmin: true)),
                 ],
               ),
             ),
