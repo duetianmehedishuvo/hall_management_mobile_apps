@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 class AddMealScreen extends StatefulWidget {
   final StudentModel? studentModel;
 
-  const AddMealScreen({this.studentModel, Key? key}) : super(key: key);
+  const AddMealScreen({this.studentModel, super.key});
 
   @override
   State<AddMealScreen> createState() => _AddMealScreenState();
@@ -137,9 +137,9 @@ class _AddMealScreenState extends State<AddMealScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 72),
                     margin: const EdgeInsets.symmetric(horizontal: 32, vertical: 72),
                     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
-                    child: Column(
+                    child: const Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
+                      children: [
                         Icon(Icons.check, color: AppColors.primaryColorLight, size: 96),
                         Center(
                           child: Text(

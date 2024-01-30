@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:duetstahall/dining/user_dashboard.dart';
 import 'package:duetstahall/dining/widgets/custom_loader.dart';
 import 'package:duetstahall/dining/widgets/custome_text_fields.dart';
 import 'package:duetstahall/dining/widgets/rounded_button.dart';
@@ -13,7 +12,6 @@ import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/admin/dashboard/admin_dashboard_screen.dart';
 import 'package:duetstahall/view/screens/auth/signup_screen.dart';
 import 'package:duetstahall/view/screens/student/student_dashboard_screen.dart';
-import 'package:duetstahall/view/widgets/snackbar_message.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

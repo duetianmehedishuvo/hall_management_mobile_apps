@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 class CheckTodayScreen extends StatefulWidget {
   final bool isToday;
 
-  const CheckTodayScreen({this.isToday = true, Key? key}) : super(key: key);
+  const CheckTodayScreen({this.isToday = true, super.key});
 
   @override
   State<CheckTodayScreen> createState() => _CheckTodayScreenState();

@@ -8,6 +8,7 @@ import 'package:duetstahall/provider/splash_provider.dart';
 import 'package:duetstahall/provider/student_provider.dart';
 import 'package:duetstahall/translations/codegen_loader.g.dart';
 import 'package:duetstahall/util/helper.dart';
+import 'package:duetstahall/util/theme/app_theme.dart';
 import 'package:duetstahall/view/screens/splash_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       locale: context.locale,
       navigatorKey: Helper.navigatorKey,
+      theme: AppTheme.getLightModeTheme(),
       // theme: Provider.of<ThemeProvider>(context).darkTheme ? AppTheme.getDarkModeTheme() : AppTheme.getLightModeTheme(),
       debugShowCheckedModeBanner: false,
       scrollBehavior: const MaterialScrollBehavior().copyWith(

@@ -15,8 +15,8 @@ final CollectionReference mealRateCollection = FirebaseFirestore.instance.collec
 
 class AppConstant {
   // API BASE URL
-  static const String baseUrl = 'https://evue.in/shuvo/api/';
-  static const String imageBaseUrl = 'https://evue.in/shuvo/images/';
+  static const String baseUrl = 'https://test.pathon.app/api/';
+  static const String imageBaseUrl = 'https://test.pathon.app/images/';
   static const String loginURI = 'login';
   static const String signUPURI = 'register';
   static const String logoutURI = 'logout';

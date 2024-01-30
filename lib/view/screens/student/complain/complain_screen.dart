@@ -56,7 +56,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                     Helper.toScreen(AddComplainScreen());
                   },
                   backgroundColor: colorPrimaryLight,
-                  child: const Icon(Icons.add)),
+                  child: const Icon(Icons.add,color: Colors.white)),
           body: Consumer<ComplainProvider>(
             builder: (context, complainProvider, child) => complainProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())

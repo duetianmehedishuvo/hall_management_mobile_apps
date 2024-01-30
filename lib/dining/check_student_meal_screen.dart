@@ -9,7 +9,7 @@ import 'package:table_calendar/table_calendar.dart';
 class CheckStudentMealScreen extends StatefulWidget {
   final String studentID;
 
-  const CheckStudentMealScreen({this.studentID = '', Key? key}) : super(key: key);
+  const CheckStudentMealScreen({this.studentID = '', super.key});
 
   @override
   State<CheckStudentMealScreen> createState() => _CheckStudentMealScreenState();

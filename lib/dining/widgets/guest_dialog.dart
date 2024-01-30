@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:duetstahall/provider/student_provider.dart';
-import 'package:duetstahall/util/dimensions.dart';
 import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';

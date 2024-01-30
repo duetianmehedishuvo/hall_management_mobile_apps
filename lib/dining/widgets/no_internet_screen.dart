@@ -1,4 +1,3 @@
-import 'package:duetstahall/util/dimensions.dart';
 import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/string_resources.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';

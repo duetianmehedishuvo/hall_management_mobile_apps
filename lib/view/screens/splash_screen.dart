@@ -53,9 +53,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
           Align(child: Hero(tag: "Logo", child: Image.asset(ImagesModel.splashImage, gaplessPlayback: false))),
           Positioned(
               bottom: 20,
-              right: 65,
-              child: Text('E-Hall:Cost Effective IOT based Smart Hall',
-                  style: headline3.copyWith(color: AppColors.whiteColorDark, fontSize: 15))),
+              right: 20,
+              left: 20,
+              child: Center(
+                  child: Text('E-Hall:Cost Effective IOT based Smart Hall', style: headline3.copyWith(color: AppColors.whiteColorDark, fontSize: 15)))),
           const Positioned(bottom: 40, right: 30, child: CustomLoader(color: AppColors.whiteColorDark))
         ],
       ),

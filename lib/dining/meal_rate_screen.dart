@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import '../util/app_constant.dart';
 
 class MealRateScreen extends StatelessWidget {
-  MealRateScreen({Key? key}) : super(key: key);
+  MealRateScreen({super.key});
   final TextEditingController mealRateController = TextEditingController();
 
   @override

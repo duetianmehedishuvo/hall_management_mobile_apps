@@ -8,7 +8,7 @@ class LoggingInterceptor extends InterceptorsWrapper {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    debugPrint("--> ${options.method} ${options.path}");
+    debugPrint("--> ${options.method} ${options.baseUrl}${options.path}");
     debugPrint("Headers: ${options.headers.toString()}");
     debugPrint("<-- END HTTP");
 

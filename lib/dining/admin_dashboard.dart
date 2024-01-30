@@ -13,16 +13,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AdminDashboardScreen extends StatelessWidget {
-  const AdminDashboardScreen({Key? key}) : super(key: key);
+  const AdminDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     Provider.of<StudentProvider>(context, listen: false).initializeAllStudent();
     Provider.of<StudentProvider>(context, listen: false).getData();
-    return WillPopScope(
-      onWillPop: () {
+    return PopScope(
+      onPopInvoked: (s) {
         showAnimatedDialog(context, const GuestDialog(isLogin: true), isFlip: false);
-        return Future.value(true);
+        // return Future.value(true);
       },
       child: Scaffold(
         appBar: AppBar(title: const Text('Admin Dashboard')),

@@ -29,12 +29,17 @@ class RoomProvider with ChangeNotifier {
     _isLoading = false;
 
     if (apiResponse.response.statusCode == 200) {
-      for (var element in apiResponse.response.data['activeStudents']) {
-        activeStudents.add(RoomModel1.fromJson(element));
+      try{
+        for (var element in apiResponse.response.data['activeStudents']) {
+          activeStudents.add(RoomModel1.fromJson(element));
+        }
+        for (var element in apiResponse.response.data['inactiveStudents']) {
+          inactiveStudents.add(RoomModel1.fromJson(element));
+        }
+      }catch(e){
+
       }
-      for (var element in apiResponse.response.data['inactiveStudents']) {
-        inactiveStudents.add(RoomModel1.fromJson(element));
-      }
+
 
       notifyListeners();
     } else {

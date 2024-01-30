@@ -38,7 +38,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       Provider.of<SettingsProvider>(context, listen: false).getConfigData();
     }
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Administrator Panel'),
         elevation: 0,
@@ -67,8 +66,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
               decoration: const BoxDecoration(
-                  color: AppColors.primaryColorLight,
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
+                  color: AppColors.primaryColorLight, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
               child: SizedBox(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -6,21 +6,21 @@ class ApiErrorHandler {
     dynamic errorDescription = "";
     if (error is Exception) {
       try {
-        if (error is DioError) {
+        if (error is DioException) {
           switch (error.type) {
-            case DioErrorType.cancel:
+            case DioExceptionType.cancel:
               errorDescription = "Request to API server was cancelled";
               break;
-            case DioErrorType.connectTimeout:
+            case DioExceptionType.connectionTimeout:
               errorDescription = "Connection timeout with API server";
               break;
-            case DioErrorType.other:
+            case DioExceptionType.unknown:
               errorDescription = "Connection to API server failed due to internet connection";
               break;
-            case DioErrorType.receiveTimeout:
+            case DioExceptionType.receiveTimeout:
               errorDescription = "Receive timeout in connection with API server";
               break;
-            case DioErrorType.response:
+            case DioExceptionType.badResponse:
               switch (error.response!.statusCode) {
                 case 400:
                   errorDescription =
@@ -31,16 +31,21 @@ class ApiErrorHandler {
                 case 401:
                 case 500:
                 case 503:
-                  if ((error.response!.data as Map).containsKey('message')) {
-                    errorDescription = error.response!.data['message'];
-                  } else if ((error.response!.data as Map).containsKey('errors')) {
-                    errorDescription = error.response!.data['errors'];
-                  } else if ((error.response!.data as Map).containsKey('otp_verified')) {
-                    errorDescription = 'OTP Verified Failed Please Insert correct OTP';
-                  } else if ((error.response!.data as Map).containsKey('detail')) {
-                    errorDescription = error.response!.data['detail'];
-                  } else {
-                    errorDescription = error.response!.statusMessage;
+                  print('shshs ${error.response!.data}');
+                  try{
+                    if ((error.response!.data as Map).containsKey('message')) {
+                      errorDescription = error.response!.data['message'];
+                    } else if ((error.response!.data as Map).containsKey('errors')) {
+                      errorDescription = error.response!.data['errors'];
+                    } else if ((error.response!.data as Map).containsKey('otp_verified')) {
+                      errorDescription = 'OTP Verified Failed Please Insert correct OTP';
+                    } else if ((error.response!.data as Map).containsKey('detail')) {
+                      errorDescription = error.response!.data['detail'];
+                    } else {
+                      errorDescription = error.response!.statusMessage.toString();
+                    }
+                  }catch(e){
+                    errorDescription = 'something went wrong';
                   }
 
                   break;
@@ -53,8 +58,14 @@ class ApiErrorHandler {
                   }
               }
               break;
-            case DioErrorType.sendTimeout:
+            case DioExceptionType.sendTimeout:
               errorDescription = "Send timeout with server";
+              break;
+            case DioExceptionType.badCertificate:
+              // TODO: Handle this case.
+              break;
+            case DioExceptionType.connectionError:
+              // TODO: Handle this case.
               break;
           }
         } else {
