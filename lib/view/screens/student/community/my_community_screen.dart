@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MyCommunityScreen extends StatefulWidget {
-  const MyCommunityScreen({Key? key}) : super(key: key);
+  const MyCommunityScreen({super.key});
 
   @override
   State<MyCommunityScreen> createState() => _ComplainScreenState();

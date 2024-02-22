@@ -11,15 +11,14 @@ class SettingsButton extends StatelessWidget {
   final Color color;
 
   const SettingsButton(
-      {Key? key,
+      {super.key,
       required this.icon,
       required this.labelKey,
       this.hintKey = "",
       required this.onClick,
       this.hideDivider = false,
       this.hintWidget,
-      required this.color})
-      : super(key: key);
+      required this.color});
 
   @override
   Widget build(BuildContext context) {

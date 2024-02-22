@@ -1,4 +1,5 @@
 import 'package:duetstahall/dining/my_meal_screen.dart';
+import 'package:duetstahall/helper/open_call_url_map_sms_helper.dart';
 import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/room_provider.dart';
 import 'package:duetstahall/provider/settings_provider.dart';
@@ -140,7 +141,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.community, 'Community', const CommunityScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.notice, 'Notice', Container(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.notice, 'Notice', Container(), imageHeight: 86, secondHeight: 15, isNotice: true),
                 ],
               ),
             ),
@@ -152,12 +153,16 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
 }
 
 Widget menuWidget(String imageUrl, String title, Widget nextWidget,
-    {double firstHeight = 10, double secondHeight = 10, double thirdHeight = 10, double imageHeight = 80}) {
+    {double firstHeight = 10, double secondHeight = 10, double thirdHeight = 10, double imageHeight = 80, bool isNotice = false}) {
   return Expanded(
     child: InkWell(
       onTap: () {
-        Helper.toScreen(nextWidget);
-        Provider.of<RoomProvider>(Helper.navigatorKey.currentState!.context, listen: false).changeFloors(1);
+        if (isNotice) {
+          openNewLink('https://www.duet.ac.bd/notice/all-notices');
+        } else {
+          Helper.toScreen(nextWidget);
+          Provider.of<RoomProvider>(Helper.navigatorKey.currentState!.context, listen: false).changeFloors(1);
+        }
       },
       child: Container(
         padding: const EdgeInsets.all(10),
