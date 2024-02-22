@@ -1,6 +1,7 @@
 import 'package:duetstahall/data/model/response/base/api_response.dart';
 import 'package:duetstahall/data/model/response/guest_room_model.dart';
 import 'package:duetstahall/data/repository/guest_room_repo.dart';
+import 'package:duetstahall/helper/date_converter.dart';
 import 'package:duetstahall/view/widgets/snackbar_message.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -62,11 +63,28 @@ class GuestRoomProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> addGuestRoomBook(String date, String startTime, String endTime, String purpose, String phoneNo) async {
+  DateTime? startTime;
+  DateTime? endTime;
+
+  resetDateTime() {
+    startTime = null;
+    endTime = null;
+  }
+
+  changeDateTime(bool isStart, DateTime dateTime) {
+    if (isStart == true) {
+      startTime = dateTime;
+    } else {
+      endTime = dateTime;
+    }
+    notifyListeners();
+  }
+
+  Future<bool> addGuestRoomBook(String purpose, String phoneNo) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponse apiResponse1 =
-        await guestRoomRepo.addGuestRoomBook(selectRoomTypeInt.toString(), date, startTime, endTime, purpose, phoneNo);
+    ApiResponse apiResponse1 = await guestRoomRepo.addGuestRoomBook(
+        selectRoomTypeInt.toString(), DateConverter.localDateToIsoString2(startTime!), DateConverter.localDateToIsoString2(endTime!), purpose, phoneNo);
     _isLoading = false;
     notifyListeners();
     if (apiResponse1.response.statusCode == 200) {
@@ -88,7 +106,24 @@ class GuestRoomProvider with ChangeNotifier {
     notifyListeners();
     if (apiResponse1.response.statusCode == 200) {
       showMessage(apiResponse1.response.data['message'], isError: false);
-      getAllRoomAssign();
+      getAllRoomAssign(isAdmin: true);
+      return true;
+    } else {
+      String errorMessage = apiResponse1.error.toString();
+      showMessage(errorMessage);
+      return false;
+    }
+  }
+
+  Future<bool> deleteGuestRoomBook() async {
+    _isLoading = true;
+    notifyListeners();
+    ApiResponse apiResponse1 = await guestRoomRepo.deleteGuestRoomBook(guestRoomModel.id.toString());
+    _isLoading = false;
+    notifyListeners();
+    if (apiResponse1.response.statusCode == 200) {
+      showMessage(apiResponse1.response.data['message'], isError: false);
+      getAllRoomAssign(isAdmin: true);
       return true;
     } else {
       String errorMessage = apiResponse1.error.toString();
@@ -104,17 +139,30 @@ class GuestRoomProvider with ChangeNotifier {
   changeRoomType(String value) {
     selectRoomType = value;
     selectRoomTypeInt = selectRoomType == roomType[0]
-        ? 1
+        ? 0
         : selectRoomType == roomType[1]
-            ? 2
+            ? 1
             : selectRoomType == roomType[2]
-                ? 3
-                : 4;
+                ? 2
+                : 3;
     notifyListeners();
   }
 
+  late GuestRoomModel guestRoomModel;
+  bool hasAvailableRoom = false;
 
+  changeGuestRoom(value) {
+    guestRoomModel = value;
+    hasAvailableRoom = guestRoomModel.status == 0 ? false : true;
+    notifyListeners();
+  }
 
-
-
+  changeGuestRoomAccess(bool value, {bool isFirstTime = false}) {
+    hasAvailableRoom = value;
+    if (!isFirstTime) {
+      notifyListeners();
+      acceptRoom(guestRoomModel.id as int, value == true ? 1 : 0);
+      // changeGuestMealAddedStatus();
+    }
+  }
 }

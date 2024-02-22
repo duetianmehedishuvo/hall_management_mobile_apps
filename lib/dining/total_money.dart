@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../util/app_constant.dart';
 
 class TotalMoneyScreen extends StatelessWidget {
-  const TotalMoneyScreen({Key? key}) : super(key: key);
+  const TotalMoneyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

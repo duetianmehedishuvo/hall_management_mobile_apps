@@ -31,9 +31,9 @@ class AddStudentScreen extends StatelessWidget {
               onTap: () {
                 final DatabaseHelper databaseService = DatabaseHelper();
                 databaseService.allStudents().then((value) {
-                  for (var v in value) {
-                    // print(v.toMap());
-                  }
+                  // for (var v in value) {
+                  //   // print(v.toMap());
+                  // }
                 });
               }),
           CustomButton(

@@ -14,7 +14,7 @@ class StudentScreen extends StatelessWidget {
   final bool isUpdateMealCount;
   final bool isDelete;
 
-  const StudentScreen({this.isUpdateMealCount = false, this.isDelete = false, Key? key}) : super(key: key);
+  const StudentScreen({this.isUpdateMealCount = false, this.isDelete = false, super.key});
 
   @override
   Widget build(BuildContext context) {

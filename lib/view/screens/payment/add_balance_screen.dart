@@ -40,78 +40,76 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
   final TextEditingController searchController = TextEditingController();
 
   Future<void> sslCommerzGeneralCall(StudentProvider studentProvider) async {
-    Sslcommerz sslcommerz = Sslcommerz(
-        initializer: SSLCommerzInitialization(
-            //Use the ipn if you have valid one, or it will fail the transaction.
-            ipn_url: "https://www.duet.ac.bd/",
-            multi_card_name: 'visa,master,bkash',
-            currency: SSLCurrencyType.BDT,
-            product_category: "Meal",
-            sdkType: SSLCSdkType.TESTBOX,
-            store_id: 'duet62987ee0a6af1',
-            store_passwd: 'duet62987ee0a6af1@ssl',
-            total_amount: int.parse(amountController.text) * 1.0,
-            tran_id: "1231321321321312"));
-    sslcommerz.addShipmentInfoInitializer(
-        sslcShipmentInfoInitializer: SSLCShipmentInfoInitializer(
-            shipmentMethod: "yes",
-            numOfItems: 5,
-            shipmentDetails: ShipmentDetails(
-                shipAddress1: "Ship address 1",
-                shipCity: "Faridpur",
-                shipCountry: "Bangladesh",
-                shipName: "Ship name 1",
-                shipPostCode: "7860")));
-    sslcommerz.addCustomerInfoInitializer(
-        customerInfoInitializer: SSLCCustomerInfoInitializer(
-            customerState: "Gazipur",
-            customerName: "Mehedi Hasan Shuvo",
-            customerEmail: "sayem227@gmail.com",
-            customerAddress1: "Anderkilla",
-            customerCity: "Chattogram",
-            customerPostCode: "200",
-            customerCountry: "Bangladesh",
-            customerPhone: '01777368276'));
-    var result = await sslcommerz.payNow();
-    if (result is PlatformException) {
-      showMessage(
-        "the response is: ${result.amount!} code: ${result.cardNo!}",
-      );
+    if (widget.isShare == true) {
+      studentProvider.shareBalance(amountController.text).then((value) {
+        if (value['status'] == true) {
+          amountController.text = '';
+          Provider.of<StudentProvider>(context, listen: false).clearSearchStudent(isFirstTime: false);
+          Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
+        } else {
+          showMessage('Balance Shared Failed');
+        }
+      });
     } else {
-      SSLCTransactionInfoModel model = result;
-      showMessage("Transaction successful: Amount ${model.amount} TK", isError: false);
-      _onConfirmed();
-      if (widget.isPayBalance == true) {
-        Provider.of<HallFeeProvider>(context, listen: false).payNow(widget.id, int.parse(amountController.text)).then((value) {
-          if (value['status'] == true) {
-            amountController.text = '';
-            Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
-            Helper.back();
-            Helper.back();
-            Helper.back();
-          } else {
-            showMessage('Balance Shared Failed');
-          }
-        });
-      } else if (widget.isShare == true) {
-        studentProvider.shareBalance(amountController.text).then((value) {
-          if (value['status'] == true) {
-            amountController.text = '';
-            Provider.of<StudentProvider>(context, listen: false).clearSearchStudent(isFirstTime: false);
-            Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
-          } else {
-            showMessage('Balance Shared Failed');
-          }
-        });
+      Sslcommerz sslcommerz = Sslcommerz(
+          initializer: SSLCommerzInitialization(
+              //Use the ipn if you have valid one, or it will fail the transaction.
+              ipn_url: "https://www.duet.ac.bd/",
+              multi_card_name: 'visa,master,bkash',
+              currency: SSLCurrencyType.BDT,
+              product_category: "Meal",
+              sdkType: SSLCSdkType.TESTBOX,
+              store_id: 'duet62987ee0a6af1',
+              store_passwd: 'duet62987ee0a6af1@ssl',
+              total_amount: int.parse(amountController.text) * 1.0,
+              tran_id: "1231321321321312"));
+      sslcommerz.addShipmentInfoInitializer(
+          sslcShipmentInfoInitializer: SSLCShipmentInfoInitializer(
+              shipmentMethod: "yes",
+              numOfItems: 5,
+              shipmentDetails: ShipmentDetails(
+                  shipAddress1: "Ship address 1", shipCity: "Faridpur", shipCountry: "Bangladesh", shipName: "Ship name 1", shipPostCode: "7860")));
+      sslcommerz.addCustomerInfoInitializer(
+          customerInfoInitializer: SSLCCustomerInfoInitializer(
+              customerState: "Gazipur",
+              customerName: "Mehedi Hasan Shuvo",
+              customerEmail: "sayem227@gmail.com",
+              customerAddress1: "Anderkilla",
+              customerCity: "Chattogram",
+              customerPostCode: "200",
+              customerCountry: "Bangladesh",
+              customerPhone: '01777368276'));
+      var result = await sslcommerz.payNow();
+      if (result is PlatformException) {
+        showMessage(
+          "the response is: ${result.amount!} code: ${result.cardNo!}",
+        );
       } else {
-        studentProvider.updateBalance(amountController.text).then((value) {
-          if (value['status'] == true) {
-            amountController.text = '';
-            Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
-          } else {
-            showMessage('Balance Added Failed');
-          }
-        });
+        SSLCTransactionInfoModel model = result;
+        showMessage("Transaction successful: Amount ${model.amount} TK", isError: false);
+        _onConfirmed();
+        if (widget.isPayBalance == true) {
+          Provider.of<HallFeeProvider>(context, listen: false).payNow(widget.id, int.parse(amountController.text)).then((value) {
+            if (value['status'] == true) {
+              amountController.text = '';
+              Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
+              Helper.back();
+              Helper.back();
+              Helper.back();
+            } else {
+              showMessage('Balance Shared Failed');
+            }
+          });
+        } else {
+          studentProvider.updateBalance(amountController.text).then((value) {
+            if (value['status'] == true) {
+              amountController.text = '';
+              Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
+            } else {
+              showMessage('Balance Added Failed');
+            }
+          });
+        }
       }
     }
   }
@@ -133,8 +131,7 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: '${widget.isShare ? "Share Your" : "Add New"} Balance'),
-      body: Consumer3<StudentProvider, SettingsProvider, AuthProvider>(
-          builder: (context, studentProvider, settingsProvider, authProvider, child) {
+      body: Consumer3<StudentProvider, SettingsProvider, AuthProvider>(builder: (context, studentProvider, settingsProvider, authProvider, child) {
         return !studentProvider.isLoading
             ? Column(
                 children: [
@@ -158,12 +155,10 @@ class _AddBalanceScreenState extends State<AddBalanceScreen> {
                         ),
                         const SizedBox(height: 20),
                         Center(
-                            child: Text('Today Meal Rate : ${settingsProvider.configModel.mealRate}৳',
-                                style: robotoStyle600SemiBold.copyWith(fontSize: 16))),
-                        const SizedBox(height: 5),
-                        Center(
                             child:
-                                Text('My Current Balance: ${authProvider.balance}৳', style: robotoStyle600SemiBold.copyWith(fontSize: 16))),
+                                Text('Today Meal Rate : ${settingsProvider.configModel.mealRate}৳', style: robotoStyle600SemiBold.copyWith(fontSize: 16))),
+                        const SizedBox(height: 5),
+                        Center(child: Text('My Current Balance: ${authProvider.balance}৳', style: robotoStyle600SemiBold.copyWith(fontSize: 16))),
                         !widget.isShare ? const SizedBox.shrink() : SizedBox(height: SizeConfig.blockSizeVertical * 1),
                         !widget.isShare
                             ? const SizedBox.shrink()

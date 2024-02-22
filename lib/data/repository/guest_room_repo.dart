@@ -32,11 +32,11 @@ class GuestRoomRepo {
     }
   }
 
-  Future<ApiResponse> addGuestRoomBook(String roomNO, String date, String startTime, String endTime, String purpose, String phoneNo) async {
+  Future<ApiResponse> addGuestRoomBook(String roomNO, String startTime, String endTime, String purpose, String phoneNo) async {
     Response response = Response(requestOptions: RequestOptions(path: '22222'));
     try {
-      response = await dioClient.post('addGuestRoomBook',
-          data: {'roomNO': roomNO, 'date': date, 'start_time': startTime, 'end_time': endTime, 'purpose': purpose, 'phoneNo': phoneNo});
+      response = await dioClient
+          .post('addGuestRoomBook', data: {'roomNO': roomNO, 'start_time': startTime, 'end_time': endTime, 'purpose': purpose, 'phoneNo': phoneNo});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
@@ -47,6 +47,16 @@ class GuestRoomRepo {
     Response response = Response(requestOptions: RequestOptions(path: '22222'));
     try {
       response = await dioClient.post('acceptRoom', data: {'id': id, 'status': status});
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
+
+  Future<ApiResponse> deleteGuestRoomBook(String id) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+    try {
+      response = await dioClient.get('deleteGuestRoomBook?id=$id');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);

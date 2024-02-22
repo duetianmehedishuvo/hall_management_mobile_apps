@@ -124,29 +124,25 @@ class _CustomTextFieldState extends State<CustomTextField> {
         enabled: widget.isEnabled,
         autofocus: widget.autoFocus!,
         obscureText: widget.isPassword! ? _obscureText : false,
-        inputFormatters:
-            widget.inputType == TextInputType.phone ? <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp('[0-9+]'))] : null,
+        inputFormatters: widget.inputType == TextInputType.phone ? <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp('[0-9+]'))] : null,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(vertical: widget.verticalSize!, horizontal: widget.horizontalSize!),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius!),
-              borderSide: BorderSide(
-                  color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent, width: widget.isShowBorder! ? 1 : 0)),
+              borderSide: BorderSide(color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent, width: widget.isShowBorder! ? 1 : 0)),
           disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius!),
-              borderSide: BorderSide(
-                  color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent, width: widget.isShowBorder! ? 1 : 0)),
+              borderSide: BorderSide(color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent, width: widget.isShowBorder! ? 1 : 0)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius!),
-              borderSide: BorderSide(
-                  color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent, width: widget.isShowBorder! ? 1 : 0)),
+              borderSide: BorderSide(color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent, width: widget.isShowBorder! ? 1 : 0)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius!),
-              borderSide: BorderSide(
-                  color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent, width: widget.isShowBorder! ? 1 : 1)),
+              borderSide: BorderSide(color: widget.isShowBorder! ? CupertinoColors.systemGrey : Colors.transparent, width: widget.isShowBorder! ? 1 : 1)),
           isDense: true,
           hintText: widget.hintText,
           labelText: widget.labelText,
+          labelStyle: input.copyWith(fontSize: widget.hintFontSize, color: widget.textColor ?? AppColors.hintTextColorLight.withOpacity(.5)),
           fillColor: widget.fillColor ?? AppColors.imageBGColorLight,
           hintStyle: input.copyWith(fontSize: widget.hintFontSize, color: widget.textColor ?? AppColors.hintTextColorLight),
           filled: true,
@@ -159,13 +155,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
           prefixIconConstraints: const BoxConstraints(minWidth: 23, maxHeight: 20),
           suffixIcon: widget.isShowSuffixIcon! && !widget.isShowSuffixWidget!
               ? widget.isPassword!
-                  ? InkWell(
-                      onTap: _toggle, child: Icon(!_obscureText ? Icons.visibility_off : Icons.visibility, color: AppColors.grey, size: 23))
+                  ? InkWell(onTap: _toggle, child: Icon(!_obscureText ? Icons.visibility_off : Icons.visibility, color: AppColors.grey, size: 23))
                   : widget.isIcon!
                       ? IconButton(
                           onPressed: widget.onSuffixTap,
-                          icon: Image.asset(widget.suffixIconUrl!,
-                              width: 15, height: 15, color: Theme.of(context).textTheme.bodyText1!.color),
+                          icon: Image.asset(widget.suffixIconUrl!, width: 15, height: 15, color: Theme.of(context).textTheme.bodyText1!.color),
                         )
                       : null
               : widget.isShowSuffixWidget!
