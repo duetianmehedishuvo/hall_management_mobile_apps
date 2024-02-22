@@ -9,6 +9,7 @@ import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/auth/signin_screen.dart';
 import 'package:duetstahall/view/screens/hall_fee/hall_fee_screen.dart';
 import 'package:duetstahall/view/screens/payment/add_balance_screen.dart';
+import 'package:duetstahall/view/screens/student/community/community_screen.dart';
 import 'package:duetstahall/view/screens/student/complain/complain_screen.dart';
 import 'package:duetstahall/view/screens/student/guest_room_book/guest_room_screen.dart';
 import 'package:duetstahall/view/screens/student/roomStudent/room_student_firstscreen.dart';
@@ -18,7 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class StudentDashboardScreen extends StatefulWidget {
-  const StudentDashboardScreen({Key? key}) : super(key: key);
+  const StudentDashboardScreen({super.key});
 
   @override
   State<StudentDashboardScreen> createState() => _StudentDashboardScreenState();
@@ -70,18 +71,15 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
               decoration: const BoxDecoration(
-                  color: AppColors.primaryColorLight,
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
+                  color: AppColors.primaryColorLight, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
               child: SizedBox(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text("Welcome, ${authProvider.name}", style: headline4.copyWith(color: Colors.white, fontSize: 18)),
                     const SizedBox(height: 3),
-                    Text('My Balance:  ${authProvider.balance}৳',
-                        style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
-                    Text('Total Hall Fee:  ${authProvider.dueBalance}৳',
-                        style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
+                    Text('My Balance:  ${authProvider.balance}৳', style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
+                    Text('Total Hall Fee:  ${authProvider.dueBalance}৳', style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
                     const SizedBox(height: 3),
                     Text('Service Time ', style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
                     const SizedBox(height: 3),
@@ -109,8 +107,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.balance, 'Balance', const AddBalanceScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.cash, 'Transaction', const TransactionDetailsScreen(),
-                      imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.cash, 'Transaction', const TransactionDetailsScreen(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),
@@ -141,9 +138,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  menuWidget(ImagesModel.community, 'Community', const ComplainScreen()),
+                  menuWidget(ImagesModel.community, 'Community', const CommunityScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.notice, 'Notice', const GuestRoomScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.notice, 'Notice', Container(), imageHeight: 86, secondHeight: 15),
                 ],
               ),
             ),

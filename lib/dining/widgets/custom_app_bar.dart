@@ -1,7 +1,9 @@
 import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/student_provider.dart';
 import 'package:duetstahall/util/image.dart';
+import 'package:duetstahall/util/size.util.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
+import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,12 +17,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double borderRadius;
   final bool isRefreshEnable;
   final bool isRefreshEnable2;
+  final bool isOpenCommunity;
 
   const CustomAppBar(
       {Key? key,
       required this.title,
       this.isBackButtonExist = true,
       this.isRefreshEnable = false,
+      this.isOpenCommunity = false,
       this.isRefreshEnable2 = false,
       this.onBackPressed,
       this.onRefreshPressed,
@@ -75,6 +79,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               onRefreshPressed!();
                             },
                             child: const Icon(Icons.refresh, color: Colors.white),
+                          )
+                        : isOpenCommunity
+                        ? InkWell(
+                            onTap: () {
+                              // onRefreshPressed!();
+                            },
+                            child: Row(
+                              children: [
+                                Text('My Post',style: robotoStyle500Medium.copyWith(color: Colors.white)),
+                                spaceWeight5,
+                                Icon(Icons.info, color: Colors.white,size: 18)
+                              ],
+                            ),
                           )
                         : const SizedBox.shrink(),
                 const SizedBox(width: 10)
