@@ -97,8 +97,7 @@ class _ComplainScreenState extends State<CommunityDetailsScreen> {
                               ),
                             ),
                             spaceHeight5,
-                            Text(widget.communityModel.details!,
-                                style: robotoStyle500Medium.copyWith(fontSize: 15, color: Colors.black), maxLines: 3, overflow: TextOverflow.ellipsis),
+                            Text(widget.communityModel.details!, style: robotoStyle500Medium.copyWith(fontSize: 15, color: Colors.black)),
                             Container(height: 1, width: screenWeight(), color: Colors.grey.withOpacity(.2), margin: EdgeInsets.symmetric(vertical: 4)),
                             Row(
                               children: [

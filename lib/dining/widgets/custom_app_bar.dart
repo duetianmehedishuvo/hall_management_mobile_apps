@@ -1,9 +1,11 @@
 import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/student_provider.dart';
+import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/size.util.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/screens/student/community/my_community_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -84,6 +86,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ? InkWell(
                             onTap: () {
                               // onRefreshPressed!();
+                              Helper.toScreen(MyCommunityScreen());
                             },
                             child: Row(
                               children: [
