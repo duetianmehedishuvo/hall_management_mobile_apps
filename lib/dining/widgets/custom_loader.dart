@@ -1,9 +1,10 @@
 
+import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CustomLoader extends StatelessWidget {
-  const CustomLoader({this.color = Colors.teal, Key? key}) : super(key: key);
+  const CustomLoader({this.color = colorPrimaryLight, super.key});
   final Color color;
 
   @override

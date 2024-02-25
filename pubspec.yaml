@@ -67,6 +67,7 @@ dependencies:
   auto_size_text: ^3.0.0
   carousel_slider: ^4.2.1
   modal_progress_hud_nsn: ^0.5.1
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:

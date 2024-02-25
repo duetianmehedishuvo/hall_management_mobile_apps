@@ -9,6 +9,7 @@ import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/auth/signin_screen.dart';
 import 'package:duetstahall/view/screens/hall_fee/hall_fee_screen.dart';
+import 'package:duetstahall/view/screens/library/library_screen.dart';
 import 'package:duetstahall/view/screens/payment/add_balance_screen.dart';
 import 'package:duetstahall/view/screens/student/community/community_screen.dart';
 import 'package:duetstahall/view/screens/student/complain/complain_screen.dart';
@@ -70,7 +71,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
           padding: const EdgeInsets.only(bottom: 20),
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              padding: const EdgeInsets.only(left: 14, bottom: 10,right: 14),
               decoration: const BoxDecoration(
                   color: AppColors.primaryColorLight, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
               child: SizedBox(
@@ -79,12 +80,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                   children: <Widget>[
                     Text("Welcome, ${authProvider.name}", style: headline4.copyWith(color: Colors.white, fontSize: 18)),
                     const SizedBox(height: 3),
-                    Text('My Balance:  ${authProvider.balance}৳', style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
-                    Text('Total Hall Fee:  ${authProvider.dueBalance}৳', style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
+                    Text('My Balance:  ${authProvider.balance}৳ | Hall Due:  ${authProvider.dueBalance}৳', style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
                     const SizedBox(height: 3),
-                    Text('Service Time ', style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
-                    const SizedBox(height: 3),
-                    Text('${settingsProvider.configModel.offlineTakaLoadTime}',
+                    Text('Service Time: ${settingsProvider.configModel.offlineTakaLoadTime}',
                         style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
                   ],
                 ),
@@ -97,7 +95,18 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.room, 'Room/Student History', const RoomStudentFirstScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.meal, 'Meal', const MyMealScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.meal, 'Meal', const MyMealScreen(), imageHeight: 74, secondHeight: 15),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  menuWidget(ImagesModel.library, 'Central Library', const LibraryScreen()),
+                  const SizedBox(width: 10),
+                  menuWidget(ImagesModel.medical, 'Medical', const MyMealScreen()),
                 ],
               ),
             ),
@@ -108,7 +117,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.balance, 'Balance', const AddBalanceScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.cash, 'Transaction', const TransactionDetailsScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.cash, 'Transaction', const TransactionDetailsScreen(), imageHeight: 55, secondHeight: 15),
                 ],
               ),
             ),
@@ -119,7 +128,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.share, 'Share Balance', const AddBalanceScreen(isShare: true)),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.hall_fee, 'Hall Fee', const HallFeeScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.hall_fee, 'Hall Fee', const HallFeeScreen(), imageHeight: 54, secondHeight: 15),
                 ],
               ),
             ),
@@ -130,7 +139,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.complaint, 'Complain', const ComplainScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.guest_room, 'Guest Room', const GuestRoomScreen(), imageHeight: 86, secondHeight: 15),
+                  menuWidget(ImagesModel.guest_room, 'Guest Room', const GuestRoomScreen(), imageHeight: 54, secondHeight: 15),
                 ],
               ),
             ),
@@ -141,7 +150,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.community, 'Community', const CommunityScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.notice, 'Notice', Container(), imageHeight: 86, secondHeight: 15, isNotice: true),
+                  menuWidget(ImagesModel.notice, 'Notice', Container(), imageHeight: 54, secondHeight: 15, isNotice: true),
                 ],
               ),
             ),
@@ -153,7 +162,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
 }
 
 Widget menuWidget(String imageUrl, String title, Widget nextWidget,
-    {double firstHeight = 10, double secondHeight = 10, double thirdHeight = 10, double imageHeight = 80, bool isNotice = false}) {
+    {double firstHeight = 10, double secondHeight = 10, double thirdHeight = 10, double imageHeight = 60, bool isNotice = false}) {
   return Expanded(
     child: InkWell(
       onTap: () {
@@ -165,7 +174,7 @@ Widget menuWidget(String imageUrl, String title, Widget nextWidget,
         }
       },
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [BoxShadow(color: Colors.grey.withOpacity(.2), blurRadius: 10.0, spreadRadius: 3.0, offset: const Offset(0.0, 0.0))],

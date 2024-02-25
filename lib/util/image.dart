@@ -40,5 +40,7 @@ class ImagesModel {
   static const String no_data = 'assets/images/no_data.png';
   static const String wish_image = 'assets/images/wish.png';
   static const String wishlist = 'assets/images/wishlist.png';
+  static const String library = 'assets/images/library.png';
+  static const String medical = 'assets/images/syringe.png';
 
 }
