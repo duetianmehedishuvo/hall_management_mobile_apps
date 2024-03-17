@@ -66,7 +66,7 @@ class _PurchedAllBookHistoryScreenState extends State<PurchedAllBookHistoryScree
                 ? const Center(child: CircularProgressIndicator())
                 : Column(
                     children: [
-                      !widget.isAdmin
+                      !widget.isAdmin&&!widget.isFromIssueBook
                           ? spaceZero
                           : Padding(
                               padding: const EdgeInsets.all(8.0),
