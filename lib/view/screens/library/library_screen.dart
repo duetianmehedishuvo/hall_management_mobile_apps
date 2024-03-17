@@ -1,20 +1,21 @@
-import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/helper/open_call_url_map_sms_helper.dart';
+import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/library_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/size.util.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/screens/auth/signin_screen.dart';
 import 'package:duetstahall/view/screens/library/add_book_screen.dart';
 import 'package:duetstahall/view/screens/library/all_book_screen.dart';
+import 'package:duetstahall/view/screens/library/check_card_screen.dart';
+import 'package:duetstahall/view/screens/library/purched_all_book_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
 class LibraryScreen extends StatefulWidget {
-  final bool isAdmin;
-
-  const LibraryScreen({this.isAdmin = false, super.key});
+  const LibraryScreen({super.key});
 
   @override
   State<LibraryScreen> createState() => _LibraryScreenState();
@@ -25,13 +26,32 @@ class _LibraryScreenState extends State<LibraryScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    Provider.of<AuthProvider>(context, listen: false).getUserInfo();
     Provider.of<LibraryProvider>(context, listen: false).changeLoadingFalse();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Central Library'),
+      appBar: AppBar(
+        title: Text(checkIsAdmin ? 'Administration Central Library' : 'Central Library'),
+        elevation: 0,
+        centerTitle: true,
+        backgroundColor: AppColors.primaryColorLight,
+        actions: [
+          !checkIsAdmin
+              ? spaceZero
+              : IconButton(
+                  onPressed: () {
+                    Provider.of<AuthProvider>(context, listen: false).logout().then((value) {
+                      if (value == true) {
+                        Helper.toRemoveUntilScreen(const LoginScreen());
+                      }
+                    });
+                  },
+                  icon: const Icon(Icons.logout)),
+        ],
+      ),
       body: Consumer<LibraryProvider>(
         builder: (context, libraryProvider, child) => ModalProgressHUD(
           inAsyncCall: libraryProvider.isLoading,
@@ -48,13 +68,20 @@ class _LibraryScreenState extends State<LibraryScreen> {
               ),
               spaceHeight5,
               spaceHeight5,
-              buttonWidget(Icons.add_circle, 'Add Book', const AddBookScreen()),
-              buttonWidget(Icons.library_books, 'All Books', const AllBookScreen(isAdmin: true)),
-              buttonWidget(Icons.book_sharp, 'Issue Books', const AllBookScreen(isAdmin: true), onTap: () {
-                libraryProvider.deleteAllCard().then((value) {});
-              }),
-              buttonWidget(Icons.library_add_rounded, 'My Renew Book List', Container()),
-              buttonWidget(Icons.library_add_check, 'My Return Book List', Container()),
+              !checkIsAdmin ? spaceZero : buttonWidget(Icons.add_circle, 'Add Book', const AddBookScreen()),
+              buttonWidget(Icons.library_books, 'All Books', AllBookScreen(isAdmin: checkIsAdmin)),
+              !checkIsAdmin
+                  ? spaceZero
+                  : buttonWidget(Icons.book_sharp, 'Issue Books', const AllBookScreen(isAdmin: true), onTap: () {
+                      libraryProvider.deleteAllCard().then((value) {
+                        if (value == true) {
+                          Helper.toScreen(CheckCardScreen());
+                        }
+                      });
+                    }),
+              checkIsAdmin
+                  ? spaceZero
+                  : buttonWidget(Icons.library_add_rounded, 'My Renew and Return Book List', PurchedAllBookHistoryScreen(isAdmin: false)),
               buttonWidget(Icons.notifications_active, 'Notices', Container(),
                   url: 'http://103.133.35.62:8081/cgi-bin/koha/opac-news-rss.pl?branchcode=MNL'),
               buttonWidget(Icons.report_sharp, 'DUET Institutional Repository', Container(), url: 'http://103.133.35.64:8080/xmlui/'),

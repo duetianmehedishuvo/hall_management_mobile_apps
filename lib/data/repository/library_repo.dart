@@ -59,20 +59,10 @@ class LibraryRepo {
     }
   }
 
-  Future<ApiResponse> bookPurchedHistoryByStudentID(int page, int studentID, String type) async {
+  Future<ApiResponse> bookPurchedHistory(int page, int studentID, String type, int isAdmin) async {
     Response response = Response(requestOptions: RequestOptions(path: '22222'));
     try {
-      response = await dioClient.get('bookPurchedHistoryByStudentID?studentID=$studentID&type=$type&page=$page');
-      return ApiResponse.withSuccess(response);
-    } catch (e) {
-      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
-    }
-  }
-
-  Future<ApiResponse> bookPurchedHistoryForAdmin(int page, String type) async {
-    Response response = Response(requestOptions: RequestOptions(path: '22222'));
-    try {
-      response = await dioClient.get('bookPurchedHistoryForAdmin?type=$type&page=$page');
+      response = await dioClient.get('bookPurchedHistory?studentID=$studentID&type=$type&isAdmin=$isAdmin&page=$page');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
@@ -88,6 +78,7 @@ class LibraryRepo {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
     }
   }
+
   Future<ApiResponse> checkCardIssue() async {
     Response response = Response(requestOptions: RequestOptions(path: '22222'));
     try {

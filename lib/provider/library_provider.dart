@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:duetstahall/data/model/response/base/api_response.dart';
 import 'package:duetstahall/data/model/response/book_model.dart';
+import 'package:duetstahall/data/model/response/book_purched_model.dart';
 import 'package:duetstahall/data/repository/library_repo.dart';
+import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/view/widgets/snackbar_message.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -101,16 +105,34 @@ class LibraryProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> bookIssue(int isUpdate, {int id = -1}) async {
+    _isLoading = true;
+    notifyListeners();
+    ApiResponse apiResponse1 = await libraryRepo.bookIssue(bookModel.id as int, int.parse(studentID), isUpdate, id);
+    _isLoading = false;
+    notifyListeners();
+    if (apiResponse1.response.statusCode == 200) {
+      showMessage(apiResponse1.response.data['message'], isError: false);
+      getBookPurchedHistory(isFirstTime: false);
+      return true;
+    } else {
+      String errorMessage = apiResponse1.error.toString();
+      showMessage(errorMessage);
+      return false;
+    }
+  }
+
   Future<bool> deleteAllCard() async {
     _isLoading = true;
     cardID = '';
     studentID = '';
+
     notifyListeners();
     ApiResponse apiResponse = await libraryRepo.deleteAllCard();
     _isLoading = false;
     notifyListeners();
     if (apiResponse.response.statusCode == 200) {
-      // showMessage(apiResponse.response.data['message'], isError: false);
+      isCheckCardIssue = true;
       return true;
     } else {
       String errorMessage = apiResponse.error.toString();
@@ -122,81 +144,107 @@ class LibraryProvider with ChangeNotifier {
   String studentID = '';
   String cardID = '';
 
+  clearStudentID(){
+    studentID = '';
+  }
+
+  bool isCheckCardIssue = false;
+
+  void changeCheckCardIssue() {
+    isCheckCardIssue = false;
+    notifyListeners();
+  }
+
   void checkCardIssue() async {
     cardID = '';
     studentID = '';
-    ApiResponse apiResponse = await libraryRepo.checkCardIssue();
-    if (apiResponse.response.statusCode == 200) {
-      studentID = apiResponse.response.data['student_id'];
-      cardID = apiResponse.response.data['card_id'];
-    } else {
-      String errorMessage = apiResponse.error.toString();
-      showMessage(errorMessage);
-      checkCardIssue();
+
+    if (isCheckCardIssue == true) {
+      ApiResponse apiResponse = await libraryRepo.checkCardIssue();
+      if (apiResponse.response.statusCode == 200) {
+        studentID = apiResponse.response.data['student_id'].toString();
+        cardID = apiResponse.response.data['card_id'].toString();
+        notifyListeners();
+      } else {
+        Timer(const Duration(seconds: 2), () {
+          checkCardIssue();
+        });
+      }
     }
   }
 
-//
-// Future<bool> deletePost(int id, int index) async {
-//   _isLoading = true;
-//   notifyListeners();
-//   ApiResponse apiResponse1 = await communityRepo.deletePost(id);
-//   _isLoading = false;
-//   notifyListeners();
-//   if (apiResponse1.response.statusCode == 200) {
-//     showMessage(apiResponse1.response.data['message'], isError: false);
-//     communityList.removeAt(index);
-//     notifyListeners();
-//   } else {
-//     String errorMessage = apiResponse1.error.toString();
-//     showMessage(errorMessage);
-//   }
-//   return true;
-// }
-//
-// // TODO:: for Commend
-// List<CommendModel> commendList = [];
-// bool isBottomLoadingCommend = false;
-// int selectPageCommend = 1;
-// bool isLoadingCommend = false;
-// bool hasNextDataCommend = false;
-//
-// updateAllCommend() {
-//   selectPageCommend++;
-//   getAllCommend(page: selectPageCommend, );
-//   notifyListeners();
-// }
-//
-// getAllCommend({int page = 1,  bool isFirstTime = true}) async {
-//   if (page == 1) {
-//     selectPageCommend = 1;
-//     commendList.clear();
-//     commendList = [];
-//     isLoadingCommend = true;
-//     hasNextDataCommend = false;
-//     isBottomLoadingCommend = false;
-//     if (!isFirstTime) {
-//       notifyListeners();
-//     }
-//   } else {
-//     isBottomLoadingCommend = true;
-//     notifyListeners();
-//   }
-//   ApiResponse response = await communityRepo.getAllPostCommend(selectPageCommend, communityId);
-//
-//   isLoadingCommend = false;
-//   isBottomLoadingCommend = false;
-//
-//   if (response.response.statusCode == 200) {
-//     hasNextDataCommend = response.response.data['next_page_url'] != null ? true : false;
-//     response.response.data['data'].forEach((element) {
-//       commendList.add(CommendModel.fromJson(element));
-//     });
-//   } else {
-//     Fluttertoast.showToast(msg: response.response.statusMessage!);
-//   }
-//   notifyListeners();
-// }
+// TODO:: for Commend
+  List<BookPurchedModel> bookPurchedList = [];
+  bool isBottomLoadingCommend = false;
+  int selectPageCommend = 1;
+  bool isLoadingCommend = false;
+  bool hasNextDataCommend = false;
+
+  updateAllCommend() {
+    selectPageCommend++;
+    getBookPurchedHistory(page: selectPageCommend);
+    notifyListeners();
+  }
+
+  int isAdmin = 0;
+
+  changeAdminStatus(int status) {
+    isAdmin = status;
+    notifyListeners();
+  }
+
+  List<String> purchedType = ['All', 'Renew', "Return"];
+  String selectPurchedType = 'All';
+
+  changePurchedType(String value, {bool isCallAPI = false, bool isFirstTime = true}) {
+    selectPurchedType = value;
+    if (isCallAPI == true) {
+      getBookPurchedHistory(isFirstTime: false);
+    }
+    if (!isFirstTime) {
+      notifyListeners();
+    }
+  }
+
+  getBookPurchedHistory({int page = 1, bool isFirstTime = true}) async {
+    if (page == 1) {
+      selectPageCommend = 1;
+      bookPurchedList.clear();
+      bookPurchedList = [];
+      isLoadingCommend = true;
+      hasNextDataCommend = false;
+      isBottomLoadingCommend = false;
+      if (!isFirstTime) {
+        notifyListeners();
+      }
+    } else {
+      isBottomLoadingCommend = true;
+      notifyListeners();
+    }
+    ApiResponse response = await libraryRepo.bookPurchedHistory(
+        selectPageCommend, studentID.isEmpty ? int.parse(globalStudentID) : int.parse(studentID), selectPurchedType, isAdmin);
+
+    isLoadingCommend = false;
+    isBottomLoadingCommend = false;
+
+    if (response.response.statusCode == 200) {
+      hasNextDataCommend = response.response.data['next_page_url'] != null ? true : false;
+      response.response.data['data'].forEach((element) {
+        bookPurchedList.add(BookPurchedModel.fromJson(element));
+      });
+    } else {
+      Fluttertoast.showToast(msg: response.response.statusMessage!);
+    }
+    notifyListeners();
+  }
+
+  BookModel bookModel = BookModel();
+
+  selectBook(BookModel b) {
+    bookModel = b;
+    notifyListeners();
+  }
+
 //
 // int communityId = 1;
 //

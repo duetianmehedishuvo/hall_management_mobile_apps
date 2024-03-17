@@ -1,47 +1,52 @@
 import 'package:duetstahall/data/model/response/book_model.dart';
+import 'package:duetstahall/data/model/response/book_purched_model.dart';
 import 'package:duetstahall/data/model/response/hall_fee_model.dart';
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/provider/library_provider.dart';
 import 'package:duetstahall/util/helper.dart';
+import 'package:duetstahall/util/size.util.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/hall_fee/hall_fee_details_screen.dart';
 import 'package:duetstahall/view/screens/library/add_book_screen.dart';
+import 'package:duetstahall/view/screens/library/all_book_screen.dart';
 import 'package:duetstahall/view/screens/library/book_details_screen.dart';
+import 'package:duetstahall/view/widgets/custom_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AllBookScreen extends StatefulWidget {
+class PurchedAllBookHistoryScreen extends StatefulWidget {
   final bool isAdmin;
-  final bool isFromCheckCard;
 
-  const AllBookScreen({this.isAdmin = false, this.isFromCheckCard = false, super.key});
+  const PurchedAllBookHistoryScreen({this.isAdmin = true, super.key});
 
   @override
-  State<AllBookScreen> createState() => _AllBookScreenState();
+  State<PurchedAllBookHistoryScreen> createState() => _PurchedAllBookHistoryScreenState();
 }
 
-class _AllBookScreenState extends State<AllBookScreen> {
+class _PurchedAllBookHistoryScreenState extends State<PurchedAllBookHistoryScreen> {
   ScrollController controller = ScrollController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<LibraryProvider>(context, listen: false).addBookCategoryItem(true);
-    Provider.of<LibraryProvider>(context, listen: false).getAllCommunity();
+
+    Provider.of<LibraryProvider>(context, listen: false).clearStudentID();
+    Provider.of<LibraryProvider>(context, listen: false).changePurchedType('All', isFirstTime: true);
+    Provider.of<LibraryProvider>(context, listen: false).getBookPurchedHistory();
     controller.addListener(() {
       if (controller.offset >= controller.position.maxScrollExtent &&
           !controller.position.outOfRange &&
-          Provider.of<LibraryProvider>(context, listen: false).hasNextData) {
-        Provider.of<LibraryProvider>(context, listen: false).updateAllCommunity();
+          Provider.of<LibraryProvider>(context, listen: false).hasNextDataCommend) {
+        Provider.of<LibraryProvider>(context, listen: false).updateAllCommend();
       }
     });
   }
 
   Future<void> _refresh(BuildContext context) async {
-    Provider.of<LibraryProvider>(context, listen: false).getAllCommunity(isFirstTime: false);
+    Provider.of<LibraryProvider>(context, listen: false).getBookPurchedHistory(isFirstTime: false);
   }
 
   @override
@@ -52,12 +57,23 @@ class _AllBookScreenState extends State<AllBookScreen> {
       },
       child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: const CustomAppBar(title: 'All Book List', borderRadius: 0),
+          appBar: const CustomAppBar(title: 'Book Parched History', borderRadius: 0),
           body: Consumer<LibraryProvider>(
-            builder: (context, libraryProvider, child) => libraryProvider.isLoading
+            builder: (context, libraryProvider, child) => libraryProvider.isLoadingCommend
                 ? const Center(child: CircularProgressIndicator())
                 : Column(
                     children: [
+                      !widget.isAdmin
+                          ? spaceZero
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CustomButton(
+                                  btnTxt: 'Add New Book Issue',
+                                  onTap: () {
+                                    Helper.toScreen(AllBookScreen(isFromCheckCard: true));
+                                  }),
+                            ),
+                      libraryProvider.bookPurchedList.isEmpty ? noDataAvailable() : spaceZero,
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                         child: Card(
@@ -70,15 +86,15 @@ class _AllBookScreenState extends State<AllBookScreen> {
                             splashColor: AppColors.imageBGColorLight,
                             tileColor: AppColors.imageBGColorLight,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            title: Text("Book Category", style: robotoStyle500Medium),
+                            title: Text("Type", style: robotoStyle500Medium),
                             contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             trailing: DropdownButtonHideUnderline(
                               child: DropdownButton(
                                 isExpanded: false,
-                                value: libraryProvider.selectCategoryType,
+                                value: libraryProvider.selectPurchedType,
                                 focusColor: AppColors.imageBGColorLight,
                                 dropdownColor: AppColors.imageBGColorLight,
-                                items: libraryProvider.categoryType.map((item) {
+                                items: libraryProvider.purchedType.map((item) {
                                   return DropdownMenuItem(
                                     value: item,
                                     child: SizedBox(
@@ -87,11 +103,11 @@ class _AllBookScreenState extends State<AllBookScreen> {
                                   );
                                 }).toList(),
                                 onChanged: (value) {
-                                  libraryProvider.changeCategoryType(value.toString(), isCallAPI: true);
+                                  libraryProvider.changePurchedType(value.toString(), isCallAPI: true);
                                 },
                                 hint: const SizedBox(
                                   width: 150,
-                                  child: Text("Select Book Item", style: TextStyle(color: Colors.grey), textAlign: TextAlign.end),
+                                  child: Text("Select Type", style: TextStyle(color: Colors.grey), textAlign: TextAlign.end),
                                 ),
                                 style: const TextStyle(color: Colors.black, decorationColor: Colors.green),
                               ),
@@ -106,21 +122,15 @@ class _AllBookScreenState extends State<AllBookScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                           children: [
                             ListView.builder(
-                                itemCount: libraryProvider.bookList.length,
+                                itemCount: libraryProvider.bookPurchedList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  BookModel b = libraryProvider.bookList[index];
+                                  BookPurchedModel b = libraryProvider.bookPurchedList[index];
                                   return InkWell(
                                     onTap: () {
-                                      if (widget.isAdmin && widget.isFromCheckCard == false) {
-                                        Helper.toScreen(AddBookScreen(bookModel: b, isAdmin: widget.isAdmin, isUpdate: true));
-                                      } else if (widget.isFromCheckCard) {
-                                        libraryProvider.selectBook(b);
-                                        Helper.toScreen(BookDetailsScreen(isfromCheck: widget.isFromCheckCard));
-                                      }else{
-                                        libraryProvider.selectBook(b);
-                                        Helper.toScreen(const BookDetailsScreen());
+                                      if (b.status == 0 && widget.isAdmin == true) {
+                                        Helper.toScreen(BookDetailsScreen(isfromCheck: true, isUpdate: 1, id: b.id as int));
                                       }
                                     },
                                     child: Card(
@@ -129,19 +139,20 @@ class _AllBookScreenState extends State<AllBookScreen> {
                                       elevation: 1,
                                       child: ListTile(
                                         title: Text(b.title!, style: robotoStyle500Medium.copyWith(fontSize: 15)),
-                                        subtitle: Text('Author: ${b.author!}', style: robotoStyle300Light.copyWith(fontSize: 15)),
                                         trailing: Text('${b.price!}৳\n${b.category}',
                                             style: robotoStyle700Bold.copyWith(fontSize: 15), textAlign: TextAlign.right),
+                                        subtitle: Text('Author: ${b.author!}\nStatus: ${b.status == 0 ? 'Renew' : 'Return'}\nLast Update: ${b.updatedAt}',
+                                            style: robotoStyle300Light.copyWith(fontSize: 15)),
                                       ),
                                     ),
                                   );
                                 }),
-                            libraryProvider.isBottomLoading
+                            libraryProvider.isBottomLoadingCommend
                                 ? const Center(child: CircularProgressIndicator())
-                                : libraryProvider.hasNextData
+                                : libraryProvider.hasNextDataCommend
                                     ? InkWell(
                                         onTap: () {
-                                          libraryProvider.updateAllCommunity();
+                                          libraryProvider.updateAllCommend();
                                         },
                                         child: Container(
                                           height: 30,
@@ -162,10 +173,7 @@ class _AllBookScreenState extends State<AllBookScreen> {
     );
   }
 
-  void route(HallFeeModel hallFeeModel, int index) {
-    Helper.toScreen(HallFeeDetailsScreen(hallFeeModel, isAdmin: widget.isAdmin, index: index));
-  }
-
-  DataColumn buildDataColumn(String title, String tooltips) =>
-      DataColumn(label: Expanded(child: Center(child: Text(title, textAlign: TextAlign.center))), tooltip: tooltips);
+// void route(HallFeeModel hallFeeModel, int index) {
+//   Helper.toScreen(HallFeeDetailsScreen(hallFeeModel, isAdmin: widget.isAdmin, index: index));
+// }
 }

@@ -8,6 +8,7 @@ import 'package:duetstahall/util/image.dart';
 import 'package:duetstahall/util/sizeConfig.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/screens/library/library_screen.dart';
 import 'package:duetstahall/view/screens/student/student_dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +38,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const StudentDashboardScreen()), (route) => false);
         } else if (Provider.of<AuthProvider>(context, listen: false).userStatus == 1) {
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const AdminDashboardScreen()), (route) => false);
+        }else if (Provider.of<AuthProvider>(context, listen: false).userStatus == 2) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) =>  const LibraryScreen()), (route) => false);
         }
       }
     });

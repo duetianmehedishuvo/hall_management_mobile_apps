@@ -29,8 +29,7 @@ Widget singleItemWithKeyValue(String key, String value) {
 Widget noDataAvailable() {
   return Center(
       child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: Text('No Data Available', style: robotoStyle500Medium.copyWith(fontSize: 16))));
+          padding: const EdgeInsets.symmetric(vertical: 15), child: Text('No Data Available', style: robotoStyle500Medium.copyWith(fontSize: 16))));
 }
 
 Widget singleItemWithKeyValueAndCopy(String key, String value) {
@@ -56,7 +55,14 @@ double screenWeight() {
 }
 
 bool get checkIsAdmin {
-  return Provider.of<AuthProvider>(Helper.navigatorKey.currentState!.context, listen: false).userStatus == 1 ? true : false;
+  return Provider.of<AuthProvider>(Helper.navigatorKey.currentState!.context, listen: false).userStatus == 1 ||
+          Provider.of<AuthProvider>(Helper.navigatorKey.currentState!.context, listen: false).userStatus == 2
+      ? true
+      : false;
+}
+
+String get globalStudentID {
+  return Provider.of<AuthProvider>(Helper.navigatorKey.currentState!.context, listen: false).studentID;
 }
 
 class Helper {
@@ -87,8 +93,8 @@ class Helper {
   }
 
   static showSnack(context, message, {color = colorPrimaryLight, duration = 2}) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(message, style: const TextStyle(fontSize: 14)), backgroundColor: color, duration: Duration(seconds: duration)));
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message, style: const TextStyle(fontSize: 14)), backgroundColor: color, duration: Duration(seconds: duration)));
   }
 
   static circularProgress(context) {
