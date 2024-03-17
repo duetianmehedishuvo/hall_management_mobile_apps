@@ -14,6 +14,10 @@ class LibraryProvider with ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  void changeLoadingFalse() {
+    _isLoading = false;
+  }
+
   List<String> categoryType = ['CSE', 'EEE', "ME", "IPE", "CE", "Other"];
   String selectCategoryType = 'CSE';
 
@@ -96,6 +100,42 @@ class LibraryProvider with ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> deleteAllCard() async {
+    _isLoading = true;
+    cardID = '';
+    studentID = '';
+    notifyListeners();
+    ApiResponse apiResponse = await libraryRepo.deleteAllCard();
+    _isLoading = false;
+    notifyListeners();
+    if (apiResponse.response.statusCode == 200) {
+      // showMessage(apiResponse.response.data['message'], isError: false);
+      return true;
+    } else {
+      String errorMessage = apiResponse.error.toString();
+      showMessage(errorMessage);
+      return false;
+    }
+  }
+
+  String studentID = '';
+  String cardID = '';
+
+  void checkCardIssue() async {
+    cardID = '';
+    studentID = '';
+    ApiResponse apiResponse = await libraryRepo.checkCardIssue();
+    if (apiResponse.response.statusCode == 200) {
+      studentID = apiResponse.response.data['student_id'];
+      cardID = apiResponse.response.data['card_id'];
+    } else {
+      String errorMessage = apiResponse.error.toString();
+      showMessage(errorMessage);
+      checkCardIssue();
+    }
+  }
+
 //
 // Future<bool> deletePost(int id, int index) async {
 //   _isLoading = true;
