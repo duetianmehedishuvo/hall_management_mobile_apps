@@ -79,9 +79,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                         }
                       });
                     }),
-              checkIsAdmin
-                  ? spaceZero
-                  : buttonWidget(Icons.library_add_rounded, 'My Renew and Return Book List', PurchedAllBookHistoryScreen(isAdmin: false)),
+              buttonWidget(Icons.library_add_rounded, '${checkIsAdmin ? 'All Book Issue History' : 'My Renew and Return Book List'}',
+                  PurchedAllBookHistoryScreen(isAdmin: checkIsAdmin, isFromIssueBook: false)),
               buttonWidget(Icons.notifications_active, 'Notices', Container(),
                   url: 'http://103.133.35.62:8081/cgi-bin/koha/opac-news-rss.pl?branchcode=MNL'),
               buttonWidget(Icons.report_sharp, 'DUET Institutional Repository', Container(), url: 'http://103.133.35.64:8080/xmlui/'),

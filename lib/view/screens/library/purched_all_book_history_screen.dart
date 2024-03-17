@@ -18,8 +18,9 @@ import 'package:provider/provider.dart';
 
 class PurchedAllBookHistoryScreen extends StatefulWidget {
   final bool isAdmin;
+  final bool isFromIssueBook;
 
-  const PurchedAllBookHistoryScreen({this.isAdmin = true, super.key});
+  const PurchedAllBookHistoryScreen({this.isAdmin = true, this.isFromIssueBook = true, super.key});
 
   @override
   State<PurchedAllBookHistoryScreen> createState() => _PurchedAllBookHistoryScreenState();
@@ -32,21 +33,23 @@ class _PurchedAllBookHistoryScreenState extends State<PurchedAllBookHistoryScree
   void initState() {
     // TODO: implement initState
     super.initState();
+    if (widget.isAdmin == false) {
+      Provider.of<LibraryProvider>(context, listen: false).clearStudentID();
+    }
 
-    Provider.of<LibraryProvider>(context, listen: false).clearStudentID();
     Provider.of<LibraryProvider>(context, listen: false).changePurchedType('All', isFirstTime: true);
-    Provider.of<LibraryProvider>(context, listen: false).getBookPurchedHistory();
+    Provider.of<LibraryProvider>(context, listen: false).getBookPurchedHistory(isFromIssueBook: widget.isFromIssueBook);
     controller.addListener(() {
       if (controller.offset >= controller.position.maxScrollExtent &&
           !controller.position.outOfRange &&
           Provider.of<LibraryProvider>(context, listen: false).hasNextDataCommend) {
-        Provider.of<LibraryProvider>(context, listen: false).updateAllCommend();
+        Provider.of<LibraryProvider>(context, listen: false).updateAllCommend(widget.isFromIssueBook);
       }
     });
   }
 
   Future<void> _refresh(BuildContext context) async {
-    Provider.of<LibraryProvider>(context, listen: false).getBookPurchedHistory(isFirstTime: false);
+    Provider.of<LibraryProvider>(context, listen: false).getBookPurchedHistory(isFirstTime: false, isFromIssueBook: widget.isFromIssueBook);
   }
 
   @override
@@ -57,7 +60,7 @@ class _PurchedAllBookHistoryScreenState extends State<PurchedAllBookHistoryScree
       },
       child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: const CustomAppBar(title: 'Book Parched History', borderRadius: 0),
+          appBar: const CustomAppBar(title: 'Student Book Parched History', borderRadius: 0),
           body: Consumer<LibraryProvider>(
             builder: (context, libraryProvider, child) => libraryProvider.isLoadingCommend
                 ? const Center(child: CircularProgressIndicator())
@@ -138,7 +141,9 @@ class _PurchedAllBookHistoryScreenState extends State<PurchedAllBookHistoryScree
                                       shadowColor: Colors.grey.withOpacity(.2),
                                       elevation: 1,
                                       child: ListTile(
-                                        title: Text(b.title!, style: robotoStyle500Medium.copyWith(fontSize: 15)),
+                                        title: Text(
+                                            widget.isAdmin == true && widget.isFromIssueBook == false ? '${b.title!}\nID:${b.studentId}' : b.title!,
+                                            style: robotoStyle500Medium.copyWith(fontSize: 15)),
                                         trailing: Text('${b.price!}৳\n${b.category}',
                                             style: robotoStyle700Bold.copyWith(fontSize: 15), textAlign: TextAlign.right),
                                         subtitle: Text('Author: ${b.author!}\nStatus: ${b.status == 0 ? 'Renew' : 'Return'}\nLast Update: ${b.updatedAt}',
@@ -152,7 +157,7 @@ class _PurchedAllBookHistoryScreenState extends State<PurchedAllBookHistoryScree
                                 : libraryProvider.hasNextDataCommend
                                     ? InkWell(
                                         onTap: () {
-                                          libraryProvider.updateAllCommend();
+                                          libraryProvider.updateAllCommend(widget.isFromIssueBook);
                                         },
                                         child: Container(
                                           height: 30,

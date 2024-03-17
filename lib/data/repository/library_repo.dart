@@ -69,6 +69,16 @@ class LibraryRepo {
     }
   }
 
+  Future<ApiResponse> bookHistory(int page, int bookId) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+    try {
+      response = await dioClient.get('bookHistory?bookID=$bookId&page=$page');
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
+
   Future<ApiResponse> deleteAllCard() async {
     Response response = Response(requestOptions: RequestOptions(path: '22222'));
     try {

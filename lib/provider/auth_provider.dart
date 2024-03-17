@@ -24,12 +24,12 @@ class AuthProvider with ChangeNotifier {
 
   //TODO:: for Sign Up Section
 
-  Future<bool> signup(String studentID, String name, String phoneNumber, String password, String details, String homeTown,
-      String researchArea, String jobPosition, String futureGoal, String whatssApp, String email, String motive) async {
+  Future<bool> signup(String studentID, String name, String phoneNumber, String password, String details, String homeTown, String researchArea,
+      String jobPosition, String futureGoal, String whatssApp, String email, String motive) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponse apiResponse = await authRepo.signup(studentID, name, selectedDepartments, phoneNumber, selectedBlood, password, details,
-        homeTown, researchArea, jobPosition, futureGoal, whatssApp, email, motive);
+    ApiResponse apiResponse = await authRepo.signup(studentID, name, selectedDepartments, phoneNumber, selectedBlood, password, details, homeTown,
+        researchArea, jobPosition, futureGoal, whatssApp, email, motive);
     _isLoading = false;
     notifyListeners();
     if (apiResponse.response.statusCode == 200) {
@@ -55,8 +55,8 @@ class AuthProvider with ChangeNotifier {
       String jobPosition, String futureGoal, String whatssApp, String email, String motive) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponse apiResponse = await authRepo.updateStudentInfo(studentID, name, selectedDepartments, phoneNumber, selectedBlood, details,
-        homeTown, researchArea, jobPosition, futureGoal, whatssApp, email, motive);
+    ApiResponse apiResponse = await authRepo.updateStudentInfo(studentID, name, selectedDepartments, phoneNumber, selectedBlood, details, homeTown,
+        researchArea, jobPosition, futureGoal, whatssApp, email, motive);
     _isLoading = false;
     notifyListeners();
     if (apiResponse.response.statusCode == 200) {
@@ -210,6 +210,11 @@ class AuthProvider with ChangeNotifier {
   String balance = '';
   String dueBalance = '';
   int userStatus = -1;
+
+  changeUserStatus(int value) {
+    userStatus = value;
+    notifyListeners();
+  }
 
   void getUserInfo({bool isFirstTime = true}) {
     name = authRepo.getUserName();

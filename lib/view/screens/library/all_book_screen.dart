@@ -112,13 +112,19 @@ class _AllBookScreenState extends State<AllBookScreen> {
                                 itemBuilder: (context, index) {
                                   BookModel b = libraryProvider.bookList[index];
                                   return InkWell(
+                                    onLongPress: () {
+                                      if (widget.isAdmin && widget.isFromCheckCard == false) {
+                                        libraryProvider.selectBook(b);
+                                        Helper.toScreen(BookDetailsScreen(isForBookHistory: true, id: b.id as int));
+                                      }
+                                    },
                                     onTap: () {
                                       if (widget.isAdmin && widget.isFromCheckCard == false) {
                                         Helper.toScreen(AddBookScreen(bookModel: b, isAdmin: widget.isAdmin, isUpdate: true));
                                       } else if (widget.isFromCheckCard) {
                                         libraryProvider.selectBook(b);
                                         Helper.toScreen(BookDetailsScreen(isfromCheck: widget.isFromCheckCard));
-                                      }else{
+                                      } else {
                                         libraryProvider.selectBook(b);
                                         Helper.toScreen(const BookDetailsScreen());
                                       }

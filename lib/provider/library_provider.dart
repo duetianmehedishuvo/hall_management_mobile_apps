@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:duetstahall/data/model/response/base/api_response.dart';
+import 'package:duetstahall/data/model/response/book_history_model.dart';
 import 'package:duetstahall/data/model/response/book_model.dart';
 import 'package:duetstahall/data/model/response/book_purched_model.dart';
 import 'package:duetstahall/data/repository/library_repo.dart';
@@ -144,7 +145,7 @@ class LibraryProvider with ChangeNotifier {
   String studentID = '';
   String cardID = '';
 
-  clearStudentID(){
+  clearStudentID() {
     studentID = '';
   }
 
@@ -180,16 +181,9 @@ class LibraryProvider with ChangeNotifier {
   bool isLoadingCommend = false;
   bool hasNextDataCommend = false;
 
-  updateAllCommend() {
+  updateAllCommend(bool isFromIssueBook) {
     selectPageCommend++;
     getBookPurchedHistory(page: selectPageCommend);
-    notifyListeners();
-  }
-
-  int isAdmin = 0;
-
-  changeAdminStatus(int status) {
-    isAdmin = status;
     notifyListeners();
   }
 
@@ -206,7 +200,7 @@ class LibraryProvider with ChangeNotifier {
     }
   }
 
-  getBookPurchedHistory({int page = 1, bool isFirstTime = true}) async {
+  getBookPurchedHistory({int page = 1, bool isFirstTime = true, bool isFromIssueBook = true}) async {
     if (page == 1) {
       selectPageCommend = 1;
       bookPurchedList.clear();
@@ -222,7 +216,14 @@ class LibraryProvider with ChangeNotifier {
       notifyListeners();
     }
     ApiResponse response = await libraryRepo.bookPurchedHistory(
-        selectPageCommend, studentID.isEmpty ? int.parse(globalStudentID) : int.parse(studentID), selectPurchedType, isAdmin);
+        selectPageCommend,
+        studentID.isEmpty ? int.parse(globalStudentID) : int.parse(studentID),
+        selectPurchedType,
+        isFromIssueBook == true
+            ? 0
+            : checkIsAdmin
+                ? 1
+                : 0);
 
     isLoadingCommend = false;
     isBottomLoadingCommend = false;
@@ -245,45 +246,44 @@ class LibraryProvider with ChangeNotifier {
     notifyListeners();
   }
 
-//
-// int communityId = 1;
-//
-// changeCommunityID(val) {
-//   communityId = val;
-//   notifyListeners();
-// }
-//
-// Future<bool> commend( String comment, int isUpdate, {int id = -1}) async {
-//   isLoadingCommend = true;
-//   notifyListeners();
-//   ApiResponse apiResponse1 = await communityRepo.comment(communityId, comment, isUpdate, id);
-//   isLoadingCommend = false;
-//   notifyListeners();
-//   if (apiResponse1.response.statusCode == 200) {
-//     showMessage(apiResponse1.response.data['message'], isError: false);
-//     getAllCommend();
-//     return true;
-//   } else {
-//     String errorMessage = apiResponse1.error.toString();
-//     showMessage(errorMessage);
-//     return false;
-//   }
-// }
-//
-// Future<bool> deleteCommend(int id, int index) async {
-//   isLoadingCommend = true;
-//   notifyListeners();
-//   ApiResponse apiResponse1 = await communityRepo.deleteCommend(id);
-//   isLoadingCommend = false;
-//   notifyListeners();
-//   if (apiResponse1.response.statusCode == 200) {
-//     showMessage(apiResponse1.response.data['message'], isError: false);
-//     commendList.removeAt(index);
-//     notifyListeners();
-//   } else {
-//     String errorMessage = apiResponse1.error.toString();
-//     showMessage(errorMessage);
-//   }
-//   return true;
-// }
+  ////////////////// TODO: get All Book Parched History
+
+  List<BookHistoryModel> bookHistoryList = [];
+
+  updateAllBookHistory(int bookID) {
+    selectPageCommend++;
+    getBookHistory(bookID, page: selectPageCommend);
+    notifyListeners();
+  }
+
+  getBookHistory(int bookID, {int page = 1, bool isFirstTime = true}) async {
+    if (page == 1) {
+      selectPageCommend = 1;
+      bookHistoryList.clear();
+      bookHistoryList = [];
+      isLoadingCommend = true;
+      hasNextDataCommend = false;
+      isBottomLoadingCommend = false;
+      if (!isFirstTime) {
+        notifyListeners();
+      }
+    } else {
+      isBottomLoadingCommend = true;
+      notifyListeners();
+    }
+    ApiResponse response = await libraryRepo.bookHistory(selectPageCommend, bookID);
+
+    isLoadingCommend = false;
+    isBottomLoadingCommend = false;
+
+    if (response.response.statusCode == 200) {
+      hasNextDataCommend = response.response.data['next_page_url'] != null ? true : false;
+      response.response.data['data'].forEach((element) {
+        bookHistoryList.add(BookHistoryModel.fromJson(element));
+      });
+    } else {
+      Fluttertoast.showToast(msg: response.response.statusMessage!);
+    }
+    notifyListeners();
+  }
 }

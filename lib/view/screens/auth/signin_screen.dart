@@ -177,11 +177,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                                               Navigator.of(context)
                                                                   .pushReplacement(MaterialPageRoute(builder: (_) => const AdminDashboardScreen()));
                                                             } else if (authProvider.studentModel1.role == 2) {
-                                                              Provider.of<AuthProvider>(context, listen: false).getUserInfo();
+                                                              authProvider.changeUserStatus(2);
+                                                              authProvider.getUserInfo();
                                                               Navigator.of(context)
                                                                   .pushReplacement(MaterialPageRoute(builder: (_) => const LibraryScreen()));
                                                             } else {
-                                                              Provider.of<AuthProvider>(context, listen: false).getUserInfo(isFirstTime: false);
+                                                              authProvider.getUserInfo();
                                                               Navigator.of(context)
                                                                   .pushReplacement(MaterialPageRoute(builder: (_) => const StudentDashboardScreen()));
                                                             }

@@ -73,8 +73,7 @@ class _CheckCardScreenState extends State<CheckCardScreen> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      libraryProvider.changeAdminStatus(1);
-                                      Helper.toScreen(PurchedAllBookHistoryScreen());
+                                      Helper.toScreen(PurchedAllBookHistoryScreen(isAdmin: true));
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(10),
