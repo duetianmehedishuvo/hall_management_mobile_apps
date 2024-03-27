@@ -65,14 +65,15 @@ class _MedicalHomeScreenState extends State<MedicalHomeScreen> {
               buttonWidget(Icons.book_sharp, 'Add Patient New Entry', const AllBookScreen(isAdmin: true), onTap: () {
                 libraryProvider.deleteAllCard().then((value) {
                   if (value == true) {
-                    Helper.toScreen(CheckCardScreen());
+                    Helper.toScreen(CheckCardScreen(isFromMedical: true));
                   }
                 });
               }),
 
               buttonWidget(Icons.notifications_active, 'All Doctor Lists', Container(),
                   url: 'https://www.duet.ac.bd/office/medical-center/employee-information'),
-              buttonWidget(Icons.report_sharp, 'All Employee Lists', Container(), url: 'https://www.duet.ac.bd/office/medical-center/employee-information'),
+              buttonWidget(Icons.report_sharp, 'All Employee Lists', Container(),
+                  url: 'https://www.duet.ac.bd/office/medical-center/employee-information'),
               // spaceHeight10,
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5.0),

@@ -8,6 +8,7 @@ import 'package:duetstahall/data/repository/complain_repo.dart';
 import 'package:duetstahall/data/repository/guest_room_repo.dart';
 import 'package:duetstahall/data/repository/hall_fee_repo.dart';
 import 'package:duetstahall/data/repository/library_repo.dart';
+import 'package:duetstahall/data/repository/medical_repo.dart';
 import 'package:duetstahall/data/repository/room_repo.dart';
 import 'package:duetstahall/data/repository/settings_repo.dart';
 import 'package:duetstahall/data/repository/splash_repo.dart';
@@ -19,6 +20,7 @@ import 'package:duetstahall/provider/dashboard_provider.dart';
 import 'package:duetstahall/provider/guest_room_provider.dart';
 import 'package:duetstahall/provider/hall_fee_provider.dart';
 import 'package:duetstahall/provider/library_provider.dart';
+import 'package:duetstahall/provider/medical_provider.dart';
 import 'package:duetstahall/provider/room_provider.dart';
 import 'package:duetstahall/provider/settings_provider.dart';
 import 'package:duetstahall/provider/student_provider.dart';
@@ -42,6 +44,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => CommunityRepo(dioClient: sl()));
   sl.registerLazySingleton(() => SettingsRepo(dioClient: sl()));
   sl.registerLazySingleton(() => LibraryRepo(dioClient: sl()));
+  sl.registerLazySingleton(() => MedicalRepo(dioClient: sl()));
 
   // Provider
   sl.registerFactory(() => AuthProvider(authRepo: sl()));
@@ -54,6 +57,7 @@ Future<void> init() async {
   sl.registerFactory(() => SettingsProvider(settingsRepo: sl()));
   sl.registerFactory(() => CommunityProvider(communityRepo: sl()));
   sl.registerFactory(() => LibraryProvider(libraryRepo: sl()));
+  sl.registerFactory(() => MedicalProvider(medicalRepo: sl()));
 
   // External
   final sharedPreferences = await SharedPreferences.getInstance();

@@ -4,6 +4,7 @@ import 'package:duetstahall/provider/complain_provider.dart';
 import 'package:duetstahall/provider/guest_room_provider.dart';
 import 'package:duetstahall/provider/hall_fee_provider.dart';
 import 'package:duetstahall/provider/library_provider.dart';
+import 'package:duetstahall/provider/medical_provider.dart';
 import 'package:duetstahall/provider/room_provider.dart';
 import 'package:duetstahall/provider/settings_provider.dart';
 import 'package:duetstahall/provider/splash_provider.dart';
@@ -49,6 +50,7 @@ void main() async {
           ChangeNotifierProvider(create: (context) => di.sl<GuestRoomProvider>()),
           ChangeNotifierProvider(create: (context) => di.sl<CommunityProvider>()),
           ChangeNotifierProvider(create: (context) => di.sl<LibraryProvider>()),
+          ChangeNotifierProvider(create: (context) => di.sl<MedicalProvider>()),
         ],
         child: const MyApp(),
       )));

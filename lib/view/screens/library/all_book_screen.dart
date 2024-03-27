@@ -14,9 +14,10 @@ import 'package:provider/provider.dart';
 
 class AllBookScreen extends StatefulWidget {
   final bool isAdmin;
+  final bool isFromMedical;
   final bool isFromCheckCard;
 
-  const AllBookScreen({this.isAdmin = false, this.isFromCheckCard = false, super.key});
+  const AllBookScreen({this.isAdmin = false, this.isFromMedical = false, this.isFromCheckCard = false, super.key});
 
   @override
   State<AllBookScreen> createState() => _AllBookScreenState();

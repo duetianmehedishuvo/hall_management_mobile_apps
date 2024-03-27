@@ -1,5 +1,6 @@
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/provider/library_provider.dart';
+import 'package:duetstahall/provider/medical_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/size.util.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
@@ -10,7 +11,9 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class CheckCardScreen extends StatefulWidget {
-  const CheckCardScreen({super.key});
+  final bool isFromMedical;
+
+  const CheckCardScreen({this.isFromMedical = false, super.key});
 
   @override
   State<CheckCardScreen> createState() => _CheckCardScreenState();
@@ -25,18 +28,6 @@ class _CheckCardScreenState extends State<CheckCardScreen> {
     super.initState();
     Provider.of<LibraryProvider>(context, listen: false).checkCardIssue();
   }
-
-  // @override
-  // void dispose() {
-  //   // TODO: implement dispose
-  //   Provider.of<LibraryProvider>(context, listen: false).changeCheckCardIssue();
-  //   Timer(Duration(seconds: 2),(){
-  //
-  //   });
-  //   super.dispose();
-  //
-  //
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +46,9 @@ class _CheckCardScreenState extends State<CheckCardScreen> {
       },
       child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: const CustomAppBar(title: 'All Book List', borderRadius: 0),
-          body: Consumer<LibraryProvider>(
-            builder: (context, libraryProvider, child) => libraryProvider.isLoading
+          appBar: const CustomAppBar(title: 'Search Student', borderRadius: 0),
+          body: Consumer2<LibraryProvider, MedicalProvider>(
+            builder: (context, libraryProvider, medicalProvider, child) => libraryProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : Stack(
                     clipBehavior: Clip.none,
@@ -73,7 +64,10 @@ class _CheckCardScreenState extends State<CheckCardScreen> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      Helper.toScreen(PurchedAllBookHistoryScreen(isAdmin: true));
+                                      if (widget.isFromMedical) {
+                                        medicalProvider.changeAllAndStudentID(0, int.parse(libraryProvider.studentID));
+                                      }
+                                      Helper.toScreen(PurchedAllBookHistoryScreen(isAdmin: true, isFromMedical: widget.isFromMedical));
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(10),

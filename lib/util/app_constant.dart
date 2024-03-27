@@ -17,6 +17,7 @@ class AppConstant {
   // API BASE URL
   static const String baseUrl = 'https://test.pathon.app/api/';
   static const String imageBaseUrl = 'https://test.pathon.app/images/';
+  static const String imageBaseMedicalUrl = 'https://test.pathon.app/medical_image/';
   static const String loginURI = 'login';
   static const String signUPURI = 'register';
   static const String logoutURI = 'logout';
