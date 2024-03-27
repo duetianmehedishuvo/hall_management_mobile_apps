@@ -10,6 +10,7 @@ import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/auth/signin_screen.dart';
 import 'package:duetstahall/view/screens/hall_fee/hall_fee_screen.dart';
 import 'package:duetstahall/view/screens/library/library_screen.dart';
+import 'package:duetstahall/view/screens/medical/medical_home_screen.dart';
 import 'package:duetstahall/view/screens/payment/add_balance_screen.dart';
 import 'package:duetstahall/view/screens/student/community/community_screen.dart';
 import 'package:duetstahall/view/screens/student/complain/complain_screen.dart';
@@ -106,7 +107,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   menuWidget(ImagesModel.library, 'Central Library', const LibraryScreen()),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.medical, 'Medical', const MyMealScreen()),
+                  menuWidget(ImagesModel.medical, 'Medical', const MedicalHomeScreen()),
                 ],
               ),
             ),
