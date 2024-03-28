@@ -1,24 +1,25 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/provider/medical_provider.dart';
 import 'package:duetstahall/util/app_constant.dart';
 import 'package:duetstahall/util/size.util.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
+import 'package:duetstahall/view/widgets/network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
-class MedicalServiceDetailsModel extends StatefulWidget {
+class MedicalServiceDetailsScreen extends StatefulWidget {
   final int id;
 
-  const MedicalServiceDetailsModel({this.id = 0, super.key});
+  const MedicalServiceDetailsScreen({this.id = 0, super.key});
 
   @override
-  State<MedicalServiceDetailsModel> createState() => _MedicalServiceDetailsModelState();
+  State<MedicalServiceDetailsScreen> createState() => _MedicalServiceDetailsScreenState();
 }
 
-class _MedicalServiceDetailsModelState extends State<MedicalServiceDetailsModel> {
+class _MedicalServiceDetailsScreenState extends State<MedicalServiceDetailsScreen> {
   ScrollController controller = ScrollController();
 
   @override
@@ -46,9 +47,11 @@ class _MedicalServiceDetailsModelState extends State<MedicalServiceDetailsModel>
                 buildContainer('providerName:', medicalProvider.medicalServiceDetailsModel.providerName.toString(), 1),
                 buildContainer('serviceType:', medicalProvider.medicalServiceDetailsModel.serviceType.toString(), 0),
                 buildContainer('createdAt:', medicalProvider.medicalServiceDetailsModel.createdAt.toString(), 1),
-                medicalProvider.medicalServiceDetailsModel.docuemntUrl!.isEmpty ||medicalProvider.isLoading2
+                medicalProvider.medicalServiceDetailsModel.docuemntUrl == null ||
+                        medicalProvider.medicalServiceDetailsModel.docuemntUrl!.isEmpty ||
+                        medicalProvider.isLoading2
                     ? spaceZero
-                    : CachedNetworkImage(imageUrl: '${AppConstant.imageBaseMedicalUrl}${medicalProvider.medicalServiceDetailsModel.docuemntUrl}')
+                    : customNetworkImage(context, '${AppConstant.imageBaseMedicalUrl}${medicalProvider.medicalServiceDetailsModel.docuemntUrl}')
               ],
             ),
           ),

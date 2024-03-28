@@ -1,22 +1,22 @@
 import 'package:duetstahall/helper/open_call_url_map_sms_helper.dart';
 import 'package:duetstahall/provider/auth_provider.dart';
 import 'package:duetstahall/provider/library_provider.dart';
+import 'package:duetstahall/provider/medical_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/size.util.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/auth/signin_screen.dart';
-import 'package:duetstahall/view/screens/library/add_book_screen.dart';
 import 'package:duetstahall/view/screens/library/all_book_screen.dart';
 import 'package:duetstahall/view/screens/library/check_card_screen.dart';
-import 'package:duetstahall/view/screens/library/purched_all_book_history_screen.dart';
 import 'package:duetstahall/view/screens/medical/all_medical_service_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 
 class MedicalHomeScreen extends StatefulWidget {
-  const MedicalHomeScreen({super.key});
+  bool isFromAdmin;
+   MedicalHomeScreen(this.isFromAdmin,{super.key});
 
   @override
   State<MedicalHomeScreen> createState() => _MedicalHomeScreenState();
@@ -28,19 +28,19 @@ class _MedicalHomeScreenState extends State<MedicalHomeScreen> {
     // TODO: implement initState
     super.initState();
     Provider.of<AuthProvider>(context, listen: false).getUserInfo();
-    Provider.of<LibraryProvider>(context, listen: false).changeLoadingFalse();
+    Provider.of<MedicalProvider>(context, listen: false).changeLoadingFalse();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(checkIsAdmin ? 'Administration Medical Center' : 'Medical Center'),
+        title: Text(widget.isFromAdmin ? 'Administration Medical Center' : 'Medical Center'),
         elevation: 0,
         centerTitle: true,
         backgroundColor: AppColors.primaryColorLight,
         actions: [
-          !checkIsAdmin
+          !widget.isFromAdmin
               ? spaceZero
               : IconButton(
                   onPressed: () {
@@ -59,21 +59,21 @@ class _MedicalHomeScreenState extends State<MedicalHomeScreen> {
           child: ListView(
             padding: const EdgeInsets.all(10),
             children: [
-              buttonWidget(Icons.add_circle, 'All Medical Service', const ALlMedicalServiceScreen()),
-              buttonWidget(Icons.library_books, 'All History', AllBookScreen(isAdmin: checkIsAdmin)),
-              buttonWidget(Icons.library_books, 'My History', AllBookScreen(isAdmin: checkIsAdmin)),
-              buttonWidget(Icons.book_sharp, 'Add Patient New Entry', const AllBookScreen(isAdmin: true), onTap: () {
-                libraryProvider.deleteAllCard().then((value) {
-                  if (value == true) {
-                    Helper.toScreen(CheckCardScreen(isFromMedical: true));
-                  }
-                });
-              }),
+              buttonWidget(Icons.design_services, 'All Medical Service', const ALlMedicalServiceScreen()),
+              !widget.isFromAdmin ? spaceZero : buttonWidget(Icons.history, 'All History', AllBookScreen(isAdmin: true, isFromMedical: true)),
+              widget.isFromAdmin ? spaceZero : buttonWidget(Icons.history, 'My History', AllBookScreen(isAdmin: false, isFromMedical: true)),
+              !widget.isFromAdmin
+                  ? spaceZero
+                  : buttonWidget(Icons.add_circle, 'Add Patient New Entry', const AllBookScreen(isAdmin: true), onTap: () {
+                      libraryProvider.deleteAllCard().then((value) {
+                        if (value == true) {
+                          Helper.toScreen(CheckCardScreen(isFromMedical: true));
+                        }
+                      });
+                    }),
 
-              buttonWidget(Icons.notifications_active, 'All Doctor Lists', Container(),
-                  url: 'https://www.duet.ac.bd/office/medical-center/employee-information'),
-              buttonWidget(Icons.report_sharp, 'All Employee Lists', Container(),
-                  url: 'https://www.duet.ac.bd/office/medical-center/employee-information'),
+              buttonWidget(Icons.list, 'All Doctor Lists', Container(), url: 'https://www.duet.ac.bd/office/medical-center/employee-information'),
+              buttonWidget(Icons.list_alt, 'All Employee Lists', Container(), url: 'https://www.duet.ac.bd/office/medical-center/employee-information'),
               // spaceHeight10,
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5.0),

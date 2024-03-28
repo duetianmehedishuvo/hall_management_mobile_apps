@@ -12,6 +12,7 @@ import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/admin/dashboard/admin_dashboard_screen.dart';
 import 'package:duetstahall/view/screens/auth/signup_screen.dart';
 import 'package:duetstahall/view/screens/library/library_screen.dart';
+import 'package:duetstahall/view/screens/medical/medical_home_screen.dart';
 import 'package:duetstahall/view/screens/student/student_dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -180,7 +181,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                                               authProvider.changeUserStatus(2);
                                                               authProvider.getUserInfo();
                                                               Navigator.of(context)
-                                                                  .pushReplacement(MaterialPageRoute(builder: (_) => const LibraryScreen()));
+                                                                  .pushReplacement(MaterialPageRoute(builder: (_) =>  LibraryScreen(isFromAdmin: true)));
+                                                            } else if (authProvider.studentModel1.role == 3) {
+                                                              authProvider.changeUserStatus(3);
+                                                              authProvider.getUserInfo();
+                                                              Navigator.of(context)
+                                                                  .pushReplacement(MaterialPageRoute(builder: (_) =>  MedicalHomeScreen(true)));
                                                             } else {
                                                               authProvider.getUserInfo();
                                                               Navigator.of(context)

@@ -72,7 +72,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
           padding: const EdgeInsets.only(bottom: 20),
           children: [
             Container(
-              padding: const EdgeInsets.only(left: 14, bottom: 10,right: 14),
+              padding: const EdgeInsets.only(left: 14, bottom: 10, right: 14),
               decoration: const BoxDecoration(
                   color: AppColors.primaryColorLight, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
               child: SizedBox(
@@ -81,7 +81,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                   children: <Widget>[
                     Text("Welcome, ${authProvider.name}", style: headline4.copyWith(color: Colors.white, fontSize: 18)),
                     const SizedBox(height: 3),
-                    Text('My Balance:  ${authProvider.balance}৳ | Hall Due:  ${authProvider.dueBalance}৳', style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
+                    Text('My Balance:  ${authProvider.balance}৳ | Hall Due:  ${authProvider.dueBalance}৳',
+                        style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
                     const SizedBox(height: 3),
                     Text('Service Time: ${settingsProvider.configModel.offlineTakaLoadTime}',
                         style: headline5.copyWith(color: AppColors.whiteColorDark.withOpacity(.8))),
@@ -105,9 +106,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  menuWidget(ImagesModel.library, 'Central Library', const LibraryScreen()),
+                  menuWidget(ImagesModel.library, 'Central Library', LibraryScreen(isFromAdmin: false)),
                   const SizedBox(width: 10),
-                  menuWidget(ImagesModel.medical, 'Medical', const MedicalHomeScreen()),
+                  menuWidget(ImagesModel.medical, 'Medical', MedicalHomeScreen(false)),
                 ],
               ),
             ),

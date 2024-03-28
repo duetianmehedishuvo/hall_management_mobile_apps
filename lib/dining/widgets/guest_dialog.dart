@@ -14,7 +14,7 @@ class GuestDialog extends StatelessWidget {
   final bool isRemove;
   final String studentID;
 
-  const GuestDialog({Key? key, this.isLogin = false, this.isRemove = false, this.studentID = ''}) : super(key: key);
+  const GuestDialog({super.key, this.isLogin = false, this.isRemove = false, this.studentID = ''});
 
   @override
   Widget build(BuildContext context) {

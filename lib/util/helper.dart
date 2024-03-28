@@ -56,7 +56,8 @@ double screenWeight() {
 
 bool get checkIsAdmin {
   return Provider.of<AuthProvider>(Helper.navigatorKey.currentState!.context, listen: false).userStatus == 1 ||
-          Provider.of<AuthProvider>(Helper.navigatorKey.currentState!.context, listen: false).userStatus == 2
+          Provider.of<AuthProvider>(Helper.navigatorKey.currentState!.context, listen: false).userStatus == 2||
+          Provider.of<AuthProvider>(Helper.navigatorKey.currentState!.context, listen: false).userStatus == 3
       ? true
       : false;
 }

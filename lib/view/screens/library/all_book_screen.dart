@@ -1,13 +1,17 @@
 import 'package:duetstahall/data/model/response/book_model.dart';
 import 'package:duetstahall/data/model/response/hall_fee_model.dart';
+import 'package:duetstahall/data/model/response/medical_service_model.dart';
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/provider/library_provider.dart';
+import 'package:duetstahall/provider/medical_provider.dart';
 import 'package:duetstahall/util/helper.dart';
+import 'package:duetstahall/util/size.util.dart';
 import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/hall_fee/hall_fee_details_screen.dart';
 import 'package:duetstahall/view/screens/library/add_book_screen.dart';
 import 'package:duetstahall/view/screens/library/book_details_screen.dart';
+import 'package:duetstahall/view/screens/medical/medical_service_details_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,19 +34,35 @@ class _AllBookScreenState extends State<AllBookScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<LibraryProvider>(context, listen: false).addBookCategoryItem(true);
-    Provider.of<LibraryProvider>(context, listen: false).getAllCommunity();
-    controller.addListener(() {
-      if (controller.offset >= controller.position.maxScrollExtent &&
-          !controller.position.outOfRange &&
-          Provider.of<LibraryProvider>(context, listen: false).hasNextData) {
-        Provider.of<LibraryProvider>(context, listen: false).updateAllCommunity();
-      }
-    });
+    if (widget.isFromMedical == true) {
+      var mProvider = Provider.of<MedicalProvider>(context, listen: false);
+      mProvider.changeAllAndStudentID(widget.isAdmin ? 1 : 0, widget.isAdmin ? -1 : int.parse(globalStudentID));
+
+      mProvider.getAllMedicalHistory();
+      controller.addListener(() {
+        if (controller.offset >= controller.position.maxScrollExtent && !controller.position.outOfRange && mProvider.hasNextData) {
+          mProvider.updateAllMedicalHistory();
+        }
+      });
+    } else {
+      Provider.of<LibraryProvider>(context, listen: false).addBookCategoryItem(true);
+      Provider.of<LibraryProvider>(context, listen: false).getAllCommunity();
+      controller.addListener(() {
+        if (controller.offset >= controller.position.maxScrollExtent &&
+            !controller.position.outOfRange &&
+            Provider.of<LibraryProvider>(context, listen: false).hasNextData) {
+          Provider.of<LibraryProvider>(context, listen: false).updateAllCommunity();
+        }
+      });
+    }
   }
 
   Future<void> _refresh(BuildContext context) async {
-    Provider.of<LibraryProvider>(context, listen: false).getAllCommunity(isFirstTime: false);
+    if (widget.isFromMedical) {
+      Provider.of<MedicalProvider>(context, listen: false).getAllMedicalHistory(isFirstTime: false);
+    } else {
+      Provider.of<LibraryProvider>(context, listen: false).getAllCommunity(isFirstTime: false);
+    }
   }
 
   @override
@@ -53,53 +73,57 @@ class _AllBookScreenState extends State<AllBookScreen> {
       },
       child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: const CustomAppBar(title: 'All Book List', borderRadius: 0),
-          body: Consumer<LibraryProvider>(
-            builder: (context, libraryProvider, child) => libraryProvider.isLoading
+          appBar: CustomAppBar(
+              title: '${widget.isFromMedical ? widget.isAdmin ? "All Medical service" : "My All Service" : "All Book List"}',
+              borderRadius: 0),
+          body: Consumer2<LibraryProvider, MedicalProvider>(
+            builder: (context, libraryProvider, medicalProvider, child) => libraryProvider.isLoading || medicalProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                        child: Card(
-                          elevation: 1,
-                          shape: RoundedRectangleBorder(
-                              side: const BorderSide(width: 1, color: CupertinoColors.systemGrey), borderRadius: BorderRadius.circular(10)),
-                          child: ListTile(
-                            selectedColor: AppColors.imageBGColorLight,
-                            selectedTileColor: AppColors.imageBGColorLight,
-                            splashColor: AppColors.imageBGColorLight,
-                            tileColor: AppColors.imageBGColorLight,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            title: Text("Book Category", style: robotoStyle500Medium),
-                            contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            trailing: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                isExpanded: false,
-                                value: libraryProvider.selectCategoryType,
-                                focusColor: AppColors.imageBGColorLight,
-                                dropdownColor: AppColors.imageBGColorLight,
-                                items: libraryProvider.categoryType.map((item) {
-                                  return DropdownMenuItem(
-                                    value: item,
-                                    child: SizedBox(
-                                        width: 150, //expand here
-                                        child: Text(item, textAlign: TextAlign.end, style: robotoStyle600SemiBold)),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  libraryProvider.changeCategoryType(value.toString(), isCallAPI: true);
-                                },
-                                hint: const SizedBox(
-                                  width: 150,
-                                  child: Text("Select Book Item", style: TextStyle(color: Colors.grey), textAlign: TextAlign.end),
+                      widget.isFromMedical
+                          ? spaceZero
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                              child: Card(
+                                elevation: 1,
+                                shape: RoundedRectangleBorder(
+                                    side: const BorderSide(width: 1, color: CupertinoColors.systemGrey), borderRadius: BorderRadius.circular(10)),
+                                child: ListTile(
+                                  selectedColor: AppColors.imageBGColorLight,
+                                  selectedTileColor: AppColors.imageBGColorLight,
+                                  splashColor: AppColors.imageBGColorLight,
+                                  tileColor: AppColors.imageBGColorLight,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  title: Text("Book Category", style: robotoStyle500Medium),
+                                  contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  trailing: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                      isExpanded: false,
+                                      value: libraryProvider.selectCategoryType,
+                                      focusColor: AppColors.imageBGColorLight,
+                                      dropdownColor: AppColors.imageBGColorLight,
+                                      items: libraryProvider.categoryType.map((item) {
+                                        return DropdownMenuItem(
+                                          value: item,
+                                          child: SizedBox(
+                                              width: 150, //expand here
+                                              child: Text(item, textAlign: TextAlign.end, style: robotoStyle600SemiBold)),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        libraryProvider.changeCategoryType(value.toString(), isCallAPI: true);
+                                      },
+                                      hint: const SizedBox(
+                                        width: 150,
+                                        child: Text("Select Book Item", style: TextStyle(color: Colors.grey), textAlign: TextAlign.end),
+                                      ),
+                                      style: const TextStyle(color: Colors.black, decorationColor: Colors.green),
+                                    ),
+                                  ),
                                 ),
-                                style: const TextStyle(color: Colors.black, decorationColor: Colors.green),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
                       Expanded(
                         child: ListView(
                           controller: controller,
@@ -107,48 +131,71 @@ class _AllBookScreenState extends State<AllBookScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                           children: [
                             ListView.builder(
-                                itemCount: libraryProvider.bookList.length,
+                                itemCount: widget.isFromMedical ? medicalProvider.allMedicalService.length : libraryProvider.bookList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  BookModel b = libraryProvider.bookList[index];
-                                  return InkWell(
-                                    onLongPress: () {
-                                      if (widget.isAdmin && widget.isFromCheckCard == false) {
-                                        libraryProvider.selectBook(b);
-                                        Helper.toScreen(BookDetailsScreen(isForBookHistory: true, id: b.id as int));
-                                      }
-                                    },
-                                    onTap: () {
-                                      if (widget.isAdmin && widget.isFromCheckCard == false) {
-                                        Helper.toScreen(AddBookScreen(bookModel: b, isAdmin: widget.isAdmin, isUpdate: true));
-                                      } else if (widget.isFromCheckCard) {
-                                        libraryProvider.selectBook(b);
-                                        Helper.toScreen(BookDetailsScreen(isfromCheck: widget.isFromCheckCard));
-                                      } else {
-                                        libraryProvider.selectBook(b);
-                                        Helper.toScreen(const BookDetailsScreen());
-                                      }
-                                    },
-                                    child: Card(
-                                      color: Colors.white,
-                                      shadowColor: Colors.grey.withOpacity(.2),
-                                      elevation: 1,
-                                      child: ListTile(
-                                        title: Text(b.title!, style: robotoStyle500Medium.copyWith(fontSize: 15)),
-                                        subtitle: Text('Author: ${b.author!}', style: robotoStyle300Light.copyWith(fontSize: 15)),
-                                        trailing: Text('${b.price!}৳\n${b.category}',
-                                            style: robotoStyle700Bold.copyWith(fontSize: 15), textAlign: TextAlign.right),
+                                  if (widget.isFromMedical) {
+                                    MedicalServiceModel b = medicalProvider.allMedicalService[index];
+                                    return InkWell(
+                                      onTap: () {
+                                        Helper.toScreen(MedicalServiceDetailsScreen(id: b.id as int));
+                                      },
+                                      child: Card(
+                                        color: Colors.white,
+                                        shadowColor: Colors.grey.withOpacity(.2),
+                                        elevation: 1,
+                                        child: ListTile(
+                                          title: Text('${b.name!}-${b.department}-${b.studentId}', style: robotoStyle500Medium.copyWith(fontSize: 15)),
+                                          subtitle: Text('Type: ${b.serviceType!}\nProvider: ${b.providerName!}',
+                                              style: robotoStyle300Light.copyWith(fontSize: 15)),
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  } else {
+                                    BookModel b = libraryProvider.bookList[index];
+                                    return InkWell(
+                                      onLongPress: () {
+                                        if (widget.isAdmin && widget.isFromCheckCard == false) {
+                                          libraryProvider.selectBook(b);
+                                          Helper.toScreen(BookDetailsScreen(isForBookHistory: true, id: b.id as int));
+                                        }
+                                      },
+                                      onTap: () {
+                                        if (widget.isAdmin && widget.isFromCheckCard == false) {
+                                          Helper.toScreen(AddBookScreen(bookModel: b, isAdmin: widget.isAdmin, isUpdate: true));
+                                        } else if (widget.isFromCheckCard) {
+                                          libraryProvider.selectBook(b);
+                                          Helper.toScreen(BookDetailsScreen(isfromCheck: widget.isFromCheckCard));
+                                        } else {
+                                          libraryProvider.selectBook(b);
+                                          Helper.toScreen(const BookDetailsScreen());
+                                        }
+                                      },
+                                      child: Card(
+                                        color: Colors.white,
+                                        shadowColor: Colors.grey.withOpacity(.2),
+                                        elevation: 1,
+                                        child: ListTile(
+                                          title: Text(b.title!, style: robotoStyle500Medium.copyWith(fontSize: 15)),
+                                          subtitle: Text('Author: ${b.author!}', style: robotoStyle300Light.copyWith(fontSize: 15)),
+                                          trailing: Text('${b.price!}৳\n${b.category}',
+                                              style: robotoStyle700Bold.copyWith(fontSize: 15), textAlign: TextAlign.right),
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 }),
-                            libraryProvider.isBottomLoading
+                            libraryProvider.isBottomLoading || (widget.isFromMedical && medicalProvider.isBottomLoading)
                                 ? const Center(child: CircularProgressIndicator())
-                                : libraryProvider.hasNextData
+                                : libraryProvider.hasNextData || (widget.isFromMedical && medicalProvider.hasNextData)
                                     ? InkWell(
                                         onTap: () {
-                                          libraryProvider.updateAllCommunity();
+                                          if (widget.isFromMedical) {
+                                            medicalProvider.updateAllMedicalHistory();
+                                          } else {
+                                            libraryProvider.updateAllCommunity();
+                                          }
                                         },
                                         child: Container(
                                           height: 30,

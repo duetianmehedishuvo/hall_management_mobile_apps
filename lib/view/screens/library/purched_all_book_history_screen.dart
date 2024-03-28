@@ -10,7 +10,7 @@ import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/library/all_book_screen.dart';
 import 'package:duetstahall/view/screens/library/book_details_screen.dart';
 import 'package:duetstahall/view/screens/medical/add_medical_service_screen.dart';
-import 'package:duetstahall/view/screens/medical/medical_service_details_model.dart';
+import 'package:duetstahall/view/screens/medical/medical_service_details_screen.dart';
 import 'package:duetstahall/view/widgets/custom_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -158,7 +158,7 @@ class _PurchedAllBookHistoryScreenState extends State<PurchedAllBookHistoryScree
                                     MedicalServiceModel b = medicalProvider.allMedicalService[index];
                                     return InkWell(
                                       onTap: () {
-                                        Helper.toScreen(MedicalServiceDetailsModel( id: b.id as int));
+                                        Helper.toScreen(MedicalServiceDetailsScreen( id: b.id as int));
                                       },
                                       child: Card(
                                         color: Colors.white,

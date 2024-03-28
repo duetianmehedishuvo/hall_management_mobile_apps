@@ -1,11 +1,9 @@
 import 'package:duetstahall/data/model/response/community_model.dart';
-import 'package:duetstahall/dialog_bottom_sheet/add_dialogue.dart';
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
 import 'package:duetstahall/helper/date_converter.dart';
 import 'package:duetstahall/provider/community_provider.dart';
 import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/size.util.dart';
-import 'package:duetstahall/util/theme/app_colors.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:duetstahall/view/screens/student/community/community_details_screen.dart';
 import 'package:duetstahall/view/screens/student/students/student_details_screen.dart';

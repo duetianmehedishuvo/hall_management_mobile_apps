@@ -76,8 +76,7 @@ class CustomTextField extends StatefulWidget {
       this.horizontalSize = 22,
       this.verticalSize = 10,
       this.borderRadius = 20,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   _CustomTextFieldState createState() => _CustomTextFieldState();
