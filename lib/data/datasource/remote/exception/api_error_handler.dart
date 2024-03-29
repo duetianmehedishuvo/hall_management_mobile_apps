@@ -31,7 +31,6 @@ class ApiErrorHandler {
                 case 401:
                 case 500:
                 case 503:
-                  print('shshs ${error.response!.data}');
                   try{
                     if ((error.response!.data as Map).containsKey('message')) {
                       errorDescription = error.response!.data['message'];

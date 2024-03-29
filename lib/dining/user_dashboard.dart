@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UserDashboardScreen extends StatefulWidget {
-  const UserDashboardScreen({Key? key}) : super(key: key);
+  const UserDashboardScreen({super.key});
 
   @override
   State<UserDashboardScreen> createState() => _UserDashboardScreenState();

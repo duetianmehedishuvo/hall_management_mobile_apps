@@ -57,7 +57,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                             color: Colors.teal,
                             hintWidget: Row(
                               children: [
-                                Text("Off/On", style: Theme.of(context).textTheme.bodyText1),
+                                Text("Off/On", style: Theme.of(context).textTheme.bodyLarge),
                                 Switch(
                                     value: studentProvider.isMealOn,
                                     activeColor: Colors.green,

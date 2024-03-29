@@ -1,5 +1,4 @@
 import 'package:duetstahall/dining/widgets/custom_app_bar.dart';
-import 'package:duetstahall/util/helper.dart';
 import 'package:duetstahall/util/size.util.dart';
 import 'package:duetstahall/util/theme/text.styles.dart';
 import 'package:flutter/material.dart';

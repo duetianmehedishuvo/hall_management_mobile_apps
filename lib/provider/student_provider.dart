@@ -8,6 +8,7 @@ import 'package:duetstahall/data/model/response/base/error_response.dart';
 import 'package:duetstahall/data/model/response/meal_model.dart';
 import 'package:duetstahall/data/model/response/student_model.dart';
 import 'package:duetstahall/data/model/response/student_model1.dart';
+import 'package:duetstahall/data/model/response/student_summery_model.dart';
 import 'package:duetstahall/data/model/response/transaction_model.dart';
 import 'package:duetstahall/data/repository/auth_repo.dart';
 import 'package:duetstahall/data/repository/student_repo.dart';
@@ -185,9 +186,8 @@ class StudentProvider with ChangeNotifier {
     kEventSource = {};
     int p = 0;
     for (var item in dates) {
-      var list = (guestMeal[p] != 0
-          ? [const EventModel('Today\'s Event 1'), const EventModel('Today\'s Event 1')]
-          : [const EventModel('Today\'s Event 1')]);
+      var list =
+          (guestMeal[p] != 0 ? [const EventModel('Today\'s Event 1'), const EventModel('Today\'s Event 1')] : [const EventModel('Today\'s Event 1')]);
       kEventSource[DateTime.utc(item.year, item.month, item.day)] = list;
       p++;
     }
@@ -228,12 +228,8 @@ class StudentProvider with ChangeNotifier {
         if (date['guest_meal'] != 0) {
           guestMealCount++;
         }
-        allMeals.add(<String, dynamic>{
-          'student_id': date['student_id'],
-          'room_no': date['room_no'],
-          'name': date['name'],
-          'guest_meal': date['guest_meal']
-        });
+        allMeals
+            .add(<String, dynamic>{'student_id': date['student_id'], 'room_no': date['room_no'], 'name': date['name'], 'guest_meal': date['guest_meal']});
       }
       Map<String, dynamic> fingerData = {};
       Map<String, dynamic> rfData = {};
@@ -348,6 +344,22 @@ class StudentProvider with ChangeNotifier {
     } else {
       String errorMessage = apiResponse1.error.toString();
       showMessage(errorMessage);
+    }
+  }
+
+  Future<bool> updateFingerRFID(String studentID, String rfID) async {
+    _isLoading = true;
+    notifyListeners();
+    ApiResponse apiResponse1 = await studentRepo.updateFingerRFID(studentID, rfID);
+    _isLoading = false;
+    notifyListeners();
+    if (apiResponse1.response.statusCode == 200) {
+      showMessage('Added Successfully', isError: false);
+      return true;
+    } else {
+      String errorMessage = apiResponse1.error.toString();
+      showMessage(errorMessage);
+      return false;
     }
   }
 
@@ -564,6 +576,47 @@ class StudentProvider with ChangeNotifier {
     searchStudents = [];
     selectStudentID = 'none';
     if (!isFirstTime) notifyListeners();
+  }
+
+  // TODO:: for All student
+  List<StudentSummeryModel> studentSummeryList = [];
+
+  updateAllStudent() {
+    selectPage++;
+    callForGetUserAllStudent(page: selectPage);
+    notifyListeners();
+  }
+
+  callForGetUserAllStudent({int page = 1, bool isFirstTime = true}) async {
+    if (page == 1) {
+      selectPage = 1;
+      studentSummeryList.clear();
+      studentSummeryList = [];
+      _isLoading = true;
+      hasNextData = false;
+      isBottomLoading = false;
+      if (!isFirstTime) {
+        notifyListeners();
+      }
+    } else {
+      isBottomLoading = true;
+      notifyListeners();
+    }
+
+    ApiResponse response = await studentRepo.allStudent(selectPage);
+
+    _isLoading = false;
+    isBottomLoading = false;
+
+    if (response.response.statusCode == 200) {
+      hasNextData = response.response.data['next_page_url'] != null ? true : false;
+      response.response.data['data'].forEach((element) {
+        studentSummeryList.add(StudentSummeryModel.fromJson(element));
+      });
+    } else {
+      Fluttertoast.showToast(msg: response.response.statusMessage!);
+    }
+    notifyListeners();
   }
 
   // TODO:: for group All Posts

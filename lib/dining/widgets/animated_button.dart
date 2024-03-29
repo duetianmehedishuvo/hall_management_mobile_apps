@@ -5,7 +5,7 @@ import 'dart:math' as m;
 class AnimatedButton extends StatefulWidget {
   final VoidCallback? onComplete;
 
-  const AnimatedButton({Key? key, this.onComplete}) : super(key: key);
+  const AnimatedButton({super.key, this.onComplete});
 
   @override
   _AnimatedButtonState createState() => _AnimatedButtonState();

@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class MyMealScreen extends StatefulWidget {
-  const MyMealScreen({Key? key}) : super(key: key);
+  const MyMealScreen({super.key});
 
   @override
   State<MyMealScreen> createState() => _MyMealScreenState();

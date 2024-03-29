@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UpdateUserProfileScreen extends StatefulWidget {
-  const UpdateUserProfileScreen({Key? key}) : super(key: key);
+  const UpdateUserProfileScreen({super.key});
 
   @override
   State<UpdateUserProfileScreen> createState() => _UpdateUserProfileScreenState();
@@ -297,7 +297,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                                     },
                                     boarderRadius: 8,
                                     backgroundColor: MaterialStateProperty.all(Colors.black),
-                                    child:  AutoSizeText(
+                                    child:  const AutoSizeText(
                                       "Update",
                                       style: TextStyle(color: Colors.white, fontSize: 14),
                                     ),

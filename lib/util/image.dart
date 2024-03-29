@@ -29,6 +29,8 @@ class ImagesModel {
   static const String guest_room = 'assets/images/guest_room.png';
   static const String hall_fee = 'assets/images/hall_fee.png';
   static const String meal = 'assets/images/meal.png';
+  static const String other = 'assets/images/other.png';
+  static const String students = 'assets/images/students.png';
   static const String room = 'assets/images/room.png';
   static const String community = 'assets/images/community.png';
   static const String notice = 'assets/images/notice.png';

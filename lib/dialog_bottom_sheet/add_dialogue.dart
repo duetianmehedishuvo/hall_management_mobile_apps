@@ -64,7 +64,7 @@ class _AddDialogueState extends State<AddDialogue> {
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(Icons.clear, color: Theme.of(context).textTheme.headline1!.color!),
+                      child: Icon(Icons.clear, color: Theme.of(context).textTheme.displayLarge!.color!),
                     )
                   ],
                 ),

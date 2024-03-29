@@ -62,6 +62,15 @@ class StudentRepo {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
     }
   }
+  Future<ApiResponse> updateFingerRFID(String studentID,String rfID) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+    try {
+      response = await dioClient.post('updateFingerRFID?studentID=$studentID&rfID=$rfID');
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
 
   Future<ApiResponse> deleteMealByID(String time) async {
     Response response = Response(requestOptions: RequestOptions(path: '22222'));
@@ -110,6 +119,16 @@ class StudentRepo {
     try {
       var studentID = sharedPreferences.getString(AppConstant.studentID);
       response = await dioClient.get("getUserAllTransAction?studentID=$studentID&page=$page");
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
+    }
+  }
+
+  Future<ApiResponse> allStudent(int page) async {
+    Response response = Response(requestOptions: RequestOptions(path: '22222'));
+    try {
+      response = await dioClient.get("allStudent?page=$page");
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e), response);
